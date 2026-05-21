@@ -25,7 +25,7 @@ def load_config(path: str | Path = "config/config.yaml") -> ProjectConfig:
     raw = config_path.read_text(encoding="utf-8")
 
     try:
-        import yaml  # type: ignore
+        import yaml
 
         values = yaml.safe_load(raw)
     except ModuleNotFoundError:
