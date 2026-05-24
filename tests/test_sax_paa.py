@@ -45,5 +45,20 @@ class TestPaaValidation(unittest.TestCase):
             paa(np.array([1.0, 2.0, 3.0, 4.0]), segments=5)
 
 
+class TestSaxValidation(unittest.TestCase):
+    def test_sax_rejects_alphabet_size_below_two(self):
+        sequence = np.array([-2.0, 0.0, 2.0])
+
+        with self.assertRaises(ValueError):
+            sax(sequence, alphabet_size=1)
+
+        with self.assertRaises(ValueError):
+            sax(sequence, alphabet_size=0)
+
+    def test_sax_rejects_alphabet_size_above_twenty_six(self):
+        with self.assertRaises(ValueError):
+            sax(np.array([-2.0, 0.0, 2.0]), alphabet_size=27)
+
+
 if __name__ == "__main__":
     unittest.main()
