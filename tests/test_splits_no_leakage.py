@@ -54,5 +54,18 @@ class TestSplitsNoLeakage(unittest.TestCase):
         self.assertGreater(transformed_test[0, 0], 50.0)
 
 
+class TestBatadalSplitValidation(unittest.TestCase):
+    def test_batadal_split_rejects_ratios_not_summing_to_one(self):
+        df = pd.DataFrame({"x": np.arange(10)})
+
+        with self.assertRaises(ValueError):
+            make_batadal_chronological_split(
+                df,
+                train_ratio=0.6,
+                validation_ratio=0.2,
+                test_ratio=0.1,
+            )
+
+
 if __name__ == "__main__":
     unittest.main()
