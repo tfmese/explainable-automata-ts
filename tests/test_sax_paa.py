@@ -30,5 +30,20 @@ class TestSaxPaa(unittest.TestCase):
         self.assertEqual(len(patterns), 3)
 
 
+class TestPaaValidation(unittest.TestCase):
+    def test_paa_rejects_non_positive_segments(self):
+        sequence = np.array([1.0, 2.0, 3.0, 4.0])
+
+        with self.assertRaises(ValueError):
+            paa(sequence, segments=0)
+
+        with self.assertRaises(ValueError):
+            paa(sequence, segments=-1)
+
+    def test_paa_rejects_segments_larger_than_sequence(self):
+        with self.assertRaises(ValueError):
+            paa(np.array([1.0, 2.0, 3.0, 4.0]), segments=5)
+
+
 if __name__ == "__main__":
     unittest.main()
