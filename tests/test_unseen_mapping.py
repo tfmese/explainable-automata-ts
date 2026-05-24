@@ -26,5 +26,19 @@ class TestUnseenMapping(unittest.TestCase):
         self.assertIn("confidence", explanation)
 
 
+class TestProbabilisticAutomataMetrics(unittest.TestCase):
+    def test_state_count_matches_unique_patterns(self):
+        patterns = ["aaa", "aab", "abb", "aab"]
+        automata = ProbabilisticAutomata().fit(patterns)
+
+        self.assertEqual(automata.state_count, len(set(patterns)))
+
+    def test_transition_density_is_between_zero_and_one(self):
+        automata = ProbabilisticAutomata().fit(["aaa", "aab", "abb", "aab"])
+
+        self.assertGreaterEqual(automata.transition_density, 0.0)
+        self.assertLessEqual(automata.transition_density, 1.0)
+
+
 if __name__ == "__main__":
     unittest.main()
