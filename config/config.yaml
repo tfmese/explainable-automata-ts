@@ -8,7 +8,9 @@
     "skab_root": "data/SKAB",
     "batadal_training_dataset_2": "data/BATADAL/Training_Dataset_2.csv",
     "outputs": "outputs",
-    "logs": "outputs/logs"
+    "logs": "outputs/logs",
+    "results": "outputs/results",
+    "figures": "outputs/figures"
   },
   "datasets": {
     "skab": {
