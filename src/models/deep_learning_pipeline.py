@@ -25,6 +25,7 @@ def set_seed(seed: int) -> None:
         torch.cuda.manual_seed_all(seed)
 
 
+# Zaman serisi verilerini kayan pencere (sliding window) seklinde hazırlayan dataset sınıfımız
 class TimeSeriesDataset(Dataset):
     def __init__(self, X: np.ndarray, y: np.ndarray, window_size: int):
         self.X = torch.tensor(X, dtype=torch.float32)
@@ -42,6 +43,7 @@ class TimeSeriesDataset(Dataset):
         return x_window, y_target
 
 
+# Aşırı öğrenmeyi engellemek amacıyla validation loss'u izleyen erken durdurma sınıfımız
 class EarlyStopping:
     def __init__(self, patience: int = 5, min_delta: float = 0.0):
         self.patience = patience
@@ -159,10 +161,10 @@ class DeepLearningPipeline:
                         self.model.load_state_dict(early_stopping.best_state)
                     break
             else:
-                # If no validation set (e.g. SKAB GroupKFold fold train split), early stopping is not used, or we monitor train loss
+                # Validation seti yoksa (örneğin SKAB GroupKFold fold'larında), train loss üzerinden takip ediyoruz
                 early_stopping(train_loss, self.model)
 
-        # Restore best weights if available
+        # Eğer eğitim bittiyse ve elimizde kaydedilmiş en iyi ağırlıklar varsa onları yüklüyoruz
         if val_loader is None and early_stopping.best_state is not None:
             self.model.load_state_dict(early_stopping.best_state)
 
