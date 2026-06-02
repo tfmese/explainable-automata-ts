@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import json
 import logging
-import os
 from pathlib import Path
 from typing import Any
 
@@ -23,6 +22,7 @@ from src.data.splits import (
     make_skab_group_folds,
 )
 from src.evaluation.metrics import classification_metrics
+from src.evaluation.visualization import generate_all_visualizations
 from src.experiments.scenarios import add_gaussian_noise, inject_unseen_pattern
 from src.models.deep_learning_pipeline import DeepLearningPipeline, set_seed
 from src.pipeline import AutomataPipeline, build_fixed_automata_pipeline
@@ -34,9 +34,76 @@ logging.basicConfig(
 )
 logger = logging.getLogger("run_experiments")
 
+MAX_STORED_PREDICTIONS = 2_000
+MAX_STORED_EXPLANATIONS = 25
+
 
 def evaluate_predictions(y_true: np.ndarray, y_pred: np.ndarray) -> dict[str, float]:
     return classification_metrics(y_true, y_pred)
+
+
+def anomaly_score(probability: float, threshold: float) -> float:
+    if threshold <= 0:
+        return 1.0 if probability <= threshold else 0.0
+    return float(1.0 / (1.0 + (probability / threshold)))
+
+
+def compact_prediction_records(
+    y_true: np.ndarray,
+    y_pred: np.ndarray,
+    scores: list[float],
+    window_size: int,
+) -> list[dict[str, Any]]:
+    limit = min(len(y_true), MAX_STORED_PREDICTIONS)
+    return [
+        {
+            "time_step": int(idx + window_size - 1),
+            "y_true": int(y_true[idx]),
+            "y_pred": int(y_pred[idx]),
+            "anomaly_score": float(scores[idx]),
+        }
+        for idx in range(limit)
+    ]
+
+
+def automata_predict_with_trace(
+    automata_pipe: AutomataPipeline,
+    df: pd.DataFrame,
+    scenario: str,
+    window_size: int,
+) -> tuple[np.ndarray, list[float], list[dict[str, Any]], list[dict[str, Any]]]:
+    patterns = automata_pipe.transform_patterns(df)
+    if scenario == "unseen":
+        patterns = inject_unseen_pattern(patterns, replacement="zzzz")
+
+    predictions: list[int] = []
+    scores: list[float] = []
+    explanations: list[dict[str, Any]] = []
+
+    for idx in range(1, len(patterns) + 1):
+        prefix = patterns[:idx]
+        decision_dict = automata_pipe.automata.predict_sequence(prefix)
+        predictions.append(1 if decision_dict["decision"] == "anomaly" else 0)
+        scores.append(anomaly_score(decision_dict["probability"], decision_dict["threshold"]))
+
+        if len(explanations) < MAX_STORED_EXPLANATIONS:
+            explanations.append(automata_pipe.explain_from_patterns(prefix, time_step=idx + window_size - 1))
+
+    trace = [
+        {
+            "time_step": item["time_step"],
+            "state": item["state"],
+            "pattern": item["pattern"],
+            "status": item["status"],
+            "mapped_to": item["mapped_to"],
+            "probability": item["probability"],
+            "threshold": item["threshold"],
+            "decision": item["decision"],
+            "confidence": item["confidence"],
+        }
+        for item in explanations
+    ]
+    return np.asarray(predictions), scores, trace, explanations
 
 
 def run_skab_experiment(
@@ -66,6 +133,7 @@ def run_skab_experiment(
 
     models_to_run = ["automata"] + config.get("deep_learning", "models", default=["lstm", "gru"])
     results_by_model: dict[str, list[dict[str, float]]] = {m: [] for m in models_to_run}
+    outputs_by_model: dict[str, list[dict[str, Any]]] = {m: [] for m in models_to_run}
 
     # Sonuç analizi için durum sayısını ve geçiş yoğunluğunu kaydedeceğimiz listeler
     automata_states = []
@@ -98,24 +166,24 @@ def run_skab_experiment(
         automata_pipe = build_fixed_automata_pipeline(config)
         automata_pipe.fit(train_df, feature_cols)
 
-        # Unseen veri senaryosunda, SAX kelimelerini 'zzzz' gibi bilinmeyen bir pattern ile bozuyoruz
-        if scenario == "unseen":
-            test_patterns = automata_pipe.transform_patterns(test_df_perturbed)
-            test_patterns_mutated = inject_unseen_pattern(test_patterns, replacement="zzzz")
-            pred_sequence = automata_pipe.automata.predict_sequence(test_patterns_mutated)
-            # Create a uniform prediction for comparison
-            y_pred_automata = np.array([1 if pred_sequence["decision"] == "anomaly" else 0] * len(y_test_aligned))
-        else:
-            test_patterns = automata_pipe.transform_patterns(test_df_perturbed)
-            y_pred_automata = []
-            # Test aşamasında her adımda biriken olasılığa göre karar üretiyoruz
-            for idx in range(1, len(test_patterns) + 1):
-                decision_dict = automata_pipe.automata.predict_sequence(test_patterns[:idx])
-                y_pred_automata.append(1 if decision_dict["decision"] == "anomaly" else 0)
-            y_pred_automata = np.asarray(y_pred_automata)
+        y_pred_automata, automata_scores, automata_trace, automata_explanations = automata_predict_with_trace(
+            automata_pipe,
+            test_df_perturbed,
+            scenario=scenario,
+            window_size=W,
+        )
 
         automata_metrics = evaluate_predictions(y_test_aligned, y_pred_automata)
         results_by_model["automata"].append(automata_metrics)
+        outputs_by_model["automata"].append(
+            {
+                "fold": fold_idx,
+                "predictions": compact_prediction_records(y_test_aligned, y_pred_automata, automata_scores, W),
+                "explanation_trace": automata_trace,
+                "full_explanation_samples": automata_explanations,
+                "transition_probabilities": automata_pipe.automata.transition_probabilities_,
+            }
+        )
         automata_states.append(automata_pipe.automata.state_count)
         automata_densities.append(automata_pipe.automata.transition_density)
 
@@ -150,8 +218,17 @@ def run_skab_experiment(
             )
 
             # Modeli test seti üzerinde değerlendiriyoruz
-            dl_metrics = dl_pipe.predict_and_evaluate(test_X_scaled, test_y)
+            dl_probs = dl_pipe.predict_proba(test_X_scaled)
+            dl_preds = (dl_probs >= 0.5).astype(int)
+            dl_y_true = test_y[W - 1 :]
+            dl_metrics = evaluate_predictions(dl_y_true, dl_preds)
             results_by_model[dl_model].append(dl_metrics)
+            outputs_by_model[dl_model].append(
+                {
+                    "fold": fold_idx,
+                    "predictions": compact_prediction_records(dl_y_true, dl_preds, dl_probs.tolist(), W),
+                }
+            )
 
     # Her bir model için fold ortalama ve standart sapmalarını çıkarıyoruz
     summary: dict[str, Any] = {}
@@ -161,6 +238,7 @@ def run_skab_experiment(
             "mean": metrics_df.mean().to_dict(),
             "std": metrics_df.std().to_dict(),
             "raw": results_by_model[m],
+            "outputs": outputs_by_model[m],
         }
 
     summary["automata_states"] = {
@@ -223,20 +301,20 @@ def run_batadal_experiment(
     # Veri sızıntısını önlemek için eğitim verisiyle fit ediyoruz
     automata_pipe.fit(train_df, feature_cols)
 
-    if scenario == "unseen":
-        test_patterns = automata_pipe.transform_patterns(test_df_perturbed)
-        test_patterns_mutated = inject_unseen_pattern(test_patterns, replacement="zzzz")
-        pred_sequence = automata_pipe.automata.predict_sequence(test_patterns_mutated)
-        y_pred_automata = np.array([1 if pred_sequence["decision"] == "anomaly" else 0] * len(y_test_aligned))
-    else:
-        test_patterns = automata_pipe.transform_patterns(test_df_perturbed)
-        y_pred_automata = []
-        for idx in range(1, len(test_patterns) + 1):
-            decision_dict = automata_pipe.automata.predict_sequence(test_patterns[:idx])
-            y_pred_automata.append(1 if decision_dict["decision"] == "anomaly" else 0)
-        y_pred_automata = np.asarray(y_pred_automata)
+    y_pred_automata, automata_scores, automata_trace, automata_explanations = automata_predict_with_trace(
+        automata_pipe,
+        test_df_perturbed,
+        scenario=scenario,
+        window_size=W,
+    )
 
-    results_by_model["automata"] = evaluate_predictions(y_test_aligned, y_pred_automata)
+    results_by_model["automata"] = {
+        "metrics": evaluate_predictions(y_test_aligned, y_pred_automata),
+        "predictions": compact_prediction_records(y_test_aligned, y_pred_automata, automata_scores, W),
+        "explanation_trace": automata_trace,
+        "full_explanation_samples": automata_explanations,
+        "transition_probabilities": automata_pipe.automata.transition_probabilities_,
+    }
 
     # --- B. Derin Öğrenme Modelleri ---
     for dl_model in [m for m in models_to_run if m != "automata"]:
@@ -264,7 +342,13 @@ def run_batadal_experiment(
             val_y=val_y,
         )
 
-        results_by_model[dl_model] = dl_pipe.predict_and_evaluate(test_X_scaled, test_y)
+        dl_probs = dl_pipe.predict_proba(test_X_scaled)
+        dl_preds = (dl_probs >= 0.5).astype(int)
+        dl_y_true = test_y[W - 1 :]
+        results_by_model[dl_model] = {
+            "metrics": evaluate_predictions(dl_y_true, dl_preds),
+            "predictions": compact_prediction_records(dl_y_true, dl_preds, dl_probs.tolist(), W),
+        }
 
     return {
         **results_by_model,
@@ -376,7 +460,9 @@ def calculate_statistical_significance(skab_results_by_seed: list[dict[str, Any]
 def main() -> None:
     config = load_config("config/config.yaml")
     results_dir = Path(config.get("paths", "results", default="outputs/results"))
+    figures_dir = Path(config.get("paths", "figures", default="outputs/figures"))
     results_dir.mkdir(parents=True, exist_ok=True)
+    figures_dir.mkdir(parents=True, exist_ok=True)
 
     # --- 1. Veri Setlerini Yüklüyoruz ---
     logger.info("Loading Datasets...")
@@ -468,6 +554,7 @@ def main() -> None:
     with open(results_dir / "automata_parameter_variation.json", "w") as f:
         json.dump(variation, f, indent=2)
 
+    generate_all_visualizations(results_dir, figures_dir)
     logger.info(f"All experiments executed successfully. Outputs stored in {results_dir}")
 
 

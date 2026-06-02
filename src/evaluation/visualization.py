@@ -7,7 +7,9 @@ from typing import Any
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 import seaborn as sns
+from sklearn.metrics import precision_recall_curve
 
 logger = logging.getLogger("visualization")
 
@@ -91,13 +93,60 @@ def plot_transition_heatmap(
     plt.close()
 
 
+def plot_automata_state_diagram(
+    transition_probabilities: dict[str, dict[str, float]],
+    save_path: Path,
+    max_states: int = 24,
+) -> None:
+    states = sorted(transition_probabilities.keys())[:max_states]
+    if not states:
+        return
+
+    angles = np.linspace(0, 2 * np.pi, len(states), endpoint=False)
+    positions = {state: np.array([np.cos(angle), np.sin(angle)]) for state, angle in zip(states, angles)}
+
+    plt.figure(figsize=(9, 9))
+    ax = plt.gca()
+    ax.set_aspect("equal")
+    ax.axis("off")
+
+    for source in states:
+        start = positions[source]
+        for target, probability in transition_probabilities.get(source, {}).items():
+            if target not in positions:
+                continue
+            end = positions[target]
+            delta = end - start
+            if np.linalg.norm(delta) == 0:
+                continue
+            ax.annotate(
+                "",
+                xy=end * 0.88,
+                xytext=start * 0.88,
+                arrowprops={
+                    "arrowstyle": "->",
+                    "color": "#60A5FA",
+                    "alpha": max(0.25, min(0.95, probability)),
+                    "lw": 0.8 + 2.0 * probability,
+                },
+            )
+
+    for state, pos in positions.items():
+        circle = plt.Circle(pos, 0.09, color="#F9FAFB", ec="#22C55E", lw=2, zorder=3)
+        ax.add_patch(circle)
+        ax.text(pos[0], pos[1], state, ha="center", va="center", color="#111827", fontsize=8, zorder=4)
+
+    plt.title("Automata State Diagram", fontsize=14, fontweight="bold", pad=15)
+    plt.tight_layout()
+    plt.savefig(save_path, dpi=300, facecolor="#0B0F19")
+    plt.close()
+
+
 def plot_parameter_sensitivity(
     variation_data: list[dict[str, Any]],
     save_path: Path,
 ) -> None:
     # Pencere boyutu ve alfabe boyutunun F1 skoru üzerindeki duyarlılık grafiklerini çixiyoruz
-    import pandas as pd
-
     df = pd.DataFrame(variation_data)
     if df.empty:
         return
@@ -128,8 +177,6 @@ def plot_state_sensitivity(
     save_path: Path,
 ) -> None:
     # Parametrelerin state sayısı ve geçiş yoğunluğu üzerindeki etkilerini görselleştiriyoruz
-    import pandas as pd
-
     df = pd.DataFrame(variation_data)
     if df.empty:
         return
@@ -153,6 +200,74 @@ def plot_state_sensitivity(
     plt.tight_layout()
     plt.savefig(save_path, dpi=300, facecolor="#0B0F19")
     plt.close()
+
+
+def plot_precision_recall_from_records(records: list[dict[str, Any]], title: str, save_path: Path) -> None:
+    if not records:
+        return
+    y_true = np.asarray([row["y_true"] for row in records])
+    scores = np.asarray([row["anomaly_score"] for row in records])
+    if len(np.unique(y_true)) < 2:
+        return
+
+    precision, recall, _ = precision_recall_curve(y_true, scores)
+    plt.figure(figsize=(6, 5))
+    plt.plot(recall, precision, color="#22C55E", lw=2)
+    plt.title(title, fontsize=14, fontweight="bold", pad=15)
+    plt.xlabel("Recall", fontsize=12)
+    plt.ylabel("Precision", fontsize=12)
+    plt.xlim(0, 1.02)
+    plt.ylim(0, 1.02)
+    plt.tight_layout()
+    plt.savefig(save_path, dpi=300, facecolor="#0B0F19")
+    plt.close()
+
+
+def emit_model_diagnostics(dataset_name: str, scenario_data: dict[str, Any], figures_path: Path) -> None:
+    for model_name, model_data in scenario_data.items():
+        if model_name in {"automata_states", "automata_densities", "automata_density"}:
+            continue
+
+        if "mean" in model_data:
+            raw_metrics = model_data.get("raw", [])
+            metrics = (
+                {
+                    "tp": sum(item.get("tp", 0) for item in raw_metrics),
+                    "fp": sum(item.get("fp", 0) for item in raw_metrics),
+                    "fn": sum(item.get("fn", 0) for item in raw_metrics),
+                    "tn": sum(item.get("tn", 0) for item in raw_metrics),
+                }
+                if raw_metrics
+                else model_data["mean"]
+            )
+            outputs = model_data.get("outputs", [])
+            first_output = outputs[0] if outputs else {}
+        else:
+            metrics = model_data.get("metrics", {})
+            first_output = model_data
+
+        required = {"tp", "fp", "fn", "tn"}
+        if required.issubset(metrics):
+            plot_confusion_matrix(
+                int(metrics["tp"]),
+                int(metrics["fp"]),
+                int(metrics["fn"]),
+                int(metrics["tn"]),
+                f"{dataset_name.upper()} {model_name.upper()} Confusion Matrix",
+                figures_path / f"{dataset_name}_{model_name}_confusion_matrix.png",
+            )
+
+        records = first_output.get("predictions", [])
+        plot_precision_recall_from_records(
+            records,
+            f"{dataset_name.upper()} {model_name.upper()} Precision-Recall",
+            figures_path / f"{dataset_name}_{model_name}_precision_recall.png",
+        )
+
+        if model_name == "automata":
+            transitions = first_output.get("transition_probabilities", {})
+            plot_transition_heatmap(transitions, figures_path / f"{dataset_name}_automata_transition_heatmap.png")
+            plot_automata_state_diagram(transitions, figures_path / f"{dataset_name}_automata_state_diagram.png")
 
 
 def generate_all_visualizations(results_root: str | Path, figures_root: str | Path) -> None:
@@ -207,5 +322,14 @@ def generate_all_visualizations(results_root: str | Path, figures_root: str | Pa
         plt.tight_layout()
         plt.savefig(figures_path / "model_comparison_skab.png", dpi=300, facecolor="#0B0F19")
         plt.close()
+
+        emit_model_diagnostics("skab", skab_data[0]["original"], figures_path)
+
+    batadal_file = results_path / "batadal_experiments.json"
+    if batadal_file.exists():
+        logger.info("Generating BATADAL diagnostic plots...")
+        with open(batadal_file) as f:
+            batadal_data = json.load(f)
+        emit_model_diagnostics("batadal", batadal_data[0]["original"], figures_path)
 
     logger.info(f"Visualizations successfully generated and saved to {figures_path}")

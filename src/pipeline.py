@@ -55,6 +55,9 @@ class AutomataPipeline:
     def explain(self, df: pd.DataFrame, time_step: int | None = None) -> dict[str, Any]:
         return explain_automata_decision(self.automata, self.transform_patterns(df), time_step=time_step)
 
+    def explain_from_patterns(self, patterns: list[str], time_step: int | None = None) -> dict[str, Any]:
+        return explain_automata_decision(self.automata, patterns, time_step=time_step)
+
 
 def build_fixed_automata_pipeline(config: ProjectConfig) -> AutomataPipeline:
     fixed = config.get("automata", "fixed_comparison")

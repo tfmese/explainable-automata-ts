@@ -170,22 +170,24 @@ class DeepLearningPipeline:
 
         return self
 
-    def predict(self, test_X: np.ndarray) -> np.ndarray:
+    def predict_proba(self, test_X: np.ndarray) -> np.ndarray:
         test_y_placeholder = np.zeros(len(test_X))
         test_dataset = TimeSeriesDataset(test_X, test_y_placeholder, self.window_size)
         test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
 
         self.model.eval()
-        all_preds = []
+        all_probs = []
         with torch.no_grad():
             for x_batch, _ in test_loader:
                 x_batch = x_batch.to(self.device)
                 logits = self.model(x_batch)
                 probs = torch.sigmoid(logits)
-                preds = (probs >= 0.5).int().cpu().numpy()
-                all_preds.extend(preds)
+                all_probs.extend(probs.cpu().numpy())
 
-        return np.asarray(all_preds)
+        return np.asarray(all_probs, dtype=float)
+
+    def predict(self, test_X: np.ndarray) -> np.ndarray:
+        return (self.predict_proba(test_X) >= 0.5).astype(int)
 
     def predict_and_evaluate(self, test_X: np.ndarray, test_y: np.ndarray) -> dict[str, float]:
         test_dataset = TimeSeriesDataset(test_X, test_y, self.window_size)
