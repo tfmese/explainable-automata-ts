@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import json
 import logging
 from pathlib import Path
@@ -76,33 +77,70 @@ def automata_predict_with_trace(
     if scenario == "unseen":
         patterns = inject_unseen_pattern(patterns, replacement="zzzz")
 
+    # Not: naive prefix-skorlaması \(O(n^2)\) olduğu için (her prefix için yeniden olasılık hesaplayınca)
+    # deney süresi saatlere uzayabiliyor. Burada geçiş olasılıklarını artımlı birikimli hesaplayarak
+    # \(O(n)\) hale getiriyoruz.
+    automata = automata_pipe.automata
+    threshold = float(automata.threshold_ if automata.threshold_ is not None else automata.smoothing)
+
+    mappings = [automata.map_pattern(p) for p in patterns]
+
     predictions: list[int] = []
     scores: list[float] = []
     explanations: list[dict[str, Any]] = []
+    trace: list[dict[str, Any]] = []
 
-    for idx in range(1, len(patterns) + 1):
-        prefix = patterns[:idx]
-        decision_dict = automata_pipe.automata.predict_sequence(prefix)
-        predictions.append(1 if decision_dict["decision"] == "anomaly" else 0)
-        scores.append(anomaly_score(decision_dict["probability"], decision_dict["threshold"]))
+    path_probability = 1.0
+    transitions_so_far: list[dict[str, Any]] = []
+
+    for idx, current in enumerate(mappings):
+        if idx == 0:
+            path_probability = 1.0
+        else:
+            previous = mappings[idx - 1]
+            prob = automata.transition_probability(previous.mapped, current.mapped)
+            path_probability *= prob
+            if len(transitions_so_far) < MAX_STORED_EXPLANATIONS:
+                transitions_so_far.append(
+                    {"from": previous.mapped, "to": current.mapped, "probability": float(prob)}
+                )
+
+        decision = "anomaly" if path_probability <= threshold else "normal"
+        confidence = float(path_probability)
+
+        predictions.append(1 if decision == "anomaly" else 0)
+        scores.append(anomaly_score(float(path_probability), threshold))
 
         if len(explanations) < MAX_STORED_EXPLANATIONS:
-            explanations.append(automata_pipe.explain_from_patterns(prefix, time_step=idx + window_size - 1))
+            time_step = int(idx + window_size - 1)
+            explanation = {
+                "time_step": time_step,
+                "state": current.mapped,
+                "pattern": current.original,
+                "status": current.status,
+                "mapped_to": current.mapped if current.status == "unseen" else None,
+                "mapping_distance": int(current.distance),
+                "transitions": list(transitions_so_far),
+                "probability": float(path_probability),
+                "decision": decision,
+                "confidence": confidence,
+                "threshold": threshold,
+            }
+            explanations.append(explanation)
+            trace.append(
+                {
+                    "time_step": time_step,
+                    "state": explanation["state"],
+                    "pattern": explanation["pattern"],
+                    "status": explanation["status"],
+                    "mapped_to": explanation["mapped_to"],
+                    "probability": explanation["probability"],
+                    "threshold": explanation["threshold"],
+                    "decision": explanation["decision"],
+                    "confidence": explanation["confidence"],
+                }
+            )
 
-    trace = [
-        {
-            "time_step": item["time_step"],
-            "state": item["state"],
-            "pattern": item["pattern"],
-            "status": item["status"],
-            "mapped_to": item["mapped_to"],
-            "probability": item["probability"],
-            "threshold": item["threshold"],
-            "decision": item["decision"],
-            "confidence": item["confidence"],
-        }
-        for item in explanations
-    ]
     return np.asarray(predictions), scores, trace, explanations
 
 
@@ -113,11 +151,12 @@ def run_skab_experiment(
     target_col: str,
     scenario: str,
     seed: int,
+    models_override: list[str] | None = None,
+    max_folds: int | None = None,
 ) -> dict[str, Any]:
     logger.info(f"Running SKAB experiment - Scenario: {scenario}, Seed: {seed}")
     set_seed(seed)
 
-    # 1. Standart deney protokolü: source_file grubuna göre GroupKFold bölmesi yapıyoruz (sızıntıyı önlemek için)
     group_col = config.get("datasets", "skab", "group_column")
     n_splits = config.get("datasets", "skab", "n_splits", default=5)
     prefer_stratified = config.get("datasets", "skab", "prefer_stratified_group_kfold", default=True)
@@ -131,25 +170,25 @@ def run_skab_experiment(
         prefer_stratified=prefer_stratified,
     )
 
-    models_to_run = ["automata"] + config.get("deep_learning", "models", default=["lstm", "gru"])
+    models_to_run = models_override or (["automata"] + config.get("deep_learning", "models", default=["lstm", "gru"]))
     results_by_model: dict[str, list[dict[str, float]]] = {m: [] for m in models_to_run}
     outputs_by_model: dict[str, list[dict[str, Any]]] = {m: [] for m in models_to_run}
 
-    # Sonuç analizi için durum sayısını ve geçiş yoğunluğunu kaydedeceğimiz listeler
     automata_states = []
     automata_densities = []
 
     for fold_idx, split in enumerate(splits):
+        if max_folds is not None and fold_idx >= max_folds:
+            break
+        logger.info(f"SKAB fold {fold_idx + 1}/{len(splits)} - Scenario: {scenario}, Seed: {seed}")
         assert_no_group_leakage(df, split, group_col)
 
         train_df = df.iloc[split.train].copy()
         test_df = df.iloc[split.test].copy()
 
-        # Pencere boyutu (W) kadar öteleme yaparak test etiketlerini hizalıyoruz
         W = config.get("automata", "fixed_comparison", "window_size", default=4)
         y_test_aligned = test_df[target_col].to_numpy()[W - 1 :]
 
-        # Gürültü senaryosu seçildiyse test verisine Gaussian gürültüsü ekliyoruz
         test_df_perturbed = test_df.copy()
         if scenario == "gaussian_noise":
             noise_std = config.get("experiments", "gaussian_noise", "std", default=0.05)
@@ -162,10 +201,11 @@ def run_skab_experiment(
             )
             test_df_perturbed[feature_cols] = perturbed_vals
 
-        # --- A. Olasılıksal Otomata Modeli ---
+        logger.info("Fitting automata...")
         automata_pipe = build_fixed_automata_pipeline(config)
         automata_pipe.fit(train_df, feature_cols)
 
+        logger.info("Predicting automata...")
         y_pred_automata, automata_scores, automata_trace, automata_explanations = automata_predict_with_trace(
             automata_pipe,
             test_df_perturbed,
@@ -187,9 +227,9 @@ def run_skab_experiment(
         automata_states.append(automata_pipe.automata.state_count)
         automata_densities.append(automata_pipe.automata.transition_density)
 
-        # --- B. Derin Öğrenme Modelleri (LSTM, GRU vb.) ---
+        #  Derin Öğrenme Modelleri (LSTM, GRU vb.) 
         for dl_model in [m for m in models_to_run if m != "automata"]:
-            # Veri sızıntısını (leakage) önlemek için öznitelikleri sızıntısız normalleştiriyoruz
+            logger.info(f"Training deep learning model: {dl_model} (fold {fold_idx + 1}/{len(splits)})")
             from src.data.preprocessing import LeakageSafePreprocessor
 
             scaler = LeakageSafePreprocessor(use_standard_scaler=True, pca_components=None)
@@ -199,7 +239,7 @@ def run_skab_experiment(
             train_y = train_df[target_col].to_numpy()
             test_y = test_df[target_col].to_numpy()
 
-            # Eğitim verisinin son %10'unu kronolojik olarak validation (erken durdurma) için ayırıyoruz
+            # Eğitim verisinin son %10'unu kronolojik olarak validation için ayırıyoruz
             val_split = int(len(train_X_scaled) * 0.9)
             fit_train_X, fit_val_X = train_X_scaled[:val_split], train_X_scaled[val_split:]
             fit_train_y, fit_val_y = train_y[:val_split], train_y[val_split:]
@@ -217,7 +257,7 @@ def run_skab_experiment(
                 val_y=fit_val_y,
             )
 
-            # Modeli test seti üzerinde değerlendiriyoruz
+            logger.info(f"Evaluating deep learning model: {dl_model} (fold {fold_idx + 1}/{len(splits)})")
             dl_probs = dl_pipe.predict_proba(test_X_scaled)
             dl_preds = (dl_probs >= 0.5).astype(int)
             dl_y_true = test_y[W - 1 :]
@@ -234,9 +274,12 @@ def run_skab_experiment(
     summary: dict[str, Any] = {}
     for m in models_to_run:
         metrics_df = pd.DataFrame(results_by_model[m])
+        
+        std_series = metrics_df.std(ddof=0)
+        std_series = std_series.fillna(0.0)
         summary[m] = {
             "mean": metrics_df.mean().to_dict(),
-            "std": metrics_df.std().to_dict(),
+            "std": std_series.to_dict(),
             "raw": results_by_model[m],
             "outputs": outputs_by_model[m],
         }
@@ -259,6 +302,7 @@ def run_batadal_experiment(
     target_col: str,
     scenario: str,
     seed: int,
+    models_override: list[str] | None = None,
 ) -> dict[str, Any]:
     logger.info(f"Running BATADAL experiment - Scenario: {scenario}, Seed: {seed}")
     set_seed(seed)
@@ -276,11 +320,9 @@ def run_batadal_experiment(
     val_df = df.iloc[split.validation].copy()
     test_df = df.iloc[split.test].copy()
 
-    # Zaman serisi pencere boyutu (W) kadar öteleyerek hedef etiketleri hizalıyoruz
     W = config.get("automata", "fixed_comparison", "window_size", default=4)
     y_test_aligned = test_df[target_col].to_numpy()[W - 1 :]
 
-    # Gürültü ekleme senaryosunun kontrolü
     test_df_perturbed = test_df.copy()
     if scenario == "gaussian_noise":
         noise_std = config.get("experiments", "gaussian_noise", "std", default=0.05)
@@ -293,14 +335,14 @@ def run_batadal_experiment(
         )
         test_df_perturbed[feature_cols] = perturbed_vals
 
-    models_to_run = ["automata"] + config.get("deep_learning", "models", default=["lstm", "gru"])
+    models_to_run = models_override or (["automata"] + config.get("deep_learning", "models", default=["lstm", "gru"]))
     results_by_model: dict[str, dict[str, float]] = {}
 
-    # --- A. Olasılıksal Otomata Modeli ---
+    logger.info("Fitting automata...")
     automata_pipe = build_fixed_automata_pipeline(config)
-    # Veri sızıntısını önlemek için eğitim verisiyle fit ediyoruz
     automata_pipe.fit(train_df, feature_cols)
 
+    logger.info("Predicting automata...")
     y_pred_automata, automata_scores, automata_trace, automata_explanations = automata_predict_with_trace(
         automata_pipe,
         test_df_perturbed,
@@ -318,6 +360,7 @@ def run_batadal_experiment(
 
     # --- B. Derin Öğrenme Modelleri ---
     for dl_model in [m for m in models_to_run if m != "automata"]:
+        logger.info(f"Training deep learning model: {dl_model} (BATADAL)")
         from src.data.preprocessing import LeakageSafePreprocessor
 
         scaler = LeakageSafePreprocessor(use_standard_scaler=True, pca_components=None)
@@ -342,6 +385,7 @@ def run_batadal_experiment(
             val_y=val_y,
         )
 
+        logger.info(f"Evaluating deep learning model: {dl_model} (BATADAL)")
         dl_probs = dl_pipe.predict_proba(test_X_scaled)
         dl_preds = (dl_probs >= 0.5).astype(int)
         dl_y_true = test_y[W - 1 :]
@@ -368,7 +412,6 @@ def run_automata_parameter_variation(
     alphabet_grid = config.get("automata", "parameter_grid", "alphabet_size", default=[3, 4, 5, 6])
 
     variation_results = []
-    # Grid search analizinde tutarlılık sağlamak için sabit seed 42'yi kullanıyoruz
     set_seed(42)
 
     group_col = config.get("datasets", "skab", "group_column")
@@ -424,29 +467,31 @@ def run_automata_parameter_variation(
 
 
 def calculate_statistical_significance(skab_results_by_seed: list[dict[str, Any]]) -> dict[str, Any]:
-    # F folds ve seeds üzerinden F1 skorlarını çıkararak Wilcoxon işaretli sıra testini yapıyoruz
     logger.info("Computing Wilcoxon signed-rank tests...")
     automata_f1 = []
     lstm_f1 = []
     gru_f1 = []
 
     for seed_res in skab_results_by_seed:
-        # Check original scenario
         orig = seed_res["original"]
-        for fold in orig["automata"]["raw"]:
-            automata_f1.append(fold["f1"])
-        for fold in orig["lstm"]["raw"]:
-            lstm_f1.append(fold["f1"])
-        for fold in orig["gru"]["raw"]:
-            gru_f1.append(fold["f1"])
+        if "automata" in orig and "raw" in orig["automata"]:
+            for fold in orig["automata"]["raw"]:
+                automata_f1.append(fold["f1"])
+        if "lstm" in orig and "raw" in orig["lstm"]:
+            for fold in orig["lstm"]["raw"]:
+                lstm_f1.append(fold["f1"])
+        if "gru" in orig and "raw" in orig["gru"]:
+            for fold in orig["gru"]["raw"]:
+                gru_f1.append(fold["f1"])
 
     sig_results = {}
     try:
-        if len(automata_f1) >= 5:
+        if len(automata_f1) >= 5 and len(lstm_f1) == len(automata_f1):
             # Automata vs LSTM
             stat_al, p_val_al = wilcoxon(automata_f1, lstm_f1)
             sig_results["automata_vs_lstm"] = {"statistic": float(stat_al), "p_value": float(p_val_al)}
 
+        if len(automata_f1) >= 5 and len(gru_f1) == len(automata_f1):
             # Automata vs GRU
             stat_ag, p_val_ag = wilcoxon(automata_f1, gru_f1)
             sig_results["automata_vs_gru"] = {"statistic": float(stat_ag), "p_value": float(p_val_ag)}
@@ -458,6 +503,38 @@ def calculate_statistical_significance(skab_results_by_seed: list[dict[str, Any]
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description="Run explainable automata vs deep learning experiments.")
+    parser.add_argument(
+        "--fast",
+        action="store_true",
+        help="Hızlı smoke-run: 1 seed, 1 senaryo (original), sadece automata. Geliştirme sırasında önerilir.",
+    )
+    parser.add_argument(
+        "--seeds",
+        type=str,
+        default="",
+        help="Virgülle ayrılmış seed listesi. Örn: 42,123. Boşsa config kullanılır.",
+    )
+    parser.add_argument(
+        "--scenarios",
+        type=str,
+        default="",
+        help='Virgülle ayrılmış senaryo listesi. Örn: original,gaussian_noise. Boşsa config kullanılır.',
+    )
+    parser.add_argument(
+        "--models",
+        type=str,
+        default="",
+        help='Virgülle ayrılmış model listesi. Örn: automata,lstm,gru,cnn1d. Boşsa config kullanılır.',
+    )
+    parser.add_argument(
+        "--max-folds",
+        type=int,
+        default=0,
+        help="SKAB için en fazla kaç fold çalıştırılsın. 0 veya negatifse tüm fold'lar çalışır.",
+    )
+    args = parser.parse_args()
+
     config = load_config("config/config.yaml")
     results_dir = Path(config.get("paths", "results", default="outputs/results"))
     figures_dir = Path(config.get("paths", "figures", default="outputs/figures"))
@@ -492,9 +569,34 @@ def main() -> None:
         f"BATADAL loaded. Shape: {batadal_df.shape}, Target: {batadal_target}, Features: {len(batadal_feature_cols)}"
     )
 
-    # --- 2. Deneyleri 5 Farklı Seed ve 3 Senaryo Altında Çalıştırıyoruz ---
+    # --- 2. Deneyleri Seed ve Senaryolar Altında Çalıştırıyoruz ---
     seeds = config.get("project", "random_seeds", default=[42, 123, 2026, 7, 999])
     scenarios = config.get("experiments", "scenarios", default=["original", "gaussian_noise", "unseen"])
+    models_override: list[str] | None = None
+    max_folds: int | None = None
+
+    if args.fast:
+        seeds = [42]
+        scenarios = ["original"]
+        models_override = ["automata"]
+        max_folds = 1
+        logger.info("FAST mode enabled: seeds=[42], scenarios=['original'], models=['automata']")
+
+    if args.seeds.strip():
+        seeds = [int(x.strip()) for x in args.seeds.split(",") if x.strip()]
+        logger.info(f"CLI override: seeds={seeds}")
+
+    if args.scenarios.strip():
+        scenarios = [x.strip() for x in args.scenarios.split(",") if x.strip()]
+        logger.info(f"CLI override: scenarios={scenarios}")
+
+    if args.models.strip():
+        models_override = [x.strip() for x in args.models.split(",") if x.strip()]
+        logger.info(f"CLI override: models={models_override}")
+
+    if args.max_folds and args.max_folds > 0:
+        max_folds = int(args.max_folds)
+        logger.info(f"CLI override: max_folds={max_folds}")
 
     skab_full_results = []
     batadal_full_results = []
@@ -512,6 +614,8 @@ def main() -> None:
                 skab_target,
                 scenario,
                 seed,
+                models_override=models_override,
+                max_folds=max_folds,
             )
             skab_seed_res[scenario] = skab_res
 
@@ -523,24 +627,27 @@ def main() -> None:
                 batadal_target,
                 scenario,
                 seed,
+                models_override=models_override,
             )
             batadal_seed_res[scenario] = batadal_res
 
         skab_full_results.append({"seed": seed, **skab_seed_res})
         batadal_full_results.append({"seed": seed, **batadal_seed_res})
 
-    # --- 3. Modeller Arası İstatistiksel Anlamlılık Testi ---
-    significance = calculate_statistical_significance(skab_full_results)
+    
+    significance: dict[str, Any] = {}
+    if not args.fast:
+        significance = calculate_statistical_significance(skab_full_results)
 
-    # --- 4. Otomata Modelinde Parametre Analizi (Duyarlılık Testi) ---
-    variation = run_automata_parameter_variation(
-        config,
-        skab_df,
-        skab_feature_cols,
-        skab_target,
-    )
+    variation: list[dict[str, Any]] = []
+    if not args.fast:
+        variation = run_automata_parameter_variation(
+            config,
+            skab_df,
+            skab_feature_cols,
+            skab_target,
+        )
 
-    # --- 5. Deney Sonuçlarını Dosyalara Kaydediyoruz ---
     logger.info("Saving results...")
     with open(results_dir / "skab_experiments.json", "w") as f:
         json.dump(skab_full_results, f, indent=2)
@@ -554,7 +661,10 @@ def main() -> None:
     with open(results_dir / "automata_parameter_variation.json", "w") as f:
         json.dump(variation, f, indent=2)
 
-    generate_all_visualizations(results_dir, figures_dir)
+    if not args.fast:
+        generate_all_visualizations(results_dir, figures_dir)
+    else:
+        logger.info("FAST mode: skipping full visualization generation.")
     logger.info(f"All experiments executed successfully. Outputs stored in {results_dir}")
 
 

@@ -60,15 +60,21 @@ class ProbabilisticAutomata:
         )
 
     def transition_probability(self, source: str, target: str) -> float:
-        return self.transition_probabilities_.get(source, {}).get(target, self.smoothing)
+        value: Any = self.transition_probabilities_.get(source, {}).get(target, self.smoothing)
+        # Bazı edge-case'lerde (örn. tip dönüşümleri / serileştirme) olasılık değeri float dışı gelebilir.
+        # Otomata olasılık hesapları deterministik ve sayısal olmalı; bu yüzden güvenli biçimde float'a zorluyoruz.
+        try:
+            return float(value)
+        except (TypeError, ValueError):
+            return float(self.smoothing)
 
     def path_probability(self, patterns: list[str]) -> float:
         if len(patterns) < 2:
             return 1.0
         mapped = [self.map_pattern(pattern).mapped if self.states_ else pattern for pattern in patterns]
-        probability = 1.0
+        probability: float = 1.0
         for source, target in zip(mapped[:-1], mapped[1:]):
-            probability *= self.transition_probability(source, target)
+            probability = float(probability) * self.transition_probability(str(source), str(target))
         return float(probability)
 
     def predict_sequence(self, patterns: list[str]) -> dict[str, Any]:

@@ -20,7 +20,9 @@ def load_batadal_training_dataset_2(path: str | Path) -> pd.DataFrame:
     csv_path = Path(path)
     if not csv_path.exists():
         raise FileNotFoundError(f"BATADAL Training Dataset 2 not found: {csv_path}")
-    return pd.read_csv(csv_path, sep=None, engine="python")
+    df = pd.read_csv(csv_path, sep=None, engine="python")
+    df.columns = [column.strip() for column in df.columns]
+    return df
 
 
 def infer_batadal_target_column(df: pd.DataFrame, configured_target: str | None = None) -> str:
