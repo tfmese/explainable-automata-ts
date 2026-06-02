@@ -8,7 +8,7 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
-from scipy.stats import wilcoxon
+from scipy.stats import binomtest, wilcoxon
 
 from src.config import load_config, ProjectConfig
 from src.data.batadal_loader import (
@@ -75,7 +75,13 @@ def automata_predict_with_trace(
 ) -> tuple[np.ndarray, list[float], list[dict[str, Any]], list[dict[str, Any]]]:
     patterns = automata_pipe.transform_patterns(df)
     if scenario == "unseen":
-        patterns = inject_unseen_pattern(patterns, replacement="zzzz")
+        
+        patterns = inject_unseen_pattern(
+            patterns,
+            replacement="zzzz",
+            forbidden_patterns=set(automata_pipe.automata.states_),
+            alphabet_size=automata_pipe.alphabet_size,
+        )
 
     # Not: naive prefix-skorlaması \(O(n^2)\) olduğu için (her prefix için yeniden olasılık hesaplayınca)
     # deney süresi saatlere uzayabiliyor. Burada geçiş olasılıklarını artımlı birikimli hesaplayarak
@@ -358,7 +364,6 @@ def run_batadal_experiment(
         "transition_probabilities": automata_pipe.automata.transition_probabilities_,
     }
 
-    # --- B. Derin Öğrenme Modelleri ---
     for dl_model in [m for m in models_to_run if m != "automata"]:
         logger.info(f"Training deep learning model: {dl_model} (BATADAL)")
         from src.data.preprocessing import LeakageSafePreprocessor
@@ -467,36 +472,108 @@ def run_automata_parameter_variation(
 
 
 def calculate_statistical_significance(skab_results_by_seed: list[dict[str, Any]]) -> dict[str, Any]:
-    logger.info("Computing Wilcoxon signed-rank tests...")
-    automata_f1 = []
-    lstm_f1 = []
-    gru_f1 = []
+    logger.info("Computing Wilcoxon and McNemar tests...")
+    automata_f1: list[float] = []
+    lstm_f1: list[float] = []
+    gru_f1: list[float] = []
+
+    # McNemar için paired sayımlar :
+    # b: automata 1 iken DL 0
+    # c: automata 0 iken DL 1
+    mcnemar_automata_vs_lstm = {"b": 0, "c": 0}
+    mcnemar_automata_vs_gru = {"b": 0, "c": 0}
+
+    def _pool_mcnemar_counts(
+        orig: dict[str, Any], model_a: str, model_b: str, acc: dict[str, int]
+    ) -> None:
+        if model_a not in orig or model_b not in orig:
+            return
+        a_outputs = orig[model_a].get("outputs", [])
+        b_outputs = orig[model_b].get("outputs", [])
+        if not a_outputs or not b_outputs:
+            return
+
+        a_by_fold = {o.get("fold"): o for o in a_outputs if "fold" in o}
+        b_by_fold = {o.get("fold"): o for o in b_outputs if "fold" in o}
+        common_folds = sorted(set(a_by_fold).intersection(b_by_fold))
+        for fold_id in common_folds:
+            a_preds = a_by_fold[fold_id].get("predictions", [])
+            b_preds = b_by_fold[fold_id].get("predictions", [])
+            if not a_preds or not b_preds:
+                continue
+
+            a_map = {r["time_step"]: (r["y_true"], r["y_pred"]) for r in a_preds if "time_step" in r}
+            b_map = {r["time_step"]: (r["y_true"], r["y_pred"]) for r in b_preds if "time_step" in r}
+            common_ts = sorted(set(a_map).intersection(b_map))
+            if not common_ts:
+                continue
+
+            for ts in common_ts:
+                y_true_a, pred_a = a_map[ts]
+                y_true_b, pred_b = b_map[ts]
+                if y_true_a != y_true_b:
+                    # Aynı fold içinde zaman hizası farklıysa paired test güvenilmez; atlıyoruz.
+                    continue
+
+                if pred_a == 1 and pred_b == 0:
+                    acc["b"] += 1
+                elif pred_a == 0 and pred_b == 1:
+                    acc["c"] += 1
 
     for seed_res in skab_results_by_seed:
-        orig = seed_res["original"]
+        orig = seed_res.get("original", {})
+
+        # Wilcoxon için: fold bazlı F1 skorları
         if "automata" in orig and "raw" in orig["automata"]:
             for fold in orig["automata"]["raw"]:
-                automata_f1.append(fold["f1"])
+                automata_f1.append(float(fold["f1"]))
         if "lstm" in orig and "raw" in orig["lstm"]:
             for fold in orig["lstm"]["raw"]:
-                lstm_f1.append(fold["f1"])
+                lstm_f1.append(float(fold["f1"]))
         if "gru" in orig and "raw" in orig["gru"]:
             for fold in orig["gru"]["raw"]:
-                gru_f1.append(fold["f1"])
+                gru_f1.append(float(fold["f1"]))
 
-    sig_results = {}
+        # McNemar için: paired tahminleri pool et
+        _pool_mcnemar_counts(orig, "automata", "lstm", mcnemar_automata_vs_lstm)
+        _pool_mcnemar_counts(orig, "automata", "gru", mcnemar_automata_vs_gru)
+
+    sig_results: dict[str, Any] = {}
     try:
-        if len(automata_f1) >= 5 and len(lstm_f1) == len(automata_f1):
-            # Automata vs LSTM
+        if len(automata_f1) >= 5 and len(lstm_f1) == len(automata_f1) and len(lstm_f1) > 0:
             stat_al, p_val_al = wilcoxon(automata_f1, lstm_f1)
             sig_results["automata_vs_lstm"] = {"statistic": float(stat_al), "p_value": float(p_val_al)}
 
-        if len(automata_f1) >= 5 and len(gru_f1) == len(automata_f1):
-            # Automata vs GRU
+        if len(automata_f1) >= 5 and len(gru_f1) == len(automata_f1) and len(gru_f1) > 0:
             stat_ag, p_val_ag = wilcoxon(automata_f1, gru_f1)
             sig_results["automata_vs_gru"] = {"statistic": float(stat_ag), "p_value": float(p_val_ag)}
+
+        # McNemar exact (binom test) - pooled
+        n01_lstm = int(mcnemar_automata_vs_lstm["b"])
+        n10_lstm = int(mcnemar_automata_vs_lstm["c"])
+        n_lstm = n01_lstm + n10_lstm
+        if n_lstm > 0:
+            res_lstm = binomtest(k=n01_lstm, n=n_lstm, p=0.5, alternative="two-sided")
+            sig_results["mcnemar_automata_vs_lstm"] = {
+                "b": n01_lstm,
+                "c": n10_lstm,
+                "n": n_lstm,
+                "p_value": float(res_lstm.pvalue),
+            }
+
+        n01_gru = int(mcnemar_automata_vs_gru["b"])
+        n10_gru = int(mcnemar_automata_vs_gru["c"])
+        n_gru = n01_gru + n10_gru
+        if n_gru > 0:
+            res_gru = binomtest(k=n01_gru, n=n_gru, p=0.5, alternative="two-sided")
+            sig_results["mcnemar_automata_vs_gru"] = {
+                "b": n01_gru,
+                "c": n10_gru,
+                "n": n_gru,
+                "p_value": float(res_gru.pvalue),
+            }
     except Exception as e:
-        logger.warning(f"Could not compute Wilcoxon significance: {e}")
+        logger.warning(f"Could not compute significance tests: {e}")
         sig_results["error"] = str(e)
 
     return sig_results
@@ -541,7 +618,6 @@ def main() -> None:
     results_dir.mkdir(parents=True, exist_ok=True)
     figures_dir.mkdir(parents=True, exist_ok=True)
 
-    # --- 1. Veri Setlerini Yüklüyoruz ---
     logger.info("Loading Datasets...")
 
     # A. SKAB

@@ -41,7 +41,12 @@ class ProbabilisticAutomata:
                 target: count / total for target, count in counts.items()
             }
 
-        train_scores = [self.path_probability(patterns[: idx + 1]) for idx in range(1, len(patterns))]
+        train_scores = []
+        path_probability = 1.0
+        for idx in range(1, len(patterns)):
+            prob = self.transition_probability(patterns[idx - 1], patterns[idx])
+            path_probability *= prob
+            train_scores.append(path_probability)
         self.threshold_ = float(np.quantile(train_scores, self.anomaly_quantile))
         return self
 

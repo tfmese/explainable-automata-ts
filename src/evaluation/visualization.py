@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from sklearn.metrics import precision_recall_curve
+from sklearn.metrics import auc, precision_recall_curve, roc_curve
 
 logger = logging.getLogger("visualization")
 
@@ -223,6 +223,33 @@ def plot_precision_recall_from_records(records: list[dict[str, Any]], title: str
     plt.close()
 
 
+def plot_roc_from_records(records: list[dict[str, Any]], title: str, save_path: Path) -> None:
+    if not records:
+        return
+
+    y_true = np.asarray([row["y_true"] for row in records])
+    scores = np.asarray([row["anomaly_score"] for row in records])
+
+    if len(np.unique(y_true)) < 2:
+        return
+
+    fpr, tpr, _ = roc_curve(y_true, scores)
+    roc_auc = float(auc(fpr, tpr))
+
+    plt.figure(figsize=(6, 5))
+    plt.plot(fpr, tpr, color="#3B82F6", lw=2, label=f"AUC={roc_auc:.3f}")
+    plt.plot([0, 1], [0, 1], color="#9CA3AF", lw=1, linestyle="--")
+    plt.title(title, fontsize=14, fontweight="bold", pad=15)
+    plt.xlabel("False Positive Rate", fontsize=12)
+    plt.ylabel("True Positive Rate", fontsize=12)
+    plt.xlim(0, 1.02)
+    plt.ylim(0, 1.02)
+    plt.legend(frameon=True, facecolor="#111827", edgecolor="#374151")
+    plt.tight_layout()
+    plt.savefig(save_path, dpi=300, facecolor="#0B0F19")
+    plt.close()
+
+
 def emit_model_diagnostics(dataset_name: str, scenario_data: dict[str, Any], figures_path: Path) -> None:
     for model_name, model_data in scenario_data.items():
         if model_name in {"automata_states", "automata_densities", "automata_density"}:
@@ -263,6 +290,11 @@ def emit_model_diagnostics(dataset_name: str, scenario_data: dict[str, Any], fig
             f"{dataset_name.upper()} {model_name.upper()} Precision-Recall",
             figures_path / f"{dataset_name}_{model_name}_precision_recall.png",
         )
+        plot_roc_from_records(
+            records,
+            f"{dataset_name.upper()} {model_name.upper()} ROC Curve",
+            figures_path / f"{dataset_name}_{model_name}_roc_curve.png",
+        )
 
         if model_name == "automata":
             transitions = first_output.get("transition_probabilities", {})
@@ -297,8 +329,12 @@ def generate_all_visualizations(results_root: str | Path, figures_root: str | Pa
         metrics_list = []
         for seed_data in skab_data:
             seed = seed_data["seed"]
-            for scenario in ["original", "gaussian_noise", "unseen"]:
+            supported_scenarios = {"original", "gaussian_noise", "unseen"}
+            scenario_names = [s for s in seed_data.keys() if s in supported_scenarios]
+            for scenario in scenario_names:
                 for m in models:
+                    if m not in seed_data[scenario]:
+                        continue
                     mean_f1 = seed_data[scenario][m]["mean"]["f1"]
                     mean_acc = seed_data[scenario][m]["mean"]["accuracy"]
                     metrics_list.append(
