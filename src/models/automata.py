@@ -93,6 +93,25 @@ class ProbabilisticAutomata:
             "confidence": probability,
         }
 
+    def predict_prefix_labels(self, patterns: list[str]) -> np.ndarray:
+        """Her zaman adımı için prefix olasılığına göre etiket üretir (O(n))."""
+        if not patterns:
+            return np.asarray([], dtype=int)
+
+        threshold = self.threshold_ if self.threshold_ is not None else self.smoothing
+        mappings = [self.map_pattern(pattern) for pattern in patterns]
+        path_probability = 1.0
+        predictions: list[int] = []
+
+        for idx, _current in enumerate(mappings):
+            if idx > 0:
+                previous = mappings[idx - 1]
+                current = mappings[idx]
+                path_probability *= self.transition_probability(previous.mapped, current.mapped)
+            predictions.append(1 if path_probability <= threshold else 0)
+
+        return np.asarray(predictions, dtype=int)
+
     @property
     def state_count(self) -> int:
         return len(self.states_)
