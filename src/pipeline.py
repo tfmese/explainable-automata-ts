@@ -19,9 +19,11 @@ class AutomataPipeline:
     alphabet_size: int
 
     def __post_init__(self) -> None:
+        missing_cfg = self.config.get("preprocessing", "missing_values", default={}) or {}
         self.preprocessor = LeakageSafePreprocessor(
             use_standard_scaler=self.config.get("preprocessing", "normalization") == "standard",
             pca_components=self.config.get("preprocessing", "automata_pca_components"),
+            missing_strategy=missing_cfg.get("strategy", "none"),
         )
         self.automata = ProbabilisticAutomata(
             smoothing=self.config.get("automata", "smoothing"),

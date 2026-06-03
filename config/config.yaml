@@ -22,7 +22,7 @@
       "prefer_stratified_group_kfold": true
     },
     "batadal": {
-      "target_column": null,
+      "target_column": "ATT_FLAG",
       "time_columns": ["DATETIME", "Date", "Time"],
       "split": {
         "train": 0.6,
@@ -34,7 +34,10 @@
   "preprocessing": {
     "normalization": "standard",
     "automata_pca_components": 1,
-    "fit_transforms_on_train_only": true
+    "fit_transforms_on_train_only": true,
+    "missing_values": {
+      "strategy": "median"
+    }
   },
   "automata": {
     "fixed_comparison": {
