@@ -26,6 +26,7 @@ from src.evaluation.statistical_tests import calculate_statistical_significance
 from src.evaluation.visualization import generate_all_visualizations
 from src.experiments.experiment_logger import ExperimentLogger, build_experiment_record
 from src.experiments.parameter_sweep import run_parameter_grid
+from src.experiments.results_io import prepare_results_dir, write_json_result
 from src.experiments.scenarios import add_gaussian_noise, inject_unseen_pattern
 from src.models.deep_learning_pipeline import DeepLearningPipeline, set_seed
 from src.pipeline import build_fixed_automata_pipeline
@@ -573,10 +574,21 @@ def main() -> None:
         default=0,
         help="SKAB için en fazla kaç fold çalıştırılsın. 0 veya negatifse tüm fold'lar çalışır.",
     )
+    parser.add_argument(
+        "--skip-parameter-grid",
+        action="store_true",
+        help="Ana deneyler bittikten sonra otomata parametre taramasını atla (uzun süren faz).",
+    )
+    parser.add_argument(
+        "--timestamped-results",
+        action="store_true",
+        help="Sonuçları outputs/results/run_YYYYMMDD_HHMMSS alt klasörüne yaz.",
+    )
     args = parser.parse_args()
 
     config = load_config("config/config.yaml")
-    results_dir = Path(config.get("paths", "results", default="outputs/results"))
+    base_results_dir = Path(config.get("paths", "results", default="outputs/results"))
+    results_dir = prepare_results_dir(base_results_dir, timestamped=args.timestamped_results)
     figures_dir = Path(config.get("paths", "figures", default="outputs/figures"))
     logs_dir = Path(config.get("paths", "logs", default="outputs/logs"))
     explanations_dir = results_dir.parent / EXPLANATIONS_DIR_NAME
@@ -700,27 +712,32 @@ def main() -> None:
 
     skab_variation: list[dict[str, Any]] = []
     batadal_variation: list[dict[str, Any]] = []
-    if not args.fast:
+    run_parameter_grid_phase = not args.fast and not args.skip_parameter_grid
+    if run_parameter_grid_phase:
         skab_variation = run_skab_parameter_variation(config, skab_df, skab_feature_cols, skab_target)
         batadal_variation = run_batadal_parameter_variation(
             config, batadal_df, batadal_feature_cols, batadal_target
         )
+    elif args.skip_parameter_grid:
+        logger.info("Parameter grid phase skipped (--skip-parameter-grid).")
 
-    logger.info("Saving results...")
-    with open(results_dir / "skab_experiments.json", "w") as f:
-        json.dump(skab_full_results, f, indent=2)
-
-    with open(results_dir / "batadal_experiments.json", "w") as f:
-        json.dump(batadal_full_results, f, indent=2)
-
-    with open(results_dir / "statistical_significance.json", "w") as f:
-        json.dump(significance, f, indent=2)
-
-    with open(results_dir / "automata_parameter_variation.json", "w") as f:
-        json.dump(skab_variation, f, indent=2)
-
-    with open(results_dir / "batadal_parameter_variation.json", "w") as f:
-        json.dump(batadal_variation, f, indent=2)
+    logger.info("Saving results to %s", results_dir)
+    backup_existing = not args.timestamped_results
+    write_json_result(results_dir, "skab_experiments.json", skab_full_results, backup_existing=backup_existing)
+    write_json_result(results_dir, "batadal_experiments.json", batadal_full_results, backup_existing=backup_existing)
+    write_json_result(results_dir, "statistical_significance.json", significance, backup_existing=backup_existing)
+    write_json_result(
+        results_dir,
+        "automata_parameter_variation.json",
+        skab_variation,
+        backup_existing=backup_existing,
+    )
+    write_json_result(
+        results_dir,
+        "batadal_parameter_variation.json",
+        batadal_variation,
+        backup_existing=backup_existing,
+    )
 
     experiment_logger.save_run_summary(
         {
@@ -728,6 +745,9 @@ def main() -> None:
             "scenarios": scenarios,
             "models": models_override or config.get("deep_learning", "models", default=[]),
             "fast_mode": args.fast,
+            "skip_parameter_grid": args.skip_parameter_grid,
+            "timestamped_results": args.timestamped_results,
+            "results_dir": str(results_dir),
             "skab_target": skab_target,
             "batadal_target": batadal_target,
             "record_count": sum(1 for _ in experiment_logger.jsonl_path.open(encoding="utf-8"))
