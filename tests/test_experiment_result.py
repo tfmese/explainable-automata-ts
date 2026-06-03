@@ -16,6 +16,7 @@ class TestExperimentResult(unittest.TestCase):
 
         self.assertEqual(result.dataset, "skab")
         self.assertEqual(result.metrics["f1"], 0.91)
+        self.assertEqual(result.to_dict()["model"], "automata")
 
 
 if __name__ == "__main__":
