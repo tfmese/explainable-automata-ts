@@ -250,7 +250,13 @@ def plot_roc_from_records(records: list[dict[str, Any]], title: str, save_path: 
     plt.close()
 
 
-def emit_model_diagnostics(dataset_name: str, scenario_data: dict[str, Any], figures_path: Path) -> None:
+def emit_model_diagnostics(
+    dataset_name: str,
+    scenario_data: dict[str, Any],
+    figures_path: Path,
+    scenario_suffix: str | None = None,
+) -> None:
+    suffix = f"_{scenario_suffix}" if scenario_suffix else ""
     for model_name, model_data in scenario_data.items():
         if model_name in {"automata_states", "automata_densities", "automata_density"}:
             continue
@@ -281,25 +287,31 @@ def emit_model_diagnostics(dataset_name: str, scenario_data: dict[str, Any], fig
                 int(metrics["fn"]),
                 int(metrics["tn"]),
                 f"{dataset_name.upper()} {model_name.upper()} Confusion Matrix",
-                figures_path / f"{dataset_name}_{model_name}_confusion_matrix.png",
+                figures_path / f"{dataset_name}_{model_name}{suffix}_confusion_matrix.png",
             )
 
         records = first_output.get("predictions", [])
         plot_precision_recall_from_records(
             records,
             f"{dataset_name.upper()} {model_name.upper()} Precision-Recall",
-            figures_path / f"{dataset_name}_{model_name}_precision_recall.png",
+            figures_path / f"{dataset_name}_{model_name}{suffix}_precision_recall.png",
         )
         plot_roc_from_records(
             records,
             f"{dataset_name.upper()} {model_name.upper()} ROC Curve",
-            figures_path / f"{dataset_name}_{model_name}_roc_curve.png",
+            figures_path / f"{dataset_name}_{model_name}{suffix}_roc_curve.png",
         )
 
         if model_name == "automata":
             transitions = first_output.get("transition_probabilities", {})
-            plot_transition_heatmap(transitions, figures_path / f"{dataset_name}_automata_transition_heatmap.png")
-            plot_automata_state_diagram(transitions, figures_path / f"{dataset_name}_automata_state_diagram.png")
+            plot_transition_heatmap(
+                transitions,
+                figures_path / f"{dataset_name}_automata{suffix}_transition_heatmap.png",
+            )
+            plot_automata_state_diagram(
+                transitions,
+                figures_path / f"{dataset_name}_automata{suffix}_state_diagram.png",
+            )
 
 
 def generate_all_visualizations(results_root: str | Path, figures_root: str | Path) -> None:
@@ -308,13 +320,27 @@ def generate_all_visualizations(results_root: str | Path, figures_root: str | Pa
     figures_path.mkdir(parents=True, exist_ok=True)
 
     # 1. Aşama: Parametre Duyarlılık Çizimleri (Otomata modeli için grid arama sonuçları)
-    var_file = results_path / "automata_parameter_variation.json"
-    if var_file.exists():
-        logger.info("Generating parameter sensitivity plots...")
-        with open(var_file) as f:
+    skab_var_file = results_path / "automata_parameter_variation.json"
+    if skab_var_file.exists():
+        logger.info("Generating SKAB parameter sensitivity plots...")
+        with open(skab_var_file) as f:
             variation_data = json.load(f)
         plot_parameter_sensitivity(variation_data, figures_path / "parameter_sensitivity.png")
         plot_state_sensitivity(variation_data, figures_path / "state_sensitivity.png")
+
+    batadal_var_file = results_path / "batadal_parameter_variation.json"
+    if batadal_var_file.exists():
+        logger.info("Generating BATADAL parameter sensitivity plots...")
+        with open(batadal_var_file) as f:
+            batadal_variation = json.load(f)
+        plot_parameter_sensitivity(
+            batadal_variation,
+            figures_path / "batadal_parameter_sensitivity.png",
+        )
+        plot_state_sensitivity(
+            batadal_variation,
+            figures_path / "batadal_state_sensitivity.png",
+        )
 
     skab_file = results_path / "skab_experiments.json"
     if skab_file.exists():
@@ -359,13 +385,75 @@ def generate_all_visualizations(results_root: str | Path, figures_root: str | Pa
         plt.savefig(figures_path / "model_comparison_skab.png", dpi=300, facecolor="#0B0F19")
         plt.close()
 
-        emit_model_diagnostics("skab", skab_data[0]["original"], figures_path)
+        supported_scenarios = {"original", "gaussian_noise", "unseen"}
+        for scenario in supported_scenarios:
+            if scenario in skab_data[0]:
+                emit_model_diagnostics("skab", skab_data[0][scenario], figures_path, scenario_suffix=scenario)
 
     batadal_file = results_path / "batadal_experiments.json"
     if batadal_file.exists():
         logger.info("Generating BATADAL diagnostic plots...")
         with open(batadal_file) as f:
             batadal_data = json.load(f)
-        emit_model_diagnostics("batadal", batadal_data[0]["original"], figures_path)
+
+        batadal_metrics_list = []
+        supported_scenarios = {"original", "gaussian_noise", "unseen"}
+        for seed_data in batadal_data:
+            seed = seed_data["seed"]
+            scenario_names = [s for s in seed_data.keys() if s in supported_scenarios]
+            for scenario in scenario_names:
+                scenario_payload = seed_data[scenario]
+                models = [
+                    key
+                    for key in scenario_payload
+                    if key not in {"automata_states", "automata_density", "automata_densities"}
+                ]
+                for model_name in models:
+                    metrics = scenario_payload[model_name].get("metrics", {})
+                    if "f1" not in metrics:
+                        continue
+                    batadal_metrics_list.append(
+                        {
+                            "Seed": seed,
+                            "Scenario": scenario,
+                            "Model": model_name.upper(),
+                            "F1 Score": metrics["f1"],
+                            "Accuracy": metrics.get("accuracy", 0.0),
+                        }
+                    )
+
+        if batadal_metrics_list:
+            df_batadal = pd.DataFrame(batadal_metrics_list)
+            plt.figure(figsize=(10, 6))
+            sns.barplot(
+                data=df_batadal,
+                x="Scenario",
+                y="F1 Score",
+                hue="Model",
+                palette="rocket",
+                errorbar="sd",
+            )
+            plt.title(
+                "Model F1 Performance Comparison across Scenarios (BATADAL)",
+                fontsize=14,
+                fontweight="bold",
+                pad=15,
+            )
+            plt.ylabel("F1 Score", fontsize=12)
+            plt.xlabel("Experiment Scenario", fontsize=12)
+            plt.ylim(0, 1.05)
+            plt.legend(frameon=True, facecolor="#111827", edgecolor="#374151")
+            plt.tight_layout()
+            plt.savefig(figures_path / "model_comparison_batadal.png", dpi=300, facecolor="#0B0F19")
+            plt.close()
+
+        for scenario in supported_scenarios:
+            if scenario in batadal_data[0]:
+                emit_model_diagnostics(
+                    "batadal",
+                    batadal_data[0][scenario],
+                    figures_path,
+                    scenario_suffix=scenario,
+                )
 
     logger.info(f"Visualizations successfully generated and saved to {figures_path}")
