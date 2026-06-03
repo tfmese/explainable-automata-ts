@@ -8,8 +8,6 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
-from scipy.stats import binomtest, wilcoxon
-
 from src.config import load_config, ProjectConfig
 from src.data.batadal_loader import (
     batadal_feature_columns,
@@ -22,11 +20,15 @@ from src.data.splits import (
     make_batadal_chronological_split,
     make_skab_group_folds,
 )
+from src.data.preprocessing import build_leakage_safe_preprocessor
 from src.evaluation.metrics import classification_metrics
+from src.evaluation.statistical_tests import calculate_statistical_significance
 from src.evaluation.visualization import generate_all_visualizations
+from src.experiments.experiment_logger import ExperimentLogger, build_experiment_record
+from src.experiments.parameter_sweep import run_parameter_grid
 from src.experiments.scenarios import add_gaussian_noise, inject_unseen_pattern
 from src.models.deep_learning_pipeline import DeepLearningPipeline, set_seed
-from src.pipeline import AutomataPipeline, build_fixed_automata_pipeline
+from src.pipeline import build_fixed_automata_pipeline
 
 # Log kayıtlarını konsola yazdırmak için yapılandırıyoruz
 logging.basicConfig(
@@ -37,6 +39,30 @@ logger = logging.getLogger("run_experiments")
 
 MAX_STORED_PREDICTIONS = 2_000
 MAX_STORED_EXPLANATIONS = 25
+EXPLANATIONS_DIR_NAME = "explanations"
+
+
+def automata_experiment_parameters(config: ProjectConfig) -> dict[str, Any]:
+    fixed = config.get("automata", "fixed_comparison")
+    return {
+        "window_size": fixed["window_size"],
+        "alphabet_size": fixed["alphabet_size"],
+    }
+
+
+def export_automata_explanations(
+    output_dir: Path,
+    dataset: str,
+    scenario: str,
+    seed: int,
+    samples: list[dict[str, Any]],
+) -> None:
+    if not samples:
+        return
+    output_dir.mkdir(parents=True, exist_ok=True)
+    path = output_dir / f"{dataset}_{scenario}_seed{seed}_explanations.json"
+    with path.open("w", encoding="utf-8") as handle:
+        json.dump(samples, handle, indent=2, ensure_ascii=False)
 
 
 def evaluate_predictions(y_true: np.ndarray, y_pred: np.ndarray) -> dict[str, float]:
@@ -159,6 +185,7 @@ def run_skab_experiment(
     seed: int,
     models_override: list[str] | None = None,
     max_folds: int | None = None,
+    experiment_logger: ExperimentLogger | None = None,
 ) -> dict[str, Any]:
     logger.info(f"Running SKAB experiment - Scenario: {scenario}, Seed: {seed}")
     set_seed(seed)
@@ -221,6 +248,22 @@ def run_skab_experiment(
 
         automata_metrics = evaluate_predictions(y_test_aligned, y_pred_automata)
         results_by_model["automata"].append(automata_metrics)
+        if experiment_logger is not None:
+            experiment_logger.log(
+                build_experiment_record(
+                    dataset="skab",
+                    model="automata",
+                    scenario=scenario,
+                    seed=seed,
+                    parameters=automata_experiment_parameters(config),
+                    metrics=automata_metrics,
+                    fold=fold_idx,
+                    extra={
+                        "state_count": automata_pipe.automata.state_count,
+                        "transition_density": automata_pipe.automata.transition_density,
+                    },
+                )
+            )
         outputs_by_model["automata"].append(
             {
                 "fold": fold_idx,
@@ -236,9 +279,7 @@ def run_skab_experiment(
         #  Derin Öğrenme Modelleri (LSTM, GRU vb.) 
         for dl_model in [m for m in models_to_run if m != "automata"]:
             logger.info(f"Training deep learning model: {dl_model} (fold {fold_idx + 1}/{len(splits)})")
-            from src.data.preprocessing import LeakageSafePreprocessor
-
-            scaler = LeakageSafePreprocessor(use_standard_scaler=True, pca_components=None)
+            scaler = build_leakage_safe_preprocessor(config)
             train_X_scaled = scaler.fit_transform(train_df, feature_cols)
             test_X_scaled = scaler.transform(test_df_perturbed)
 
@@ -269,6 +310,20 @@ def run_skab_experiment(
             dl_y_true = test_y[W - 1 :]
             dl_metrics = evaluate_predictions(dl_y_true, dl_preds)
             results_by_model[dl_model].append(dl_metrics)
+            if experiment_logger is not None:
+                dl_params = automata_experiment_parameters(config)
+                dl_params["deep_learning_model"] = dl_model
+                experiment_logger.log(
+                    build_experiment_record(
+                        dataset="skab",
+                        model=dl_model,
+                        scenario=scenario,
+                        seed=seed,
+                        parameters=dl_params,
+                        metrics=dl_metrics,
+                        fold=fold_idx,
+                    )
+                )
             outputs_by_model[dl_model].append(
                 {
                     "fold": fold_idx,
@@ -309,6 +364,7 @@ def run_batadal_experiment(
     scenario: str,
     seed: int,
     models_override: list[str] | None = None,
+    experiment_logger: ExperimentLogger | None = None,
 ) -> dict[str, Any]:
     logger.info(f"Running BATADAL experiment - Scenario: {scenario}, Seed: {seed}")
     set_seed(seed)
@@ -356,19 +412,33 @@ def run_batadal_experiment(
         window_size=W,
     )
 
+    automata_metrics = evaluate_predictions(y_test_aligned, y_pred_automata)
     results_by_model["automata"] = {
-        "metrics": evaluate_predictions(y_test_aligned, y_pred_automata),
+        "metrics": automata_metrics,
         "predictions": compact_prediction_records(y_test_aligned, y_pred_automata, automata_scores, W),
         "explanation_trace": automata_trace,
         "full_explanation_samples": automata_explanations,
         "transition_probabilities": automata_pipe.automata.transition_probabilities_,
     }
+    if experiment_logger is not None:
+        experiment_logger.log(
+            build_experiment_record(
+                dataset="batadal",
+                model="automata",
+                scenario=scenario,
+                seed=seed,
+                parameters=automata_experiment_parameters(config),
+                metrics=automata_metrics,
+                extra={
+                    "state_count": automata_pipe.automata.state_count,
+                    "transition_density": automata_pipe.automata.transition_density,
+                },
+            )
+        )
 
     for dl_model in [m for m in models_to_run if m != "automata"]:
         logger.info(f"Training deep learning model: {dl_model} (BATADAL)")
-        from src.data.preprocessing import LeakageSafePreprocessor
-
-        scaler = LeakageSafePreprocessor(use_standard_scaler=True, pca_components=None)
+        scaler = build_leakage_safe_preprocessor(config)
         train_X_scaled = scaler.fit_transform(train_df, feature_cols)
         val_X_scaled = scaler.transform(val_df)
         test_X_scaled = scaler.transform(test_df_perturbed)
@@ -394,10 +464,24 @@ def run_batadal_experiment(
         dl_probs = dl_pipe.predict_proba(test_X_scaled)
         dl_preds = (dl_probs >= 0.5).astype(int)
         dl_y_true = test_y[W - 1 :]
+        dl_metrics = evaluate_predictions(dl_y_true, dl_preds)
         results_by_model[dl_model] = {
-            "metrics": evaluate_predictions(dl_y_true, dl_preds),
+            "metrics": dl_metrics,
             "predictions": compact_prediction_records(dl_y_true, dl_preds, dl_probs.tolist(), W),
         }
+        if experiment_logger is not None:
+            dl_params = automata_experiment_parameters(config)
+            dl_params["deep_learning_model"] = dl_model
+            experiment_logger.log(
+                build_experiment_record(
+                    dataset="batadal",
+                    model=dl_model,
+                    scenario=scenario,
+                    seed=seed,
+                    parameters=dl_params,
+                    metrics=dl_metrics,
+                )
+            )
 
     return {
         **results_by_model,
@@ -406,19 +490,14 @@ def run_batadal_experiment(
     }
 
 
-def run_automata_parameter_variation(
+def run_skab_parameter_variation(
     config: ProjectConfig,
     skab_df: pd.DataFrame,
     skab_feature_cols: list[str],
     skab_target_col: str,
 ) -> list[dict[str, Any]]:
-    logger.info("Running Automata Parameter Variation Analysis...")
-    window_grid = config.get("automata", "parameter_grid", "window_size", default=[3, 4, 5, 6])
-    alphabet_grid = config.get("automata", "parameter_grid", "alphabet_size", default=[3, 4, 5, 6])
-
-    variation_results = []
+    logger.info("Running SKAB automata parameter variation...")
     set_seed(42)
-
     group_col = config.get("datasets", "skab", "group_column")
     n_splits = config.get("datasets", "skab", "n_splits", default=5)
     splits = make_skab_group_folds(
@@ -428,155 +507,39 @@ def run_automata_parameter_variation(
         n_splits=n_splits,
         seed=42,
     )
-
-    for W in window_grid:
-        for A in alphabet_grid:
-            logger.info(f"Grid Search - window_size: {W}, alphabet_size: {A}")
-            f1_scores = []
-            state_counts = []
-            transition_densities = []
-
-            for split in splits:
-                train_df = skab_df.iloc[split.train]
-                test_df = skab_df.iloc[split.test]
-
-                y_test_aligned = test_df[skab_target_col].to_numpy()[W - 1 :]
-
-                # Belirlenen W ve A değerleriyle yeni bir Otomata hattı ayağa kaldırıyoruz
-                pipe = AutomataPipeline(config=config, window_size=W, alphabet_size=A)
-                pipe.fit(train_df, skab_feature_cols)
-
-                test_patterns = pipe.transform_patterns(test_df)
-                y_pred = []
-                for idx in range(1, len(test_patterns) + 1):
-                    decision_dict = pipe.automata.predict_sequence(test_patterns[:idx])
-                    y_pred.append(1 if decision_dict["decision"] == "anomaly" else 0)
-
-                metrics = evaluate_predictions(y_test_aligned, np.asarray(y_pred))
-                f1_scores.append(metrics["f1"])
-                state_counts.append(pipe.automata.state_count)
-                transition_densities.append(pipe.automata.transition_density)
-
-            variation_results.append(
-                {
-                    "window_size": W,
-                    "alphabet_size": A,
-                    "f1_mean": float(np.mean(f1_scores)),
-                    "f1_std": float(np.std(f1_scores)),
-                    "states_mean": float(np.mean(state_counts)),
-                    "density_mean": float(np.mean(transition_densities)),
-                }
-            )
-
-    return variation_results
+    train_test_splits = [(skab_df.iloc[split.train], skab_df.iloc[split.test]) for split in splits]
+    return run_parameter_grid(
+        config,
+        dataset_name="skab",
+        train_test_splits=train_test_splits,
+        feature_columns=skab_feature_cols,
+        target_column=skab_target_col,
+    )
 
 
-def calculate_statistical_significance(skab_results_by_seed: list[dict[str, Any]]) -> dict[str, Any]:
-    logger.info("Computing Wilcoxon and McNemar tests...")
-    automata_f1: list[float] = []
-    lstm_f1: list[float] = []
-    gru_f1: list[float] = []
-
-    # McNemar için paired sayımlar :
-    # b: automata 1 iken DL 0
-    # c: automata 0 iken DL 1
-    mcnemar_automata_vs_lstm = {"b": 0, "c": 0}
-    mcnemar_automata_vs_gru = {"b": 0, "c": 0}
-
-    def _pool_mcnemar_counts(
-        orig: dict[str, Any], model_a: str, model_b: str, acc: dict[str, int]
-    ) -> None:
-        if model_a not in orig or model_b not in orig:
-            return
-        a_outputs = orig[model_a].get("outputs", [])
-        b_outputs = orig[model_b].get("outputs", [])
-        if not a_outputs or not b_outputs:
-            return
-
-        a_by_fold = {o.get("fold"): o for o in a_outputs if "fold" in o}
-        b_by_fold = {o.get("fold"): o for o in b_outputs if "fold" in o}
-        common_folds = sorted(set(a_by_fold).intersection(b_by_fold))
-        for fold_id in common_folds:
-            a_preds = a_by_fold[fold_id].get("predictions", [])
-            b_preds = b_by_fold[fold_id].get("predictions", [])
-            if not a_preds or not b_preds:
-                continue
-
-            a_map = {r["time_step"]: (r["y_true"], r["y_pred"]) for r in a_preds if "time_step" in r}
-            b_map = {r["time_step"]: (r["y_true"], r["y_pred"]) for r in b_preds if "time_step" in r}
-            common_ts = sorted(set(a_map).intersection(b_map))
-            if not common_ts:
-                continue
-
-            for ts in common_ts:
-                y_true_a, pred_a = a_map[ts]
-                y_true_b, pred_b = b_map[ts]
-                if y_true_a != y_true_b:
-                    # Aynı fold içinde zaman hizası farklıysa paired test güvenilmez; atlıyoruz.
-                    continue
-
-                if pred_a == 1 and pred_b == 0:
-                    acc["b"] += 1
-                elif pred_a == 0 and pred_b == 1:
-                    acc["c"] += 1
-
-    for seed_res in skab_results_by_seed:
-        orig = seed_res.get("original", {})
-
-        # Wilcoxon için: fold bazlı F1 skorları
-        if "automata" in orig and "raw" in orig["automata"]:
-            for fold in orig["automata"]["raw"]:
-                automata_f1.append(float(fold["f1"]))
-        if "lstm" in orig and "raw" in orig["lstm"]:
-            for fold in orig["lstm"]["raw"]:
-                lstm_f1.append(float(fold["f1"]))
-        if "gru" in orig and "raw" in orig["gru"]:
-            for fold in orig["gru"]["raw"]:
-                gru_f1.append(float(fold["f1"]))
-
-        # McNemar için: paired tahminleri pool et
-        _pool_mcnemar_counts(orig, "automata", "lstm", mcnemar_automata_vs_lstm)
-        _pool_mcnemar_counts(orig, "automata", "gru", mcnemar_automata_vs_gru)
-
-    sig_results: dict[str, Any] = {}
-    try:
-        if len(automata_f1) >= 5 and len(lstm_f1) == len(automata_f1) and len(lstm_f1) > 0:
-            stat_al, p_val_al = wilcoxon(automata_f1, lstm_f1)
-            sig_results["automata_vs_lstm"] = {"statistic": float(stat_al), "p_value": float(p_val_al)}
-
-        if len(automata_f1) >= 5 and len(gru_f1) == len(automata_f1) and len(gru_f1) > 0:
-            stat_ag, p_val_ag = wilcoxon(automata_f1, gru_f1)
-            sig_results["automata_vs_gru"] = {"statistic": float(stat_ag), "p_value": float(p_val_ag)}
-
-        # McNemar exact (binom test) - pooled
-        n01_lstm = int(mcnemar_automata_vs_lstm["b"])
-        n10_lstm = int(mcnemar_automata_vs_lstm["c"])
-        n_lstm = n01_lstm + n10_lstm
-        if n_lstm > 0:
-            res_lstm = binomtest(k=n01_lstm, n=n_lstm, p=0.5, alternative="two-sided")
-            sig_results["mcnemar_automata_vs_lstm"] = {
-                "b": n01_lstm,
-                "c": n10_lstm,
-                "n": n_lstm,
-                "p_value": float(res_lstm.pvalue),
-            }
-
-        n01_gru = int(mcnemar_automata_vs_gru["b"])
-        n10_gru = int(mcnemar_automata_vs_gru["c"])
-        n_gru = n01_gru + n10_gru
-        if n_gru > 0:
-            res_gru = binomtest(k=n01_gru, n=n_gru, p=0.5, alternative="two-sided")
-            sig_results["mcnemar_automata_vs_gru"] = {
-                "b": n01_gru,
-                "c": n10_gru,
-                "n": n_gru,
-                "p_value": float(res_gru.pvalue),
-            }
-    except Exception as e:
-        logger.warning(f"Could not compute significance tests: {e}")
-        sig_results["error"] = str(e)
-
-    return sig_results
+def run_batadal_parameter_variation(
+    config: ProjectConfig,
+    batadal_df: pd.DataFrame,
+    feature_cols: list[str],
+    target_col: str,
+) -> list[dict[str, Any]]:
+    logger.info("Running BATADAL automata parameter variation...")
+    split_conf = config.get("datasets", "batadal", "split")
+    split = make_batadal_chronological_split(
+        batadal_df,
+        train_ratio=split_conf.get("train", 0.6),
+        validation_ratio=split_conf.get("validation", 0.2),
+        test_ratio=split_conf.get("test", 0.2),
+    )
+    train_df = batadal_df.iloc[split.train]
+    test_df = batadal_df.iloc[split.test]
+    return run_parameter_grid(
+        config,
+        dataset_name="batadal",
+        train_test_splits=[(train_df, test_df)],
+        feature_columns=feature_cols,
+        target_column=target_col,
+    )
 
 
 def main() -> None:
@@ -615,8 +578,15 @@ def main() -> None:
     config = load_config("config/config.yaml")
     results_dir = Path(config.get("paths", "results", default="outputs/results"))
     figures_dir = Path(config.get("paths", "figures", default="outputs/figures"))
+    logs_dir = Path(config.get("paths", "logs", default="outputs/logs"))
+    explanations_dir = results_dir.parent / EXPLANATIONS_DIR_NAME
     results_dir.mkdir(parents=True, exist_ok=True)
     figures_dir.mkdir(parents=True, exist_ok=True)
+    logs_dir.mkdir(parents=True, exist_ok=True)
+
+    experiment_logger = ExperimentLogger(logs_dir)
+    if experiment_logger.jsonl_path.exists():
+        experiment_logger.jsonl_path.unlink()
 
     logger.info("Loading Datasets...")
 
@@ -692,10 +662,10 @@ def main() -> None:
                 seed,
                 models_override=models_override,
                 max_folds=max_folds,
+                experiment_logger=experiment_logger,
             )
             skab_seed_res[scenario] = skab_res
 
-            # Run BATADAL
             batadal_res = run_batadal_experiment(
                 config,
                 batadal_df,
@@ -704,8 +674,21 @@ def main() -> None:
                 scenario,
                 seed,
                 models_override=models_override,
+                experiment_logger=experiment_logger,
             )
             batadal_seed_res[scenario] = batadal_res
+
+            automata_samples = batadal_res.get("automata", {}).get("full_explanation_samples", [])
+            export_automata_explanations(explanations_dir, "batadal", scenario, seed, automata_samples)
+            skab_automata_outputs = skab_res.get("automata", {}).get("outputs", [])
+            if skab_automata_outputs:
+                export_automata_explanations(
+                    explanations_dir,
+                    "skab",
+                    scenario,
+                    seed,
+                    skab_automata_outputs[0].get("full_explanation_samples", []),
+                )
 
         skab_full_results.append({"seed": seed, **skab_seed_res})
         batadal_full_results.append({"seed": seed, **batadal_seed_res})
@@ -715,13 +698,12 @@ def main() -> None:
     if not args.fast:
         significance = calculate_statistical_significance(skab_full_results)
 
-    variation: list[dict[str, Any]] = []
+    skab_variation: list[dict[str, Any]] = []
+    batadal_variation: list[dict[str, Any]] = []
     if not args.fast:
-        variation = run_automata_parameter_variation(
-            config,
-            skab_df,
-            skab_feature_cols,
-            skab_target,
+        skab_variation = run_skab_parameter_variation(config, skab_df, skab_feature_cols, skab_target)
+        batadal_variation = run_batadal_parameter_variation(
+            config, batadal_df, batadal_feature_cols, batadal_target
         )
 
     logger.info("Saving results...")
@@ -735,7 +717,24 @@ def main() -> None:
         json.dump(significance, f, indent=2)
 
     with open(results_dir / "automata_parameter_variation.json", "w") as f:
-        json.dump(variation, f, indent=2)
+        json.dump(skab_variation, f, indent=2)
+
+    with open(results_dir / "batadal_parameter_variation.json", "w") as f:
+        json.dump(batadal_variation, f, indent=2)
+
+    experiment_logger.save_run_summary(
+        {
+            "seeds": seeds,
+            "scenarios": scenarios,
+            "models": models_override or config.get("deep_learning", "models", default=[]),
+            "fast_mode": args.fast,
+            "skab_target": skab_target,
+            "batadal_target": batadal_target,
+            "record_count": sum(1 for _ in experiment_logger.jsonl_path.open(encoding="utf-8"))
+            if experiment_logger.jsonl_path.exists()
+            else 0,
+        }
+    )
 
     if not args.fast:
         generate_all_visualizations(results_dir, figures_dir)
