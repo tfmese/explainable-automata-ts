@@ -1,5 +1,6 @@
 [
   {
+    "dataset": "skab",
     "window_size": 3,
     "alphabet_size": 3,
     "f1_mean": 0.556016712039267,
@@ -8,6 +9,7 @@
     "density_mean": 0.7121212121212122
   },
   {
+    "dataset": "skab",
     "window_size": 3,
     "alphabet_size": 4,
     "f1_mean": 0.5543054785554514,
@@ -16,6 +18,7 @@
     "density_mean": 0.5143790849673202
   },
   {
+    "dataset": "skab",
     "window_size": 3,
     "alphabet_size": 5,
     "f1_mean": 0.54528970720415,
@@ -24,6 +27,7 @@
     "density_mean": 0.5916666666666668
   },
   {
+    "dataset": "skab",
     "window_size": 3,
     "alphabet_size": 6,
     "f1_mean": 0.54601396748157,
@@ -32,6 +36,7 @@
     "density_mean": 0.4793103448275862
   },
   {
+    "dataset": "skab",
     "window_size": 4,
     "alphabet_size": 3,
     "f1_mean": 0.5482434763511943,
@@ -40,6 +45,7 @@
     "density_mean": 0.24236734693877554
   },
   {
+    "dataset": "skab",
     "window_size": 4,
     "alphabet_size": 4,
     "f1_mean": 0.5425417025435705,
@@ -48,6 +54,7 @@
     "density_mean": 0.13182652210175147
   },
   {
+    "dataset": "skab",
     "window_size": 4,
     "alphabet_size": 5,
     "f1_mean": 0.535380433125543,
@@ -56,6 +63,7 @@
     "density_mean": 0.08008119224400406
   },
   {
+    "dataset": "skab",
     "window_size": 4,
     "alphabet_size": 6,
     "f1_mean": 0.5285836533441799,
@@ -64,6 +72,7 @@
     "density_mean": 0.049186210334885495
   },
   {
+    "dataset": "skab",
     "window_size": 5,
     "alphabet_size": 3,
     "f1_mean": 0.5396933726193228,
@@ -72,6 +81,7 @@
     "density_mean": 0.07909342325420855
   },
   {
+    "dataset": "skab",
     "window_size": 5,
     "alphabet_size": 4,
     "f1_mean": 0.5263133936459568,
@@ -80,6 +90,7 @@
     "density_mean": 0.02303086624290468
   },
   {
+    "dataset": "skab",
     "window_size": 5,
     "alphabet_size": 5,
     "f1_mean": 0.522805839985979,
@@ -88,6 +99,7 @@
     "density_mean": 0.008287543726049602
   },
   {
+    "dataset": "skab",
     "window_size": 5,
     "alphabet_size": 6,
     "f1_mean": 0.5206324628586243,
@@ -96,6 +108,7 @@
     "density_mean": 0.0036156947295332997
   },
   {
+    "dataset": "skab",
     "window_size": 6,
     "alphabet_size": 3,
     "f1_mean": 0.5271713604051506,
@@ -104,6 +117,7 @@
     "density_mean": 0.019588887958464016
   },
   {
+    "dataset": "skab",
     "window_size": 6,
     "alphabet_size": 4,
     "f1_mean": 0.5209723363523333,
@@ -112,6 +126,7 @@
     "density_mean": 0.002743690403173785
   },
   {
+    "dataset": "skab",
     "window_size": 6,
     "alphabet_size": 5,
     "f1_mean": 0.5197978955769849,
@@ -120,6 +135,7 @@
     "density_mean": 0.0006254075779965195
   },
   {
+    "dataset": "skab",
     "window_size": 6,
     "alphabet_size": 6,
     "f1_mean": 0.519466519341951,

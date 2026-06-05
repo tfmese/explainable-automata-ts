@@ -1,0 +1,19 @@
+{
+  "timestamp_utc": "2026-06-05T19:13:32.709127+00:00",
+  "seeds": [
+    42
+  ],
+  "scenarios": [
+    "original"
+  ],
+  "models": [
+    "automata"
+  ],
+  "fast_mode": false,
+  "skip_parameter_grid": false,
+  "timestamped_results": false,
+  "results_dir": "outputs/results",
+  "skab_target": "anomaly",
+  "batadal_target": "ATT_FLAG",
+  "record_count": 2
+}
