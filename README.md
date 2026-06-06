@@ -54,3 +54,66 @@ Detaylı sayılar aşağıdaki tablolarda.
 
 ---
 
+## 2. Veri setleri arası farklar
+
+SKAB valf sensör verisi; otomata için PC1'e indirgedik. BATADAL su şebekesi saldırı verisi, sınıf dengesizliği daha belirgin. Aynı model SKAB'da işe yararken BATADAL'da otomata tarafı zayıf kaldı — muhtemelen PC1'e sıkışınca saldırı sinyali kayboluyor.
+
+Aşağıda original senaryodan örnek ROC/PR grafikleri var. Diğer modeller ve senaryolar outputs/figures/ altında, isim formatı: {dataset}_{model}_{scenario}_roc_curve.png
+
+*SKAB — otomata*
+![SKAB otomata ROC](outputs/figures/skab_automata_original_roc_curve.png)
+![SKAB otomata PR](outputs/figures/skab_automata_original_precision_recall.png)
+
+*SKAB — LSTM*
+![SKAB LSTM ROC](outputs/figures/skab_lstm_original_roc_curve.png)
+![SKAB LSTM PR](outputs/figures/skab_lstm_original_precision_recall.png)
+
+*BATADAL — otomata*
+![BATADAL otomata ROC](outputs/figures/batadal_automata_original_roc_curve.png)
+![BATADAL otomata PR](outputs/figures/batadal_automata_original_precision_recall.png)
+
+---
+
+## 3. Gürültü etkisi
+
+Test setine mean=0, std=0.05 Gaussian noise ekledik.
+
+*SKAB:* DL modellerinin F1'i ~0.83'ten ~0.33–0.51 aralığına düştü. Otomata F1 ~0.52'de kaldı (recall 1.0'a çıktı, precision düştü). SAX küçük dalgalanmaları yuttuğu için otomata gürültüde daha stabil görünüyor.
+
+*BATADAL:* Otomata F1 ~0.06, recall ~0.20. DL tarafında GRU hâlâ en iyi (~0.38 F1 gürültüde).
+
+![SKAB otomata — orijinal](outputs/figures/skab_automata_original_confusion_matrix.png)
+![SKAB otomata — gürültülü](outputs/figures/skab_automata_gaussian_noise_confusion_matrix.png)
+
+![BATADAL otomata — orijinal](outputs/figures/batadal_automata_original_confusion_matrix.png)
+![BATADAL otomata — gürültülü](outputs/figures/batadal_automata_gaussian_noise_confusion_matrix.png)
+
+---
+
+## 4. Unseen pattern
+
+Testte eğitimde görmediğimiz bir SAX pattern gelirse Levenshtein ile en yakın state'e map ediyoruz. Unseen senaryoda bunu kasıtlı tetiklemek için test dizisine sözlükte olmayan bir pattern enjekte ettik.
+
+DL modelleri SAX kullanmadığı için unseen senaryoda girdi değişmiyor; onların metrikleri original ile aynı.
+
+![SKAB otomata unseen](outputs/figures/skab_automata_unseen_confusion_matrix.png)
+![BATADAL otomata unseen](outputs/figures/batadal_automata_unseen_confusion_matrix.png)
+
+Açıklama çıktıları outputs/explanations/ klasöründe. Kısa örnek: [docs/sample_explanation.json](docs/sample_explanation.json)
+
+json
+{
+  "time_step": 5,
+  "state": "abc",
+  "pattern": "adc",
+  "status": "unseen",
+  "mapped_to": "abc",
+  "mapping_distance": 1,
+  "transitions": [{"from": "aab", "to": "abc", "probability": 0.72}],
+  "probability": 0.108,
+  "decision": "anomaly",
+  "confidence": 0.108
+}
+
+
+---
