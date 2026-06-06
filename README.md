@@ -117,3 +117,36 @@ json
 
 
 ---
+## 5. Parametre etkileri
+
+Model karşılaştırması için window_size=4, alphabet_size=3 sabitledik. Sonra window ve alphabet'i 3–6 arasında taradık; state sayısı, geçiş yoğunluğu ve F1'e bakıldı. Parametre taraması da 5 seed ile koşuldu.
+
+SKAB'da alphabet büyüdükçe F1 biraz artıyor ama state sayısı patlıyor. BATADAL'da w=4, α=3 kombinasyonunda F1 sıfır çıktı; bazı kombinasyonlarda (ör. w=3, α=5) F1 ~0.26'ya çıkabiliyor.
+
+![SKAB parametre duyarlılığı](outputs/figures/parameter_sensitivity.png)
+![SKAB state duyarlılığı](outputs/figures/state_sensitivity.png)
+
+![BATADAL parametre duyarlılığı](outputs/figures/batadal_parameter_sensitivity.png)
+![BATADAL state duyarlılığı](outputs/figures/batadal_state_sensitivity.png)
+
+---
+
+## 6. Otomata görselleri
+
+Original senaryo için state diagram ve transition heatmap:
+
+![SKAB state diagram](outputs/figures/skab_automata_original_state_diagram.png)
+![SKAB transition heatmap](outputs/figures/skab_automata_original_transition_heatmap.png)
+
+![BATADAL state diagram](outputs/figures/batadal_automata_original_state_diagram.png)
+![BATADAL transition heatmap](outputs/figures/batadal_automata_original_transition_heatmap.png)
+
+Gürültü ve unseen senaryolarının grafikleri de outputs/figures/ içinde aynı isimlendirmeyle var.
+
+---
+
+## 7. Olasılıksal yorumlama
+
+Prefix üzerindeki geçiş olasılıklarını çarpıyoruz; sonuç yüksekse normal, düşükse anomali. Güven skoru olarak da aynı path probability değerini kullanıyoruz. Eşik train setindeki path olasılıklarının alt yüzdelik diliminden geliyor.
+
+---
