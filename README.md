@@ -150,3 +150,218 @@ Gürültü ve unseen senaryolarının grafikleri de outputs/figures/ içinde ayn
 Prefix üzerindeki geçiş olasılıklarını çarpıyoruz; sonuç yüksekse normal, düşükse anomali. Güven skoru olarak da aynı path probability değerini kullanıyoruz. Eşik train setindeki path olasılıklarının alt yüzdelik diliminden geliyor.
 
 ---
+## 8. Kod yapısı ve çalıştırma
+
+
+config/config.yaml          → tüm parametreler
+src/pipeline.py             → otomata pipeline
+src/models/automata.py      → geçiş olasılıkları, Levenshtein
+src/models/deep_learning*   → LSTM, GRU, 1D-CNN
+src/data/                   → veri yükleme, bölme, ön işleme
+src/experiments/            → senaryolar, parametre taraması
+src/explainability/         → açıklama modülü
+run_experiments.py          → ana deney scripti
+
+
+bash
+pip install -r requirements.txt
+python3 run_experiments.py          # tam deney (uzun süreli)
+python3 run_experiments.py --fast   # kısa smoke test
+python3 -m pytest
+python3 scripts/generate_report_metrics.py   # alttaki tabloları günceller
+
+
+SKAB'da Wilcoxon ve McNemar testleri otomata ile LSTM/GRU arasındaki F1 farkının anlamlı olduğunu gösterdi (p < 0.05). Sayılar ek tabloda.
+
+Tüm confusion matrix, ROC, PR ve otomata grafikleri: outputs/figures/
+
+---
+
+<!-- AUTO_METRICS_START -->
+## Ek: Sayısal sonuçlar
+
+Özet tablolar outputs/results/*.json dosyalarından üretilir. Deneyleri yeniden koştuktan sonra
+python3 scripts/generate_report_metrics.py ile bu bölüm güncellenyior.
+
+### SKAB — original (5 fold ort., 5 seed)
+
+| Model | Accuracy | Precision | Recall | F1 |
+|---|---:|---:|---:|---:|
+| AUTOMATA | 0.5000 ± 0.0055 | 0.3721 ± 0.0052 | 0.6251 ± 0.0149 | 0.4612 ± 0.0047 |
+| LSTM | 0.8977 ± 0.0049 | 0.9405 ± 0.0156 | 0.7604 ± 0.0103 | 0.8323 ± 0.0078 |
+| GRU | 0.8986 ± 0.0053 | 0.9395 ± 0.0162 | 0.7661 ± 0.0046 | 0.8359 ± 0.0050 |
+| CNN1D | 0.8975 ± 0.0033 | 0.9444 ± 0.0105 | 0.7590 ± 0.0077 | 0.8317 ± 0.0037 |
+
+### BATADAL — original (%20 test, 5 seed)
+
+| Model | Accuracy | Precision | Recall | F1 |
+|---|---:|---:|---:|---:|
+| AUTOMATA | 0.7311 ± 0.0000 | 0.0000 ± 0.0000 | 0.0000 ± 0.0000 | 0.0000 ± 0.0000 |
+| LSTM | 0.9028 ± 0.0008 | 0.1000 ± 0.2000 | 0.0100 ± 0.0200 | 0.0182 ± 0.0364 |
+| GRU | 0.9246 ± 0.0190 | 0.5187 ± 0.4248 | 0.2625 ± 0.2184 | 0.3481 ± 0.2878 |
+| CNN1D | 0.9155 ± 0.0154 | 0.3149 ± 0.3859 | 0.1675 ± 0.2277 | 0.2107 ± 0.2709 |
+
+### SKAB — gaussian_noise (5 fold ort., 5 seed)
+
+| Model | Accuracy | Precision | Recall | F1 |
+|---|---:|---:|---:|---:|
+| AUTOMATA | 0.3597 ± 0.0004 | 0.3525 ± 0.0003 | 1.0000 ± 0.0000 | 0.5212 ± 0.0003 |
+| LSTM | 0.6167 ± 0.0251 | 0.5118 ± 0.0716 | 0.3809 ± 0.0308 | 0.3662 ± 0.0204 |
+| GRU | 0.6166 ± 0.0128 | 0.5529 ± 0.0491 | 0.3486 ± 0.0602 | 0.3340 ± 0.0428 |
+| CNN1D | 0.5638 ± 0.0301 | 0.4801 ± 0.0607 | 0.6919 ± 0.0884 | 0.5071 ± 0.0441 |
+
+### BATADAL — gaussian_noise (%20 test, 5 seed)
+
+| Model | Accuracy | Precision | Recall | F1 |
+|---|---:|---:|---:|---:|
+| AUTOMATA | 0.5335 ± 0.0447 | 0.0363 ± 0.0624 | 0.2025 ± 0.3571 | 0.0616 ± 0.1063 |
+| LSTM | 0.8972 ± 0.0050 | 0.1287 ± 0.1578 | 0.0275 ± 0.0436 | 0.0423 ± 0.0640 |
+| GRU | 0.9037 ± 0.0400 | 0.4554 ± 0.3269 | 0.3300 ± 0.2254 | 0.3774 ± 0.2600 |
+| CNN1D | 0.9143 ± 0.0148 | 0.3100 ± 0.3800 | 0.1625 ± 0.2222 | 0.2048 ± 0.2641 |
+
+### SKAB — unseen (5 fold ort., 5 seed)
+
+| Model | Accuracy | Precision | Recall | F1 |
+|---|---:|---:|---:|---:|
+| AUTOMATA | 0.4988 ± 0.0044 | 0.3719 ± 0.0029 | 0.6317 ± 0.0134 | 0.4637 ± 0.0051 |
+| LSTM | 0.8977 ± 0.0049 | 0.9405 ± 0.0156 | 0.7604 ± 0.0103 | 0.8323 ± 0.0078 |
+| GRU | 0.8986 ± 0.0053 | 0.9395 ± 0.0162 | 0.7661 ± 0.0046 | 0.8359 ± 0.0050 |
+| CNN1D | 0.8975 ± 0.0033 | 0.9444 ± 0.0105 | 0.7590 ± 0.0077 | 0.8317 ± 0.0037 |
+
+### BATADAL — unseen (%20 test, 5 seed)
+
+| Model | Accuracy | Precision | Recall | F1 |
+|---|---:|---:|---:|---:|
+| AUTOMATA | 0.6435 ± 0.0000 | 0.0000 ± 0.0000 | 0.0000 ± 0.0000 | 0.0000 ± 0.0000 |
+| LSTM | 0.9028 ± 0.0008 | 0.1000 ± 0.2000 | 0.0100 ± 0.0200 | 0.0182 ± 0.0364 |
+| GRU | 0.9246 ± 0.0190 | 0.5187 ± 0.4248 | 0.2625 ± 0.2184 | 0.3481 ± 0.2878 |
+| CNN1D | 0.9155 ± 0.0154 | 0.3149 ± 0.3859 | 0.1675 ± 0.2277 | 0.2107 ± 0.2709 |
+
+### SKAB fold sonuçları (seed=42, original)
+
+| Fold | AUTOMATA F1 | LSTM F1 | GRU F1 | CNN1D F1 |
+|---:|---:|---:|---:|---:|
+| 0 | 0.5069 | 0.8632 | 0.8280 | 0.8554 |
+| 1 | 0.3898 | 0.8606 | 0.8426 | 0.8569 |
+| 2 | 0.4088 | 0.7581 | 0.7482 | 0.7179 |
+| 3 | 0.4591 | 0.8733 | 0.8750 | 0.8738 |
+| 4 | 0.5201 | 0.8780 | 0.8807 | 0.8809 |
+
+### SKAB fold detayı (seed=42, original)
+
+#### AUTOMATA
+
+| Fold | Acc | Prec | Rec | F1 |
+|---:|---:|---:|---:|---:|
+| 0 | 0.5258 | 0.3882 | 0.7304 | 0.5069 |
+| 1 | 0.5260 | 0.3564 | 0.4300 | 0.3898 |
+| 2 | 0.4955 | 0.3466 | 0.4981 | 0.4088 |
+| 3 | 0.4490 | 0.3500 | 0.6669 | 0.4591 |
+| 4 | 0.5065 | 0.3974 | 0.7523 | 0.5201 |
+
+| Fold | State | Density |
+|---:|---:|---:|
+| 0 | 66 | 0.0312 |
+| 1 | 70 | 0.0300 |
+| 2 | 72 | 0.0293 |
+| 3 | 59 | 0.0345 |
+| 4 | 52 | 0.0381 |
+
+#### LSTM
+
+| Fold | Acc | Prec | Rec | F1 |
+|---:|---:|---:|---:|---:|
+| 0 | 0.9112 | 0.8879 | 0.8399 | 0.8632 |
+| 1 | 0.9062 | 0.9025 | 0.8224 | 0.8606 |
+| 2 | 0.8566 | 0.9258 | 0.6418 | 0.7581 |
+| 3 | 0.9211 | 0.9989 | 0.7757 | 0.8733 |
+| 4 | 0.9226 | 0.9976 | 0.7840 | 0.8780 |
+
+#### GRU
+
+| Fold | Acc | Prec | Rec | F1 |
+|---:|---:|---:|---:|---:|
+| 0 | 0.8924 | 0.8879 | 0.7757 | 0.8280 |
+| 1 | 0.8897 | 0.8464 | 0.8389 | 0.8426 |
+| 2 | 0.8575 | 0.9807 | 0.6048 | 0.7482 |
+| 3 | 0.9220 | 0.9979 | 0.7791 | 0.8750 |
+| 4 | 0.9239 | 0.9938 | 0.7908 | 0.8807 |
+
+#### CNN1D
+
+| Fold | Acc | Prec | Rec | F1 |
+|---:|---:|---:|---:|---:|
+| 0 | 0.9024 | 0.8455 | 0.8655 | 0.8554 |
+| 1 | 0.9024 | 0.8855 | 0.8301 | 0.8569 |
+| 2 | 0.8452 | 0.9912 | 0.5627 | 0.7179 |
+| 3 | 0.9214 | 0.9989 | 0.7766 | 0.8738 |
+| 4 | 0.9237 | 0.9892 | 0.7939 | 0.8809 |
+
+### SKAB parametre taraması
+
+| W | α | F1 | State | Density |
+|---:|---:|---:|---:|---:|
+| 3 | 3 | 0.4557 ± 0.0428 | 26.4800 | 0.0951 |
+| 3 | 4 | 0.4753 ± 0.0486 | 48.3600 | 0.0611 |
+| 3 | 5 | 0.4954 ± 0.0465 | 78.0000 | 0.0395 |
+| 3 | 6 | 0.5157 ± 0.0355 | 124.1200 | 0.0258 |
+| 4 | 3 | 0.4612 ± 0.0478 | 64.2800 | 0.0325 |
+| 4 | 4 | 0.4850 ± 0.0465 | 139.8800 | 0.0173 |
+| 4 | 5 | 0.5111 ± 0.0497 | 236.0800 | 0.0111 |
+| 4 | 6 | 0.5244 ± 0.0359 | 393.6000 | 0.0067 |
+| 5 | 3 | 0.4683 ± 0.0539 | 131.5200 | 0.0149 |
+| 5 | 4 | 0.4866 ± 0.0418 | 335.6000 | 0.0062 |
+| 5 | 5 | 0.5090 ± 0.0460 | 615.2800 | 0.0036 |
+| 5 | 6 | 0.5309 ± 0.0304 | 1039.3200 | 0.0021 |
+| 6 | 3 | 0.4749 ± 0.0539 | 251.7600 | 0.0074 |
+| 6 | 4 | 0.4927 ± 0.0309 | 700.7200 | 0.0027 |
+| 6 | 5 | 0.5260 ± 0.0325 | 1360.6400 | 0.0014 |
+| 6 | 6 | 0.5197 ± 0.0295 | 2287.0400 | 0.0008 |
+
+### BATADAL parametre taraması
+
+| W | α | F1 | State | Density |
+|---:|---:|---:|---:|---:|
+| 3 | 3 | 0.0000 ± 0.0000 | 26.0000 | 0.1108 |
+| 3 | 4 | 0.0000 ± 0.0000 | 59.0000 | 0.0511 |
+| 3 | 5 | 0.2575 ± 0.0000 | 105.0000 | 0.0310 |
+| 3 | 6 | 0.2173 ± 0.0000 | 166.0000 | 0.0191 |
+| 4 | 3 | 0.0000 ± 0.0000 | 72.0000 | 0.0331 |
+| 4 | 4 | 0.2288 ± 0.0000 | 175.0000 | 0.0135 |
+| 4 | 5 | 0.2070 ± 0.0000 | 339.0000 | 0.0067 |
+| 4 | 6 | 0.2015 ± 0.0000 | 522.0000 | 0.0039 |
+| 5 | 3 | 0.0000 ± 0.0000 | 169.0000 | 0.0111 |
+| 5 | 4 | 0.2100 ± 0.0000 | 412.0000 | 0.0044 |
+| 5 | 5 | 0.1954 ± 0.0000 | 765.0000 | 0.0022 |
+| 5 | 6 | 0.1937 ± 0.0000 | 1051.0000 | 0.0014 |
+| 6 | 3 | 0.2466 ± 0.0000 | 316.0000 | 0.0051 |
+| 6 | 4 | 0.2018 ± 0.0000 | 745.0000 | 0.0020 |
+| 6 | 5 | 0.1905 ± 0.0000 | 1268.0000 | 0.0011 |
+| 6 | 6 | 0.1876 ± 0.0000 | 1588.0000 | 0.0008 |
+
+### İstatistiksel testler (SKAB, original)
+
+| Karşılaştırma | Test | İstatistik | p |
+|---|---|---|---:|
+| Otomata vs LSTM | Wilcoxon (F1) | 0.0000 | 0.0000 |
+| Otomata vs GRU | Wilcoxon (F1) | 0.0000 | 0.0000 |
+| Otomata vs LSTM | McNemar (b=6104, c=10390) | — | 0.0000 |
+| Otomata vs GRU | McNemar (b=6033, c=10667) | — | 0.0000 |
+
+<!-- AUTO_METRICS_END -->
+
+---
+
+## Kaynaklar
+
+## Kaynaklar
+
+- SAX (Symbolic Aggregate approXimation), 2003
+- PAA (Piecewise Aggregate Approximation), 2001
+- LSTM, 1997
+- GRU, 2014
+- Levenshtein edit distance, 1966
+- SKAB veri seti: https://github.com/waico/SKAB
+- BATADAL veri seti: https://www.batadal.net/
+- scikit-learn: https://scikit-learn.org/
+- PyTorch: https://pytorch.org/
