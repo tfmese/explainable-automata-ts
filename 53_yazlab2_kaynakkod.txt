@@ -1,0 +1,3964 @@
+================================================================================
+File: ./run_experiments.py
+================================================================================
+from __future__ import annotations
+
+import argparse
+import json
+import logging
+from pathlib import Path
+from typing import Any
+
+import numpy as np
+import pandas as pd
+from src.config import load_config, ProjectConfig
+from src.data.batadal_loader import (
+    batadal_feature_columns,
+    infer_batadal_target_column,
+    load_batadal_training_dataset_2,
+)
+from src.data.skab_loader import load_skab, skab_feature_columns
+from src.data.splits import (
+    assert_no_group_leakage,
+    make_batadal_chronological_split,
+    make_skab_group_folds,
+)
+from src.data.preprocessing import build_leakage_safe_preprocessor
+from src.evaluation.metrics import classification_metrics
+from src.evaluation.statistical_tests import calculate_statistical_significance
+from src.evaluation.visualization import generate_all_visualizations
+from src.experiments.experiment_logger import ExperimentLogger, build_experiment_record
+from src.experiments.parameter_sweep import run_parameter_grid
+from src.experiments.results_io import prepare_results_dir, write_json_result
+from src.explainability.explanation_export import select_explanation_samples
+from src.experiments.scenarios import add_gaussian_noise, inject_unseen_pattern
+from src.models.deep_learning_pipeline import DeepLearningPipeline, set_seed
+from src.pipeline import AutomataPipeline, build_fixed_automata_pipeline
+
+# Log kayıtlarını konsola yazdırmak için yapılandırıyoruz
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+)
+logger = logging.getLogger("run_experiments")
+
+EXPLANATIONS_DIR_NAME = "explanations"
+
+
+def output_limits(config: ProjectConfig) -> tuple[int, int]:
+    output_cfg = config.get("experiments", "output", default={}) or {}
+    return (
+        int(output_cfg.get("max_stored_predictions", 2000)),
+        int(output_cfg.get("max_stored_explanations", 25)),
+    )
+
+
+def automata_experiment_parameters(config: ProjectConfig) -> dict[str, Any]:
+    fixed = config.get("automata", "fixed_comparison")
+    return {
+        "window_size": fixed["window_size"],
+        "alphabet_size": fixed["alphabet_size"],
+    }
+
+
+def export_automata_explanations(
+    output_dir: Path,
+    dataset: str,
+    scenario: str,
+    seed: int,
+    samples: list[dict[str, Any]],
+    *,
+    max_samples: int | None = None,
+) -> None:
+    if not samples:
+        return
+    limit = max_samples if max_samples is not None else len(samples)
+    selected = select_explanation_samples(samples, scenario, limit)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    path = output_dir / f"{dataset}_{scenario}_seed{seed}_explanations.json"
+    with path.open("w", encoding="utf-8") as handle:
+        json.dump(selected, handle, indent=2, ensure_ascii=False)
+
+
+def evaluate_predictions(y_true: np.ndarray, y_pred: np.ndarray) -> dict[str, float]:
+    return classification_metrics(y_true, y_pred)
+
+
+def anomaly_score(probability: float, threshold: float) -> float:
+    if threshold <= 0:
+        return 1.0 if probability <= threshold else 0.0
+    return float(1.0 / (1.0 + (probability / threshold)))
+
+
+def compact_prediction_records(
+    y_true: np.ndarray,
+    y_pred: np.ndarray,
+    scores: list[float],
+    window_size: int,
+    *,
+    max_records: int,
+) -> list[dict[str, Any]]:
+    limit = min(len(y_true), max_records)
+    return [
+        {
+            "time_step": int(idx + window_size - 1),
+            "y_true": int(y_true[idx]),
+            "y_pred": int(y_pred[idx]),
+            "anomaly_score": float(scores[idx]),
+        }
+        for idx in range(limit)
+    ]
+
+
+def automata_predict_with_trace(
+    automata_pipe: AutomataPipeline,
+    df: pd.DataFrame,
+    scenario: str,
+    window_size: int,
+    *,
+    max_explanations: int,
+    max_predictions: int,
+) -> tuple[np.ndarray, list[float], list[dict[str, Any]], list[dict[str, Any]]]:
+    patterns = automata_pipe.transform_patterns(df)
+    if scenario == "unseen":
+        patterns = inject_unseen_pattern(
+            patterns,
+            replacement="zzzz",
+            forbidden_patterns=set(automata_pipe.automata.states_),
+            alphabet_size=automata_pipe.alphabet_size,
+        )
+
+    automata = automata_pipe.automata
+    threshold = float(automata.threshold_ if automata.threshold_ is not None else automata.smoothing)
+    mappings = [automata.map_pattern(p) for p in patterns]
+
+    path_probabilities: list[float] = []
+    prefix_transitions: list[list[dict[str, Any]]] = []
+    transitions_acc: list[dict[str, Any]] = []
+    path_probability = 1.0
+
+    for idx, _current in enumerate(mappings):
+        if idx == 0:
+            path_probability = 1.0
+            transitions_acc = []
+        else:
+            previous = mappings[idx - 1]
+            current = mappings[idx]
+            prob = automata.transition_probability(previous.mapped, current.mapped)
+            path_probability *= prob
+            transitions_acc.append(
+                {"from": previous.mapped, "to": current.mapped, "probability": float(prob)}
+            )
+        path_probabilities.append(float(path_probability))
+        prefix_transitions.append(list(transitions_acc))
+
+    predictions: list[int] = []
+    scores: list[float] = []
+
+    def build_explanation(idx: int) -> dict[str, Any]:
+        current = mappings[idx]
+        probability = path_probabilities[idx]
+        decision = "anomaly" if probability <= threshold else "normal"
+        return {
+            "time_step": int(idx + window_size - 1),
+            "state": current.mapped,
+            "pattern": current.original,
+            "status": current.status,
+            "mapped_to": current.mapped if current.status == "unseen" else None,
+            "mapping_distance": int(current.distance),
+            "transitions": prefix_transitions[idx],
+            "probability": probability,
+            "decision": decision,
+            "confidence": probability,
+            "threshold": threshold,
+        }
+
+    explanations_by_step: dict[int, dict[str, Any]] = {}
+    for idx, current in enumerate(mappings):
+        probability = path_probabilities[idx]
+        decision = "anomaly" if probability <= threshold else "normal"
+        predictions.append(1 if decision == "anomaly" else 0)
+        scores.append(anomaly_score(probability, threshold))
+
+        if scenario != "unseen" and len(explanations_by_step) < max_explanations:
+            explanations_by_step[idx] = build_explanation(idx)
+        elif scenario == "unseen":
+            if len(explanations_by_step) < max(3, max_explanations // 3):
+                explanations_by_step[idx] = build_explanation(idx)
+            if current.status == "unseen":
+                for neighbor in (idx - 1, idx, idx + 1):
+                    if 0 <= neighbor < len(mappings):
+                        explanations_by_step[neighbor] = build_explanation(neighbor)
+
+    ordered_steps = sorted(explanations_by_step)
+    ordered_explanations = [explanations_by_step[step] for step in ordered_steps]
+    explanations = select_explanation_samples(ordered_explanations, scenario, max_explanations)
+    trace = [
+        {
+            "time_step": item["time_step"],
+            "state": item["state"],
+            "pattern": item["pattern"],
+            "status": item["status"],
+            "mapped_to": item["mapped_to"],
+            "probability": item["probability"],
+            "threshold": item["threshold"],
+            "decision": item["decision"],
+            "confidence": item["confidence"],
+        }
+        for item in explanations
+    ]
+
+    return np.asarray(predictions), scores, trace, explanations
+
+
+def run_skab_experiment(
+    config: ProjectConfig,
+    df: pd.DataFrame,
+    feature_cols: list[str],
+    target_col: str,
+    scenario: str,
+    seed: int,
+    models_override: list[str] | None = None,
+    max_folds: int | None = None,
+    experiment_logger: ExperimentLogger | None = None,
+) -> dict[str, Any]:
+    logger.info(f"Running SKAB experiment - Scenario: {scenario}, Seed: {seed}")
+    set_seed(seed)
+
+    group_col = config.get("datasets", "skab", "group_column")
+    n_splits = config.get("datasets", "skab", "n_splits", default=5)
+    prefer_stratified = config.get("datasets", "skab", "prefer_stratified_group_kfold", default=True)
+
+    splits = make_skab_group_folds(
+        df,
+        target_column=target_col,
+        group_column=group_col,
+        n_splits=n_splits,
+        seed=seed,
+        prefer_stratified=prefer_stratified,
+    )
+
+    models_to_run = models_override or (["automata"] + config.get("deep_learning", "models", default=["lstm", "gru"]))
+    results_by_model: dict[str, list[dict[str, float]]] = {m: [] for m in models_to_run}
+    outputs_by_model: dict[str, list[dict[str, Any]]] = {m: [] for m in models_to_run}
+
+    automata_states = []
+    automata_densities = []
+    max_predictions, max_explanations = output_limits(config)
+    train_val_ratio = config.get("deep_learning", "skab_train_validation_ratio", default=0.9)
+
+    for fold_idx, split in enumerate(splits):
+        if max_folds is not None and fold_idx >= max_folds:
+            break
+        logger.info(f"SKAB fold {fold_idx + 1}/{len(splits)} - Scenario: {scenario}, Seed: {seed}")
+        assert_no_group_leakage(df, split, group_col)
+
+        train_df = df.iloc[split.train].copy()
+        test_df = df.iloc[split.test].copy()
+
+        W = config.get("automata", "fixed_comparison", "window_size", default=4)
+        y_test_aligned = test_df[target_col].to_numpy()[W - 1 :]
+
+        test_df_perturbed = test_df.copy()
+        if scenario == "gaussian_noise":
+            noise_std = config.get("experiments", "gaussian_noise", "std", default=0.05)
+            noise_mean = config.get("experiments", "gaussian_noise", "mean", default=0.0)
+            perturbed_vals = add_gaussian_noise(
+                test_df_perturbed[feature_cols].to_numpy(),
+                mean=noise_mean,
+                std=noise_std,
+                seed=seed + fold_idx,
+            )
+            test_df_perturbed[feature_cols] = perturbed_vals
+
+        logger.info("Fitting automata...")
+        automata_pipe = build_fixed_automata_pipeline(config)
+        automata_pipe.fit(train_df, feature_cols)
+
+        logger.info("Predicting automata...")
+        y_pred_automata, automata_scores, automata_trace, automata_explanations = automata_predict_with_trace(
+            automata_pipe,
+            test_df_perturbed,
+            scenario=scenario,
+            window_size=W,
+            max_explanations=max_explanations,
+            max_predictions=max_predictions,
+        )
+
+        automata_metrics = evaluate_predictions(y_test_aligned, y_pred_automata)
+        results_by_model["automata"].append(automata_metrics)
+        if experiment_logger is not None:
+            experiment_logger.log(
+                build_experiment_record(
+                    dataset="skab",
+                    model="automata",
+                    scenario=scenario,
+                    seed=seed,
+                    parameters=automata_experiment_parameters(config),
+                    metrics=automata_metrics,
+                    fold=fold_idx,
+                    extra={
+                        "state_count": automata_pipe.automata.state_count,
+                        "transition_density": automata_pipe.automata.transition_density,
+                    },
+                )
+            )
+        outputs_by_model["automata"].append(
+            {
+                "fold": fold_idx,
+                "state_count": automata_pipe.automata.state_count,
+                "transition_density": automata_pipe.automata.transition_density,
+                "predictions": compact_prediction_records(
+                    y_test_aligned, y_pred_automata, automata_scores, W, max_records=max_predictions
+                ),
+                "explanation_trace": automata_trace,
+                "full_explanation_samples": automata_explanations,
+                "transition_probabilities": automata_pipe.automata.transition_probabilities_,
+            }
+        )
+        automata_states.append(automata_pipe.automata.state_count)
+        automata_densities.append(automata_pipe.automata.transition_density)
+
+        #  Derin Öğrenme Modelleri (LSTM, GRU vb.) 
+        for dl_model in [m for m in models_to_run if m != "automata"]:
+            logger.info(f"Training deep learning model: {dl_model} (fold {fold_idx + 1}/{len(splits)})")
+            scaler = build_leakage_safe_preprocessor(config)
+            train_X_scaled = scaler.fit_transform(train_df, feature_cols)
+            test_X_scaled = scaler.transform(test_df_perturbed)
+
+            train_y = train_df[target_col].to_numpy()
+            test_y = test_df[target_col].to_numpy()
+
+            val_split = int(len(train_X_scaled) * train_val_ratio)
+            fit_train_X, fit_val_X = train_X_scaled[:val_split], train_X_scaled[val_split:]
+            fit_train_y, fit_val_y = train_y[:val_split], train_y[val_split:]
+
+            dl_pipe = DeepLearningPipeline(
+                config=config,
+                model_name=dl_model,
+                input_size=len(feature_cols),
+                window_size=W,
+            )
+            dl_pipe.fit(
+                train_X=fit_train_X,
+                train_y=fit_train_y,
+                val_X=fit_val_X,
+                val_y=fit_val_y,
+            )
+
+            logger.info(f"Evaluating deep learning model: {dl_model} (fold {fold_idx + 1}/{len(splits)})")
+            dl_probs = dl_pipe.predict_proba(test_X_scaled)
+            dl_preds = (dl_probs >= 0.5).astype(int)
+            dl_y_true = test_y[W - 1 :]
+            dl_metrics = evaluate_predictions(dl_y_true, dl_preds)
+            results_by_model[dl_model].append(dl_metrics)
+            if experiment_logger is not None:
+                dl_params = automata_experiment_parameters(config)
+                dl_params["deep_learning_model"] = dl_model
+                dl_params.update(dl_pipe.training_summary())
+                experiment_logger.log(
+                    build_experiment_record(
+                        dataset="skab",
+                        model=dl_model,
+                        scenario=scenario,
+                        seed=seed,
+                        parameters=dl_params,
+                        metrics=dl_metrics,
+                        fold=fold_idx,
+                    )
+                )
+            outputs_by_model[dl_model].append(
+                {
+                    "fold": fold_idx,
+                    "predictions": compact_prediction_records(
+                        dl_y_true, dl_preds, dl_probs.tolist(), W, max_records=max_predictions
+                    ),
+                }
+            )
+
+    # Her bir model için fold ortalama ve standart sapmalarını çıkarıyoruz
+    summary: dict[str, Any] = {}
+    for m in models_to_run:
+        metrics_df = pd.DataFrame(results_by_model[m])
+        
+        std_series = metrics_df.std(ddof=0)
+        std_series = std_series.fillna(0.0)
+        summary[m] = {
+            "mean": metrics_df.mean().to_dict(),
+            "std": std_series.to_dict(),
+            "raw": results_by_model[m],
+            "outputs": outputs_by_model[m],
+        }
+
+    summary["automata_states"] = {
+        "mean": float(np.mean(automata_states)),
+        "std": float(np.std(automata_states)),
+    }
+    summary["automata_densities"] = {
+        "mean": float(np.mean(automata_densities)),
+        "std": float(np.std(automata_densities)),
+    }
+    return summary
+
+
+def run_batadal_experiment(
+    config: ProjectConfig,
+    df: pd.DataFrame,
+    feature_cols: list[str],
+    target_col: str,
+    scenario: str,
+    seed: int,
+    models_override: list[str] | None = None,
+    experiment_logger: ExperimentLogger | None = None,
+) -> dict[str, Any]:
+    logger.info(f"Running BATADAL experiment - Scenario: {scenario}, Seed: {seed}")
+    set_seed(seed)
+
+    # Kronolojik veri bölme: %60 Eğitim, %20 Doğrulama, %20 Test
+    split_conf = config.get("datasets", "batadal", "split")
+    split = make_batadal_chronological_split(
+        df,
+        train_ratio=split_conf.get("train", 0.6),
+        validation_ratio=split_conf.get("validation", 0.2),
+        test_ratio=split_conf.get("test", 0.2),
+    )
+
+    train_df = df.iloc[split.train].copy()
+    val_df = df.iloc[split.validation].copy()
+    test_df = df.iloc[split.test].copy()
+
+    W = config.get("automata", "fixed_comparison", "window_size", default=4)
+    y_test_aligned = test_df[target_col].to_numpy()[W - 1 :]
+
+    test_df_perturbed = test_df.copy()
+    if scenario == "gaussian_noise":
+        noise_std = config.get("experiments", "gaussian_noise", "std", default=0.05)
+        noise_mean = config.get("experiments", "gaussian_noise", "mean", default=0.0)
+        perturbed_vals = add_gaussian_noise(
+            test_df_perturbed[feature_cols].to_numpy(),
+            mean=noise_mean,
+            std=noise_std,
+            seed=seed,
+        )
+        test_df_perturbed[feature_cols] = perturbed_vals
+
+    models_to_run = models_override or (["automata"] + config.get("deep_learning", "models", default=["lstm", "gru"]))
+    results_by_model: dict[str, dict[str, float]] = {}
+    max_predictions, max_explanations = output_limits(config)
+
+    logger.info("Fitting automata...")
+    automata_pipe = build_fixed_automata_pipeline(config)
+    automata_pipe.fit(train_df, feature_cols)
+
+    logger.info("Predicting automata...")
+    y_pred_automata, automata_scores, automata_trace, automata_explanations = automata_predict_with_trace(
+        automata_pipe,
+        test_df_perturbed,
+        scenario=scenario,
+        window_size=W,
+        max_explanations=max_explanations,
+        max_predictions=max_predictions,
+    )
+
+    automata_metrics = evaluate_predictions(y_test_aligned, y_pred_automata)
+    results_by_model["automata"] = {
+        "metrics": automata_metrics,
+        "predictions": compact_prediction_records(
+            y_test_aligned, y_pred_automata, automata_scores, W, max_records=max_predictions
+        ),
+        "explanation_trace": automata_trace,
+        "full_explanation_samples": automata_explanations,
+        "transition_probabilities": automata_pipe.automata.transition_probabilities_,
+    }
+    if experiment_logger is not None:
+        experiment_logger.log(
+            build_experiment_record(
+                dataset="batadal",
+                model="automata",
+                scenario=scenario,
+                seed=seed,
+                parameters=automata_experiment_parameters(config),
+                metrics=automata_metrics,
+                extra={
+                    "state_count": automata_pipe.automata.state_count,
+                    "transition_density": automata_pipe.automata.transition_density,
+                },
+            )
+        )
+
+    for dl_model in [m for m in models_to_run if m != "automata"]:
+        logger.info(f"Training deep learning model: {dl_model} (BATADAL)")
+        scaler = build_leakage_safe_preprocessor(config)
+        train_X_scaled = scaler.fit_transform(train_df, feature_cols)
+        val_X_scaled = scaler.transform(val_df)
+        test_X_scaled = scaler.transform(test_df_perturbed)
+
+        train_y = train_df[target_col].to_numpy()
+        val_y = val_df[target_col].to_numpy()
+        test_y = test_df[target_col].to_numpy()
+
+        dl_pipe = DeepLearningPipeline(
+            config=config,
+            model_name=dl_model,
+            input_size=len(feature_cols),
+            window_size=W,
+        )
+        dl_pipe.fit(
+            train_X=train_X_scaled,
+            train_y=train_y,
+            val_X=val_X_scaled,
+            val_y=val_y,
+        )
+
+        logger.info(f"Evaluating deep learning model: {dl_model} (BATADAL)")
+        dl_probs = dl_pipe.predict_proba(test_X_scaled)
+        dl_preds = (dl_probs >= 0.5).astype(int)
+        dl_y_true = test_y[W - 1 :]
+        dl_metrics = evaluate_predictions(dl_y_true, dl_preds)
+        results_by_model[dl_model] = {
+            "metrics": dl_metrics,
+            "predictions": compact_prediction_records(
+                dl_y_true, dl_preds, dl_probs.tolist(), W, max_records=max_predictions
+            ),
+        }
+        if experiment_logger is not None:
+            dl_params = automata_experiment_parameters(config)
+            dl_params["deep_learning_model"] = dl_model
+            dl_params.update(dl_pipe.training_summary())
+            experiment_logger.log(
+                build_experiment_record(
+                    dataset="batadal",
+                    model=dl_model,
+                    scenario=scenario,
+                    seed=seed,
+                    parameters=dl_params,
+                    metrics=dl_metrics,
+                )
+            )
+
+    return {
+        **results_by_model,
+        "automata_states": automata_pipe.automata.state_count,
+        "automata_density": automata_pipe.automata.transition_density,
+    }
+
+
+def run_skab_parameter_variation(
+    config: ProjectConfig,
+    skab_df: pd.DataFrame,
+    skab_feature_cols: list[str],
+    skab_target_col: str,
+) -> list[dict[str, Any]]:
+    logger.info("Running SKAB automata parameter variation...")
+    seeds = config.get("project", "random_seeds", default=[42, 123, 2026, 7, 999])
+    group_col = config.get("datasets", "skab", "group_column")
+    n_splits = config.get("datasets", "skab", "n_splits", default=5)
+    prefer_stratified = config.get("datasets", "skab", "prefer_stratified_group_kfold", default=True)
+
+    def split_provider(seed: int) -> list[tuple[pd.DataFrame, pd.DataFrame]]:
+        splits = make_skab_group_folds(
+            skab_df,
+            target_column=skab_target_col,
+            group_column=group_col,
+            n_splits=n_splits,
+            seed=seed,
+            prefer_stratified=prefer_stratified,
+        )
+        return [(skab_df.iloc[split.train], skab_df.iloc[split.test]) for split in splits]
+
+    return run_parameter_grid(
+        config,
+        dataset_name="skab",
+        split_provider=split_provider,
+        feature_columns=skab_feature_cols,
+        target_column=skab_target_col,
+        seeds=seeds,
+    )
+
+
+def run_batadal_parameter_variation(
+    config: ProjectConfig,
+    batadal_df: pd.DataFrame,
+    feature_cols: list[str],
+    target_col: str,
+) -> list[dict[str, Any]]:
+    logger.info("Running BATADAL automata parameter variation...")
+    seeds = config.get("project", "random_seeds", default=[42, 123, 2026, 7, 999])
+    split_conf = config.get("datasets", "batadal", "split")
+
+    def split_provider(_seed: int) -> list[tuple[pd.DataFrame, pd.DataFrame]]:
+        split = make_batadal_chronological_split(
+            batadal_df,
+            train_ratio=split_conf.get("train", 0.6),
+            validation_ratio=split_conf.get("validation", 0.2),
+            test_ratio=split_conf.get("test", 0.2),
+        )
+        return [(batadal_df.iloc[split.train], batadal_df.iloc[split.test])]
+
+    return run_parameter_grid(
+        config,
+        dataset_name="batadal",
+        split_provider=split_provider,
+        feature_columns=feature_cols,
+        target_column=target_col,
+        seeds=seeds,
+    )
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Run explainable automata vs deep learning experiments.")
+    parser.add_argument(
+        "--fast",
+        action="store_true",
+        help="Hızlı smoke-run: 1 seed, 1 senaryo (original), sadece automata. Geliştirme sırasında önerilir.",
+    )
+    parser.add_argument(
+        "--seeds",
+        type=str,
+        default="",
+        help="Virgülle ayrılmış seed listesi. Örn: 42,123. Boşsa config kullanılır.",
+    )
+    parser.add_argument(
+        "--scenarios",
+        type=str,
+        default="",
+        help='Virgülle ayrılmış senaryo listesi. Örn: original,gaussian_noise. Boşsa config kullanılır.',
+    )
+    parser.add_argument(
+        "--models",
+        type=str,
+        default="",
+        help='Virgülle ayrılmış model listesi. Örn: automata,lstm,gru,cnn1d. Boşsa config kullanılır.',
+    )
+    parser.add_argument(
+        "--max-folds",
+        type=int,
+        default=0,
+        help="SKAB için en fazla kaç fold çalıştırılsın. 0 veya negatifse tüm fold'lar çalışır.",
+    )
+    parser.add_argument(
+        "--skip-parameter-grid",
+        action="store_true",
+        help="Ana deneyler bittikten sonra otomata parametre taramasını atla (uzun süren faz).",
+    )
+    parser.add_argument(
+        "--timestamped-results",
+        action="store_true",
+        help="Sonuçları outputs/results/run_YYYYMMDD_HHMMSS alt klasörüne yaz.",
+    )
+    args = parser.parse_args()
+
+    config = load_config("config/config.yaml")
+    base_results_dir = Path(config.get("paths", "results", default="outputs/results"))
+    results_dir = prepare_results_dir(base_results_dir, timestamped=args.timestamped_results)
+    figures_dir = Path(config.get("paths", "figures", default="outputs/figures"))
+    logs_dir = Path(config.get("paths", "logs", default="outputs/logs"))
+    explanations_dir = results_dir.parent / EXPLANATIONS_DIR_NAME
+    results_dir.mkdir(parents=True, exist_ok=True)
+    figures_dir.mkdir(parents=True, exist_ok=True)
+    logs_dir.mkdir(parents=True, exist_ok=True)
+
+    experiment_logger = ExperimentLogger(logs_dir)
+    if experiment_logger.jsonl_path.exists():
+        experiment_logger.jsonl_path.unlink()
+
+    logger.info("Loading Datasets...")
+
+    # A. SKAB
+    skab_root = config.get("paths", "skab_root")
+    skab_groups = config.get("datasets", "skab", "enabled_groups")
+    skab_target = config.get("datasets", "skab", "target_column")
+    skab_excluded = config.get("datasets", "skab", "excluded_input_columns")
+
+    skab_df = load_skab(skab_root, skab_groups)
+    skab_feature_cols = skab_feature_columns(skab_df, skab_target, skab_excluded)
+    logger.info(f"SKAB loaded. Shape: {skab_df.shape}, Features: {len(skab_feature_cols)}")
+
+    # B. BATADAL
+    batadal_path = config.get("paths", "batadal_training_dataset_2")
+    batadal_df = load_batadal_training_dataset_2(batadal_path)
+
+    # BATADAL Training Dataset 2'deki normal çalışmayı temsil eden -999 değerlerini 0'a, anomalileri ise 1'e çekiyoruz
+    if "ATT_FLAG" in batadal_df.columns:
+        batadal_df["ATT_FLAG"] = batadal_df["ATT_FLAG"].replace(-999, 0).replace(2, 1)
+
+    batadal_target = infer_batadal_target_column(batadal_df, config.get("datasets", "batadal", "target_column"))
+    batadal_time_cols = config.get("datasets", "batadal", "time_columns")
+    batadal_feature_cols = batadal_feature_columns(batadal_df, batadal_target, batadal_time_cols)
+    logger.info(
+        f"BATADAL loaded. Shape: {batadal_df.shape}, Target: {batadal_target}, Features: {len(batadal_feature_cols)}"
+    )
+
+    # --- 2. Deneyleri Seed ve Senaryolar Altında Çalıştırıyoruz ---
+    seeds = config.get("project", "random_seeds", default=[42, 123, 2026, 7, 999])
+    scenarios = config.get("experiments", "scenarios", default=["original", "gaussian_noise", "unseen"])
+    models_override: list[str] | None = None
+    max_folds: int | None = None
+
+    if args.fast:
+        seeds = [42]
+        scenarios = ["original"]
+        models_override = ["automata"]
+        max_folds = 1
+        logger.info("FAST mode enabled: seeds=[42], scenarios=['original'], models=['automata']")
+
+    if args.seeds.strip():
+        seeds = [int(x.strip()) for x in args.seeds.split(",") if x.strip()]
+        logger.info(f"CLI override: seeds={seeds}")
+
+    if args.scenarios.strip():
+        scenarios = [x.strip() for x in args.scenarios.split(",") if x.strip()]
+        logger.info(f"CLI override: scenarios={scenarios}")
+
+    if args.models.strip():
+        models_override = [x.strip() for x in args.models.split(",") if x.strip()]
+        logger.info(f"CLI override: models={models_override}")
+
+    if args.max_folds and args.max_folds > 0:
+        max_folds = int(args.max_folds)
+        logger.info(f"CLI override: max_folds={max_folds}")
+
+    skab_full_results = []
+    batadal_full_results = []
+
+    for seed in seeds:
+        skab_seed_res: dict[str, Any] = {}
+        batadal_seed_res: dict[str, Any] = {}
+
+        for scenario in scenarios:
+            # Run SKAB
+            skab_res = run_skab_experiment(
+                config,
+                skab_df,
+                skab_feature_cols,
+                skab_target,
+                scenario,
+                seed,
+                models_override=models_override,
+                max_folds=max_folds,
+                experiment_logger=experiment_logger,
+            )
+            skab_seed_res[scenario] = skab_res
+
+            batadal_res = run_batadal_experiment(
+                config,
+                batadal_df,
+                batadal_feature_cols,
+                batadal_target,
+                scenario,
+                seed,
+                models_override=models_override,
+                experiment_logger=experiment_logger,
+            )
+            batadal_seed_res[scenario] = batadal_res
+
+            max_explanations, _ = output_limits(config)
+            automata_samples = batadal_res.get("automata", {}).get("full_explanation_samples", [])
+            export_automata_explanations(
+                explanations_dir,
+                "batadal",
+                scenario,
+                seed,
+                automata_samples,
+                max_samples=max_explanations,
+            )
+            skab_automata_outputs = skab_res.get("automata", {}).get("outputs", [])
+            if skab_automata_outputs:
+                skab_samples: list[dict[str, Any]] = []
+                for fold_output in skab_automata_outputs:
+                    skab_samples.extend(fold_output.get("full_explanation_samples", []))
+                export_automata_explanations(
+                    explanations_dir,
+                    "skab",
+                    scenario,
+                    seed,
+                    skab_samples,
+                    max_samples=max_explanations,
+                )
+
+        skab_full_results.append({"seed": seed, **skab_seed_res})
+        batadal_full_results.append({"seed": seed, **batadal_seed_res})
+
+    
+    significance: dict[str, Any] = {}
+    if not args.fast:
+        significance = calculate_statistical_significance(skab_full_results)
+
+    skab_variation: list[dict[str, Any]] = []
+    batadal_variation: list[dict[str, Any]] = []
+    run_parameter_grid_phase = not args.fast and not args.skip_parameter_grid
+    if run_parameter_grid_phase:
+        skab_variation = run_skab_parameter_variation(config, skab_df, skab_feature_cols, skab_target)
+        batadal_variation = run_batadal_parameter_variation(
+            config, batadal_df, batadal_feature_cols, batadal_target
+        )
+    elif args.skip_parameter_grid:
+        logger.info("Parameter grid phase skipped (--skip-parameter-grid).")
+
+    logger.info("Saving results to %s", results_dir)
+    backup_existing = not args.timestamped_results
+    write_json_result(results_dir, "skab_experiments.json", skab_full_results, backup_existing=backup_existing)
+    write_json_result(results_dir, "batadal_experiments.json", batadal_full_results, backup_existing=backup_existing)
+    write_json_result(results_dir, "statistical_significance.json", significance, backup_existing=backup_existing)
+    write_json_result(
+        results_dir,
+        "automata_parameter_variation.json",
+        skab_variation,
+        backup_existing=backup_existing,
+    )
+    write_json_result(
+        results_dir,
+        "batadal_parameter_variation.json",
+        batadal_variation,
+        backup_existing=backup_existing,
+    )
+
+    experiment_logger.save_run_summary(
+        {
+            "seeds": seeds,
+            "scenarios": scenarios,
+            "models": models_override or config.get("deep_learning", "models", default=[]),
+            "fast_mode": args.fast,
+            "skip_parameter_grid": args.skip_parameter_grid,
+            "timestamped_results": args.timestamped_results,
+            "results_dir": str(results_dir),
+            "skab_target": skab_target,
+            "batadal_target": batadal_target,
+            "record_count": sum(1 for _ in experiment_logger.jsonl_path.open(encoding="utf-8"))
+            if experiment_logger.jsonl_path.exists()
+            else 0,
+        }
+    )
+
+    if not args.fast:
+        generate_all_visualizations(results_dir, figures_dir)
+        try:
+            import subprocess
+            import sys
+
+            report_script = Path(__file__).resolve().parent / "scripts" / "generate_report_metrics.py"
+            subprocess.run([sys.executable, str(report_script)], check=True, cwd=Path(__file__).resolve().parent)
+            logger.info("README metric tables refreshed from experiment outputs.")
+        except Exception as exc:
+            logger.warning("Could not refresh README metrics: %s", exc)
+    else:
+        logger.info("FAST mode: skipping full visualization generation.")
+    logger.info(f"All experiments executed successfully. Outputs stored in {results_dir}")
+
+
+if __name__ == "__main__":
+    main()
+
+
+================================================================================
+File: ./tests/test_deep_learning_pipeline.py
+================================================================================
+import unittest
+import numpy as np
+from src.config import load_config
+from src.models.deep_learning_pipeline import TimeSeriesDataset, DeepLearningPipeline, set_seed
+
+class TestDeepLearningPipeline(unittest.TestCase):
+    def setUp(self):
+        set_seed(42)
+        self.X = np.random.randn(100, 3)
+        self.y = np.random.randint(0, 2, size=100)
+        self.window_size = 4
+        self.config = load_config("config/config.yaml")
+
+    def test_dataset_windowing(self):
+        dataset = TimeSeriesDataset(self.X, self.y, self.window_size)
+        self.assertEqual(len(dataset), 100 - self.window_size + 1)
+        
+        x_win, y_target = dataset[0]
+        self.assertEqual(x_win.shape, (self.window_size, 3))
+
+        np.testing.assert_allclose(x_win.numpy(), self.X[:self.window_size], rtol=1e-5, atol=1e-5)
+        self.assertEqual(y_target.item(), self.y[self.window_size - 1])
+
+    def test_lstm_pipeline_training_and_prediction(self):
+        pipeline = DeepLearningPipeline(
+            config=self.config,
+            model_name="lstm",
+            input_size=3,
+            window_size=self.window_size
+        )
+        
+        pipeline.fit(self.X[:50], self.y[:50], val_X=self.X[50:70], val_y=self.y[50:70])
+        
+        preds = pipeline.predict(self.X[70:])
+
+        self.assertEqual(len(preds), len(self.X[70:]) - self.window_size + 1)
+        
+        metrics = pipeline.predict_and_evaluate(self.X[70:], self.y[70:])
+        self.assertIn("accuracy", metrics)
+        self.assertIn("f1", metrics)
+
+    def test_cnn_pipeline_training_and_prediction(self):
+        pipeline = DeepLearningPipeline(
+            config=self.config,
+            model_name="cnn1d",
+            input_size=3,
+            window_size=self.window_size
+        )
+        
+        # Eğitme
+        pipeline.fit(self.X[:40], self.y[:40])
+        
+        # Öngörme
+        preds = pipeline.predict(self.X[40:])
+        self.assertEqual(len(preds), len(self.X[40:]) - self.window_size + 1)
+
+if __name__ == "__main__":
+    unittest.main()
+
+
+================================================================================
+File: ./tests/test_experiment_result.py
+================================================================================
+import unittest
+
+from src.experiments.results import ExperimentResult
+
+
+class TestExperimentResult(unittest.TestCase):
+    def test_experiment_result_can_be_created_and_read_metrics(self):
+        result = ExperimentResult(
+            dataset="skab",
+            model="automata",
+            scenario="original",
+            seed=42,
+            parameters={"window_size": 4, "alphabet_size": 3},
+            metrics={"f1": 0.91, "accuracy": 0.95},
+        )
+
+        self.assertEqual(result.dataset, "skab")
+        self.assertEqual(result.metrics["f1"], 0.91)
+        self.assertEqual(result.to_dict()["model"], "automata")
+
+
+if __name__ == "__main__":
+    unittest.main()
+
+
+================================================================================
+File: ./tests/test_config_and_pipeline.py
+================================================================================
+import unittest
+
+import pandas as pd
+
+from src.config import load_config
+from src.pipeline import build_fixed_automata_pipeline
+
+
+class TestConfigAndPipeline(unittest.TestCase):
+    def test_config_loads_without_pyyaml(self):
+        config = load_config()
+
+        self.assertEqual(config.get("project", "name"), "explainable-automata-ts")
+        self.assertEqual(config.get("deep_learning", "batch_size"), 32)
+
+    def test_fixed_automata_pipeline_runs_with_train_only_fit(self):
+        config = load_config()
+        train = pd.DataFrame({"sensor_a": [0, 1, 2, 3, 4, 5], "sensor_b": [1, 2, 3, 4, 5, 6]})
+        test = pd.DataFrame({"sensor_a": [2, 3, 4, 5, 6], "sensor_b": [3, 4, 5, 6, 7]})
+
+        pipeline = build_fixed_automata_pipeline(config).fit(train, ["sensor_a", "sensor_b"])
+        prediction = pipeline.predict(test)
+
+        self.assertIn(prediction["decision"], {"normal", "anomaly"})
+        self.assertIn("probability", prediction)
+
+
+if __name__ == "__main__":
+    unittest.main()
+
+
+================================================================================
+File: ./tests/test_explanation_export.py
+================================================================================
+import unittest
+
+from src.explainability.explanation_export import select_explanation_samples
+
+
+class TestExplanationExport(unittest.TestCase):
+    def test_unseen_scenario_prioritizes_unseen_samples(self):
+        explanations = [
+            {"time_step": i, "status": "seen", "pattern": f"p{i}"}
+            for i in range(100)
+        ]
+        explanations[50] = {
+            "time_step": 50,
+            "status": "unseen",
+            "pattern": "adc",
+            "mapped_to": "abc",
+        }
+
+        selected = select_explanation_samples(explanations, "unseen", max_count=5)
+
+        self.assertTrue(any(item.get("status") == "unseen" for item in selected))
+        self.assertLessEqual(len(selected), 5)
+
+    def test_original_scenario_keeps_prefix(self):
+        explanations = [{"time_step": i, "status": "seen"} for i in range(10)]
+        selected = select_explanation_samples(explanations, "original", max_count=3)
+        self.assertEqual([0, 1, 2], [item["time_step"] for item in selected])
+
+
+if __name__ == "__main__":
+    unittest.main()
+
+
+================================================================================
+File: ./tests/test_sax_paa.py
+================================================================================
+import unittest
+
+import numpy as np
+
+from src.features.paa import paa
+from src.features.sax import sax
+from src.features.windowing import extract_sax_patterns
+
+
+class TestSaxPaa(unittest.TestCase):
+    def test_paa_reduces_to_requested_segments(self):
+        reduced = paa(np.array([1, 2, 3, 4]), segments=2)
+
+        np.testing.assert_allclose(reduced, np.array([1.5, 3.5]))
+
+    def test_sax_uses_configured_alphabet_size(self):
+        pattern = sax(np.array([-2.0, 0.0, 2.0]), alphabet_size=3)
+
+        self.assertEqual(len(pattern), 3)
+        self.assertTrue(set(pattern).issubset({"a", "b", "c"}))
+
+    def test_sliding_pattern_count(self):
+        patterns = extract_sax_patterns(
+            np.array([1, 2, 3, 4, 5]),
+            window_size=3,
+            paa_segments=3,
+            alphabet_size=3,
+        )
+
+        self.assertEqual(len(patterns), 3)
+
+
+class TestPaaValidation(unittest.TestCase):
+    def test_paa_rejects_non_positive_segments(self):
+        sequence = np.array([1.0, 2.0, 3.0, 4.0])
+
+        with self.assertRaises(ValueError):
+            paa(sequence, segments=0)
+
+        with self.assertRaises(ValueError):
+            paa(sequence, segments=-1)
+
+    def test_paa_rejects_segments_larger_than_sequence(self):
+        with self.assertRaises(ValueError):
+            paa(np.array([1.0, 2.0, 3.0, 4.0]), segments=5)
+
+
+class TestSaxValidation(unittest.TestCase):
+    def test_sax_rejects_alphabet_size_below_two(self):
+        sequence = np.array([-2.0, 0.0, 2.0])
+
+        with self.assertRaises(ValueError):
+            sax(sequence, alphabet_size=1)
+
+        with self.assertRaises(ValueError):
+            sax(sequence, alphabet_size=0)
+
+    def test_sax_rejects_alphabet_size_above_twenty_six(self):
+        with self.assertRaises(ValueError):
+            sax(np.array([-2.0, 0.0, 2.0]), alphabet_size=27)
+
+
+if __name__ == "__main__":
+    unittest.main()
+
+
+================================================================================
+File: ./tests/test_automata_prefix_predictions.py
+================================================================================
+import unittest
+
+import numpy as np
+
+from src.models.automata import ProbabilisticAutomata
+
+
+class TestAutomataPrefixPredictions(unittest.TestCase):
+    def test_prefix_labels_match_naive_prefix_loop_on_small_sequence(self):
+        patterns = ["aaa", "aab", "abb", "abc", "bcc", "abc", "aab"]
+        automata = ProbabilisticAutomata().fit(patterns)
+
+        fast_preds = automata.predict_prefix_labels(patterns)
+        naive_preds: list[int] = []
+        for idx in range(1, len(patterns) + 1):
+            decision = automata.predict_sequence(patterns[:idx])["decision"]
+            naive_preds.append(1 if decision == "anomaly" else 0)
+
+        np.testing.assert_array_equal(fast_preds, np.asarray(naive_preds, dtype=int))
+
+
+if __name__ == "__main__":
+    unittest.main()
+
+
+================================================================================
+File: ./tests/test_unseen_injection.py
+================================================================================
+import unittest
+
+from src.experiments.scenarios import inject_unseen_pattern
+
+
+class TestUnseenInjection(unittest.TestCase):
+    def test_injected_pattern_not_in_forbidden_vocabulary(self):
+        # alphabet_size=3 => {a,b,c}, length=4 => 3^4 küçük; deterministik seçim yapılır.
+        forbidden = {"aaaa", "aaab"}
+        patterns = ["aaaa", "aaab", "aabb", "abcc", "bbbb"]
+
+        mutated = inject_unseen_pattern(
+            patterns,
+            replacement="zzzz",
+            forbidden_patterns=forbidden,
+            alphabet_size=3,
+        )
+
+        injected = mutated[len(patterns) // 2]
+        self.assertNotIn(injected, forbidden)
+        self.assertEqual(len(injected), len(patterns[0]))
+
+
+if __name__ == "__main__":
+    unittest.main()
+
+
+
+================================================================================
+File: ./tests/test_sax_train_only.py
+================================================================================
+import unittest
+
+import numpy as np
+
+from src.features.sax import TrainableSAXEncoder
+
+
+class TestTrainableSAXEncoder(unittest.TestCase):
+    def test_encoder_fit_uses_only_training_statistics(self):
+        train = np.linspace(0.0, 10.0, 200)
+        encoder = TrainableSAXEncoder().fit(
+            train,
+            window_size=5,
+            paa_segments=5,
+            alphabet_size=3,
+        )
+
+        train_mean = encoder.mean_
+        train_std = encoder.std_
+
+        shifted_test = np.linspace(100.0, 200.0, 100)
+        patterns = encoder.transform(shifted_test)
+
+        self.assertGreater(len(patterns), 0)
+        self.assertAlmostEqual(encoder.mean_, train_mean)
+        self.assertAlmostEqual(encoder.std_, train_std)
+
+    def test_unfitted_encoder_raises_on_transform(self):
+        encoder = TrainableSAXEncoder()
+        with self.assertRaises(RuntimeError):
+            encoder.transform(np.array([1.0, 2.0, 3.0, 4.0, 5.0]))
+
+
+if __name__ == "__main__":
+    unittest.main()
+
+
+================================================================================
+File: ./tests/test_unseen_mapping.py
+================================================================================
+import unittest
+
+from src.explainability.automata_explainer import explain_automata_decision
+from src.models.automata import ProbabilisticAutomata
+
+
+class TestUnseenMapping(unittest.TestCase):
+    def test_unseen_pattern_maps_to_nearest_seen_pattern(self):
+        automata = ProbabilisticAutomata().fit(["aaa", "abc", "bcc", "abc"])
+
+        mapping = automata.map_pattern("adc")
+
+        self.assertEqual(mapping.status, "unseen")
+        self.assertEqual(mapping.mapped, "abc")
+        self.assertEqual(mapping.distance, 1)
+
+    def test_explanation_reports_unseen_mapping(self):
+        automata = ProbabilisticAutomata().fit(["aab", "abc", "bcc", "abc"])
+
+        explanation = explain_automata_decision(automata, ["aab", "adc"], time_step=5)
+
+        self.assertEqual(explanation["time_step"], 5)
+        self.assertEqual(explanation["status"], "unseen")
+        self.assertEqual(explanation["mapped_to"], "abc")
+        self.assertIn("transitions", explanation)
+        self.assertIn("confidence", explanation)
+
+
+class TestProbabilisticAutomataMetrics(unittest.TestCase):
+    def test_state_count_matches_unique_patterns(self):
+        patterns = ["aaa", "aab", "abb", "aab"]
+        automata = ProbabilisticAutomata().fit(patterns)
+
+        self.assertEqual(automata.state_count, len(set(patterns)))
+
+    def test_transition_density_is_between_zero_and_one(self):
+        automata = ProbabilisticAutomata().fit(["aaa", "aab", "abb", "aab"])
+
+        self.assertGreaterEqual(automata.transition_density, 0.0)
+        self.assertLessEqual(automata.transition_density, 1.0)
+
+
+if __name__ == "__main__":
+    unittest.main()
+
+
+================================================================================
+File: ./tests/test_splits_no_leakage.py
+================================================================================
+import unittest
+
+import numpy as np
+import pandas as pd
+
+from src.data.preprocessing import LeakageSafePreprocessor
+from src.data.splits import (
+    assert_no_group_leakage,
+    make_batadal_chronological_split,
+    make_skab_group_folds,
+)
+
+
+class TestSplitsNoLeakage(unittest.TestCase):
+    def test_skab_group_folds_keep_source_files_disjoint(self):
+        df = pd.DataFrame(
+            {
+                "value": np.arange(12),
+                "anomaly": [0, 1] * 6,
+                "source_file": ["f1"] * 3 + ["f2"] * 3 + ["f3"] * 3 + ["f4"] * 3,
+            }
+        )
+
+        folds = make_skab_group_folds(
+            df,
+            target_column="anomaly",
+            group_column="source_file",
+            n_splits=2,
+            seed=42,
+            prefer_stratified=False,
+        )
+
+        for split in folds:
+            assert_no_group_leakage(df, split, "source_file")
+
+    def test_batadal_split_is_chronological_60_20_20(self):
+        df = pd.DataFrame({"x": np.arange(10)})
+
+        split = make_batadal_chronological_split(df)
+
+        np.testing.assert_array_equal(split.train, np.arange(0, 6))
+        np.testing.assert_array_equal(split.validation, np.arange(6, 8))
+        np.testing.assert_array_equal(split.test, np.arange(8, 10))
+
+    def test_preprocessor_fits_only_train_statistics(self):
+        train = pd.DataFrame({"x": [0.0, 2.0], "y": [10.0, 14.0]})
+        test = pd.DataFrame({"x": [100.0], "y": [200.0]})
+        preprocessor = LeakageSafePreprocessor(use_standard_scaler=True, pca_components=None)
+
+        preprocessor.fit(train, ["x", "y"])
+        transformed_test = preprocessor.transform(test)
+
+        self.assertAlmostEqual(preprocessor.scaler_.mean_[0], 1.0)
+        self.assertGreater(transformed_test[0, 0], 50.0)
+
+
+class TestBatadalSplitValidation(unittest.TestCase):
+    def test_batadal_split_rejects_ratios_not_summing_to_one(self):
+        df = pd.DataFrame({"x": np.arange(10)})
+
+        with self.assertRaises(ValueError):
+            make_batadal_chronological_split(
+                df,
+                train_ratio=0.6,
+                validation_ratio=0.2,
+                test_ratio=0.1,
+            )
+
+
+if __name__ == "__main__":
+    unittest.main()
+
+
+================================================================================
+File: ./tests/test_preprocessing_missing.py
+================================================================================
+import unittest
+
+import numpy as np
+import pandas as pd
+
+from src.data.preprocessing import LeakageSafePreprocessor, build_leakage_safe_preprocessor
+from src.config import load_config
+
+
+class TestPreprocessingMissing(unittest.TestCase):
+    def test_median_imputation_uses_train_statistics_only(self):
+        train = pd.DataFrame({"sensor_a": [1.0, np.nan, 3.0], "sensor_b": [4.0, 5.0, 6.0]})
+        test = pd.DataFrame({"sensor_a": [np.nan, 10.0], "sensor_b": [7.0, 8.0]})
+
+        preprocessor = LeakageSafePreprocessor(
+            use_standard_scaler=False,
+            pca_components=None,
+            missing_strategy="median",
+        )
+        preprocessor.fit(train, ["sensor_a", "sensor_b"])
+        transformed = preprocessor.transform(test)
+
+        self.assertEqual(transformed.shape, (2, 2))
+        self.assertFalse(np.isnan(transformed).any())
+        self.assertEqual(preprocessor._fill_values_["sensor_a"], 2.0)
+
+    def test_build_preprocessor_reads_config(self):
+        config = load_config()
+        dl_preprocessor = build_leakage_safe_preprocessor(config)
+        automata_preprocessor = build_leakage_safe_preprocessor(config, for_automata=True)
+        self.assertEqual(dl_preprocessor.missing_strategy, "median")
+        self.assertIsNone(dl_preprocessor.pca_components)
+        self.assertEqual(automata_preprocessor.pca_components, 1)
+
+    def test_dl_preprocessor_keeps_feature_dimension(self):
+        config = load_config()
+        train = pd.DataFrame(
+            {
+                "sensor_a": [0.0, 1.0, 2.0, 3.0],
+                "sensor_b": [1.0, 2.0, 3.0, 4.0],
+                "sensor_c": [2.0, 3.0, 4.0, 5.0],
+            }
+        )
+        preprocessor = build_leakage_safe_preprocessor(config)
+        out = preprocessor.fit_transform(train, ["sensor_a", "sensor_b", "sensor_c"])
+        self.assertEqual(out.shape[1], 3)
+
+
+if __name__ == "__main__":
+    unittest.main()
+
+
+================================================================================
+File: ./tests/test_counterfactual.py
+================================================================================
+import unittest
+
+from src.explainability.automata_explainer import explain_automata_decision, find_counterfactual
+from src.models.automata import ProbabilisticAutomata
+
+
+class TestCounterfactualAnalysis(unittest.TestCase):
+    def test_counterfactual_finds_decision_flipping_pattern(self):
+        # Durumlar: 'aab' -> 'abc' (1.0 geçişi)
+        # 'aab' -> 'bcc' (0.0 geçişi - imkansız)
+        automata = ProbabilisticAutomata(anomaly_quantile=0.5).fit(["aab", "abc", "aab", "abc"])
+        automata.threshold_ = 0.1
+
+        # Test: 'abc' -> 'abc' dizisi
+        # 'abc' -> 'abc' geçişi train'de olmadığı için olasılık çok düşük (1e-12) olacaktır ve ANOMALİ kararı verilecektir.
+        patterns = ["abc", "abc"]
+        explanation = explain_automata_decision(automata, patterns, time_step=1)
+
+        self.assertEqual(explanation["decision"], "anomaly")
+        cf = explanation["counterfactual"]
+        
+        # Karar 'anomaly' olduğu için counterfactual bunu 'normal' yapmalıdır.
+        self.assertIsNotNone(cf)
+        self.assertEqual(cf["decision"], "normal")
+        self.assertEqual(cf["pattern"], "aab")  # 'abc' -> 'aab' geçişi normaldir.
+        self.assertEqual(cf["distance"], 2)  # abc ve aab arasındaki Levenshtein mesafesi 2'dir.
+
+    def test_counterfactual_returns_none_if_no_states(self):
+        automata = ProbabilisticAutomata()
+        cf = find_counterfactual(automata, ["abc"], "normal", 0.05)
+        self.assertIsNone(cf)
+
+
+if __name__ == "__main__":
+    unittest.main()
+
+
+================================================================================
+File: ./tests/test_statistical_significance.py
+================================================================================
+import unittest
+
+from src.evaluation.statistical_tests import calculate_statistical_significance
+
+
+class TestStatisticalSignificance(unittest.TestCase):
+    def test_wilcoxon_uses_paired_folds_per_seed(self):
+        skab_results = [
+            {
+                "seed": 42,
+                "original": {
+                    "automata": {"raw": [{"f1": 0.4}, {"f1": 0.5}, {"f1": 0.6}]},
+                    "lstm": {"raw": [{"f1": 0.7}, {"f1": 0.8}, {"f1": 0.9}]},
+                    "gru": {"raw": [{"f1": 0.65}, {"f1": 0.75}, {"f1": 0.85}]},
+                },
+            }
+        ]
+
+        sig = calculate_statistical_significance(skab_results)
+        self.assertEqual(sig["paired_fold_count_lstm"], 3)
+        self.assertIn("automata_vs_lstm", sig)
+        self.assertIn("p_value", sig["automata_vs_lstm"])
+
+
+if __name__ == "__main__":
+    unittest.main()
+
+
+================================================================================
+File: ./tests/test_experiment_logger.py
+================================================================================
+import json
+import tempfile
+import unittest
+from pathlib import Path
+
+from src.experiments.experiment_logger import ExperimentLogger, build_experiment_record
+
+
+class TestExperimentLogger(unittest.TestCase):
+    def test_logs_jsonl_and_summary(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            logger = ExperimentLogger(tmp)
+            logger.log(
+                build_experiment_record(
+                    dataset="skab",
+                    model="automata",
+                    scenario="original",
+                    seed=42,
+                    parameters={"window_size": 4},
+                    metrics={"f1": 0.5},
+                    fold=0,
+                )
+            )
+            logger.save_run_summary({"seeds": [42]})
+
+            lines = logger.jsonl_path.read_text(encoding="utf-8").strip().splitlines()
+            self.assertEqual(len(lines), 1)
+            record = json.loads(lines[0])
+            self.assertEqual(record["dataset"], "skab")
+            self.assertEqual(record["metrics"]["f1"], 0.5)
+
+            summary = json.loads((Path(tmp) / "run_summary.json").read_text(encoding="utf-8"))
+            self.assertEqual(summary["seeds"], [42])
+
+
+if __name__ == "__main__":
+    unittest.main()
+
+
+================================================================================
+File: ./scripts/generate_report_metrics.py
+================================================================================
+#!/usr/bin/env python3
+"""Deney JSON sonuçlarından README'deki sayısal tablo bloğunu günceller.
+
+Bu script rapor metnini veya görselleri yazmaz; yalnızca <!-- AUTO_METRICS_START -->
+ile <!-- AUTO_METRICS_END --> arasındaki tabloları outputs/results/*.json dosyalarından doldurur.
+"""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+from typing import Any
+
+import numpy as np
+
+SCENARIOS = ("original", "gaussian_noise", "unseen")
+
+
+def _fmt(value: float) -> str:
+    return f"{value:.4f}"
+
+
+def _mean_std(values: list[float]) -> str:
+    if not values:
+        return "N/A"
+    mean = float(np.mean(values))
+    std = float(np.std(values))
+    return f"{_fmt(mean)} ± {_fmt(std)}"
+
+
+def _skab_models(skab_data: list[dict[str, Any]], scenario: str) -> list[str]:
+    models = []
+    for key in skab_data[0][scenario]:
+        if key not in {"automata_states", "automata_densities"}:
+            models.append(key)
+    return models
+
+
+def _batadal_models(batadal_data: list[dict[str, Any]], scenario: str) -> list[str]:
+    models = []
+    for key in batadal_data[0][scenario]:
+        if key not in {"automata_states", "automata_density", "automata_densities"}:
+            models.append(key)
+    return models
+
+
+def skab_table(skab_data: list[dict[str, Any]], scenario: str) -> str:
+    models = _skab_models(skab_data, scenario)
+    lines = [
+        f"### SKAB — {scenario} (5 fold ort., 5 seed)",
+        "",
+        "| Model | Accuracy | Precision | Recall | F1 |",
+        "|---|---:|---:|---:|---:|",
+    ]
+    for model in models:
+        acc, prec, rec, f1 = [], [], [], []
+        for seed_entry in skab_data:
+            mean = seed_entry[scenario][model]["mean"]
+            acc.append(mean["accuracy"])
+            prec.append(mean["precision"])
+            rec.append(mean["recall"])
+            f1.append(mean["f1"])
+        lines.append(
+            f"| {model.upper()} | {_mean_std(acc)} | {_mean_std(prec)} | {_mean_std(rec)} | {_mean_std(f1)} |"
+        )
+    lines.append("")
+    return "\n".join(lines)
+
+
+def batadal_table(batadal_data: list[dict[str, Any]], scenario: str) -> str:
+    models = _batadal_models(batadal_data, scenario)
+    lines = [
+        f"### BATADAL — {scenario} (%20 test, 5 seed)",
+        "",
+        "| Model | Accuracy | Precision | Recall | F1 |",
+        "|---|---:|---:|---:|---:|",
+    ]
+    for model in models:
+        acc, prec, rec, f1 = [], [], [], []
+        for seed_entry in batadal_data:
+            metrics = seed_entry[scenario][model]["metrics"]
+            acc.append(metrics["accuracy"])
+            prec.append(metrics["precision"])
+            rec.append(metrics["recall"])
+            f1.append(metrics["f1"])
+        lines.append(
+            f"| {model.upper()} | {_mean_std(acc)} | {_mean_std(prec)} | {_mean_std(rec)} | {_mean_std(f1)} |"
+        )
+    lines.append("")
+    return "\n".join(lines)
+
+
+def _transition_density_from_matrix(transitions: dict[str, dict[str, float]]) -> float:
+    n_states = len(transitions)
+    if n_states <= 1:
+        return 0.0
+    transition_count = sum(len(targets) for targets in transitions.values())
+    return transition_count / (n_states * (n_states - 1))
+
+
+def _load_fold_automata_stats(
+    skab_entry: dict[str, Any],
+    scenario: str,
+    logs_path: Path | None = None,
+) -> dict[int, dict[str, float]]:
+    stats: dict[int, dict[str, float]] = {}
+    for output in skab_entry.get(scenario, {}).get("automata", {}).get("outputs", []):
+        fold = output.get("fold")
+        if fold is None:
+            continue
+        if "state_count" in output and "transition_density" in output:
+            stats[int(fold)] = {
+                "state_count": float(output["state_count"]),
+                "transition_density": float(output["transition_density"]),
+            }
+            continue
+        transitions = output.get("transition_probabilities", {})
+        if transitions:
+            stats[int(fold)] = {
+                "state_count": float(len(transitions)),
+                "transition_density": float(_transition_density_from_matrix(transitions)),
+            }
+
+    if stats or logs_path is None or not logs_path.exists():
+        return stats
+
+    seed = skab_entry.get("seed")
+    for line in logs_path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        record = json.loads(line)
+        if (
+            record.get("dataset") != "skab"
+            or record.get("model") != "automata"
+            or record.get("scenario") != scenario
+            or record.get("seed") != seed
+        ):
+            continue
+        params = record.get("parameters", {})
+        fold = params.get("fold")
+        if fold is None:
+            continue
+        stats[int(fold)] = {
+            "state_count": float(params.get("state_count", 0)),
+            "transition_density": float(params.get("transition_density", 0.0)),
+        }
+    return stats
+
+
+def skab_fold_comparison_table(
+    skab_data: list[dict[str, Any]],
+    *,
+    scenario: str = "original",
+    seed: int = 42,
+) -> str:
+    entry = next(item for item in skab_data if item["seed"] == seed)
+    models = _skab_models(skab_data, scenario)
+    n_folds = len(entry[scenario][models[0]]["raw"])
+
+    header = "| Fold | " + " | ".join(model.upper() + " F1" for model in models) + " |"
+    sep = "|---:|" + "|".join(["---:"] * len(models)) + "|"
+    lines = [
+        f"### SKAB fold sonuçları (seed={seed}, {scenario})",
+        "",
+        header,
+        sep,
+    ]
+    for fold_idx in range(n_folds):
+        values = [_fmt(entry[scenario][model]["raw"][fold_idx]["f1"]) for model in models]
+        lines.append(f"| {fold_idx} | " + " | ".join(values) + " |")
+    lines.append("")
+    return "\n".join(lines)
+
+
+def skab_fold_detailed_tables(
+    skab_data: list[dict[str, Any]],
+    logs_path: Path,
+    *,
+    scenario: str = "original",
+    seed: int = 42,
+) -> str:
+    entry = next(item for item in skab_data if item["seed"] == seed)
+    models = _skab_models(skab_data, scenario)
+    automata_stats = _load_fold_automata_stats(entry, scenario, logs_path)
+    sections: list[str] = [
+        f"### SKAB fold detayı (seed={seed}, {scenario})",
+        "",
+    ]
+
+    for model in models:
+        raw = entry[scenario][model]["raw"]
+        lines = [
+            f"#### {model.upper()}",
+            "",
+            "| Fold | Acc | Prec | Rec | F1 |",
+            "|---:|---:|---:|---:|---:|",
+        ]
+        for fold_idx, fold_metrics in enumerate(raw):
+            lines.append(
+                f"| {fold_idx} | {_fmt(fold_metrics['accuracy'])} | {_fmt(fold_metrics['precision'])} | "
+                f"{_fmt(fold_metrics['recall'])} | {_fmt(fold_metrics['f1'])} |"
+            )
+        if model == "automata":
+            lines.extend(["", "| Fold | State | Density |", "|---:|---:|---:|"])
+            for fold_idx in range(len(raw)):
+                extra = automata_stats.get(fold_idx, {})
+                state_count = int(extra["state_count"]) if "state_count" in extra else "—"
+                density = _fmt(extra["transition_density"]) if "transition_density" in extra else "—"
+                lines.append(f"| {fold_idx} | {state_count} | {density} |")
+        lines.append("")
+        sections.append("\n".join(lines))
+
+    return "\n".join(sections)
+
+
+def parameter_variation_table(variation_path: Path, dataset_label: str) -> str:
+    if not variation_path.exists():
+        return ""
+    data = json.loads(variation_path.read_text(encoding="utf-8"))
+    if not data:
+        return ""
+
+    lines = [
+        f"### {dataset_label} parametre taraması",
+        "",
+        "| W | α | F1 | State | Density |",
+        "|---:|---:|---:|---:|---:|",
+    ]
+    for row in sorted(data, key=lambda item: (item["window_size"], item["alphabet_size"])):
+        lines.append(
+            f"| {row['window_size']} | {row['alphabet_size']} | "
+            f"{_fmt(row['f1_mean'])} ± {_fmt(row['f1_std'])} | "
+            f"{_fmt(row['states_mean'])} | {_fmt(row['density_mean'])} |"
+        )
+    lines.append("")
+    return "\n".join(lines)
+
+
+def significance_table(significance: dict[str, Any]) -> str:
+    lines = [
+        "### İstatistiksel testler (SKAB, original)",
+        "",
+        "| Karşılaştırma | Test | İstatistik | p |",
+        "|---|---|---|---:|",
+    ]
+    if "automata_vs_lstm" in significance:
+        row = significance["automata_vs_lstm"]
+        lines.append(
+            f"| Otomata vs LSTM | Wilcoxon (F1) | {row['statistic']:.4f} | {row['p_value']:.4f} |"
+        )
+    if "automata_vs_gru" in significance:
+        row = significance["automata_vs_gru"]
+        lines.append(
+            f"| Otomata vs GRU | Wilcoxon (F1) | {row['statistic']:.4f} | {row['p_value']:.4f} |"
+        )
+    if "mcnemar_automata_vs_lstm" in significance:
+        row = significance["mcnemar_automata_vs_lstm"]
+        lines.append(
+            f"| Otomata vs LSTM | McNemar (b={row['b']}, c={row['c']}) | — | {row['p_value']:.4f} |"
+        )
+    if "mcnemar_automata_vs_gru" in significance:
+        row = significance["mcnemar_automata_vs_gru"]
+        lines.append(
+            f"| Otomata vs GRU | McNemar (b={row['b']}, c={row['c']}) | — | {row['p_value']:.4f} |"
+        )
+    lines.append("")
+    return "\n".join(lines)
+
+
+def build_metrics_block(
+    skab_data: list[dict[str, Any]],
+    batadal_data: list[dict[str, Any]],
+    significance: dict[str, Any],
+    logs_path: Path,
+    results_dir: Path,
+) -> str:
+    sections = [
+        "<!-- AUTO_METRICS_START -->",
+        "## Ek: Sayısal sonuçlar",
+        "",
+        "Özet tablolar `outputs/results/*.json` dosyalarından üretilir. Deneyleri yeniden koştuktan sonra",
+        "`python3 scripts/generate_report_metrics.py` ile bu bölümü güncelleyebilirsiniz.",
+        "",
+    ]
+    for scenario in SCENARIOS:
+        sections.append(skab_table(skab_data, scenario))
+        sections.append(batadal_table(batadal_data, scenario))
+
+    sections.append(skab_fold_comparison_table(skab_data, scenario="original", seed=42))
+    sections.append(skab_fold_detailed_tables(skab_data, logs_path, scenario="original", seed=42))
+    sections.append(parameter_variation_table(results_dir / "automata_parameter_variation.json", "SKAB"))
+    sections.append(parameter_variation_table(results_dir / "batadal_parameter_variation.json", "BATADAL"))
+    sections.append(significance_table(significance))
+    sections.append("<!-- AUTO_METRICS_END -->")
+    return "\n".join(sections)
+
+
+def replace_block(readme: str, start: str, end: str, new_block: str) -> str:
+    if start in readme and end in readme:
+        before = readme.split(start)[0]
+        after = readme.split(end)[1]
+        return before + new_block + after
+    return readme.rstrip() + "\n\n" + new_block + "\n"
+
+
+def main() -> None:
+    root = Path(__file__).resolve().parents[1]
+    results_dir = root / "outputs" / "results"
+    skab_path = results_dir / "skab_experiments.json"
+    batadal_path = results_dir / "batadal_experiments.json"
+    sig_path = results_dir / "statistical_significance.json"
+    logs_path = root / "outputs" / "logs" / "experiments.jsonl"
+
+    if not skab_path.exists() or not batadal_path.exists():
+        raise SystemExit("Deney sonuçları yok. Önce `python3 run_experiments.py` çalıştırın.")
+
+    skab_data = json.loads(skab_path.read_text(encoding="utf-8"))
+    batadal_data = json.loads(batadal_path.read_text(encoding="utf-8"))
+    significance = json.loads(sig_path.read_text(encoding="utf-8")) if sig_path.exists() else {}
+
+    readme_path = root / "README.md"
+    readme = readme_path.read_text(encoding="utf-8")
+    readme = replace_block(
+        readme,
+        "<!-- AUTO_METRICS_START -->",
+        "<!-- AUTO_METRICS_END -->",
+        build_metrics_block(skab_data, batadal_data, significance, logs_path, results_dir),
+    )
+
+    # Eski otomatik görsel bloğu varsa temizle (artık üretilmiyor)
+    if "<!-- AUTO_FIGURES_START -->" in readme:
+        before = readme.split("<!-- AUTO_FIGURES_START -->")[0]
+        after = readme.split("<!-- AUTO_FIGURES_END -->")[1] if "<!-- AUTO_FIGURES_END -->" in readme else ""
+        readme = before.rstrip() + "\n\n---\n" + after.lstrip("\n")
+
+    readme_path.write_text(readme, encoding="utf-8")
+    print(f"README tabloları güncellendi: {readme_path}")
+
+
+if __name__ == "__main__":
+    main()
+
+
+================================================================================
+File: ./src/config.py
+================================================================================
+from __future__ import annotations
+
+import json
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any
+
+
+@dataclass(frozen=True)
+class ProjectConfig:
+    values: dict[str, Any]
+    path: Path
+
+    def get(self, *keys: str, default: Any = None) -> Any:
+        current: Any = self.values
+        for key in keys:
+            if not isinstance(current, dict) or key not in current:
+                return default
+            current = current[key]
+        return current
+
+
+def load_config(path: str | Path = "config/config.yaml") -> ProjectConfig:
+    config_path = Path(path)
+    raw = config_path.read_text(encoding="utf-8")
+
+    try:
+        import yaml
+
+        values = yaml.safe_load(raw)
+    except ModuleNotFoundError:
+        values = json.loads(raw)
+
+    if not isinstance(values, dict):
+        raise ValueError(f"Config root must be a mapping: {config_path}")
+
+    return ProjectConfig(values=values, path=config_path)
+
+
+================================================================================
+File: ./src/__init__.py
+================================================================================
+
+
+================================================================================
+File: ./src/pipeline.py
+================================================================================
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import Any
+
+import pandas as pd
+
+from src.config import ProjectConfig
+from src.data.preprocessing import LeakageSafePreprocessor
+from src.explainability.automata_explainer import explain_automata_decision
+from src.features.sax import TrainableSAXEncoder
+from src.models.automata import ProbabilisticAutomata
+
+
+@dataclass
+class AutomataPipeline:
+    config: ProjectConfig
+    window_size: int
+    alphabet_size: int
+
+    def __post_init__(self) -> None:
+        missing_cfg = self.config.get("preprocessing", "missing_values", default={}) or {}
+        self.preprocessor = LeakageSafePreprocessor(
+            use_standard_scaler=self.config.get("preprocessing", "normalization") == "standard",
+            pca_components=self.config.get("preprocessing", "automata_pca_components"),
+            missing_strategy=missing_cfg.get("strategy", "none"),
+        )
+        self.automata = ProbabilisticAutomata(
+            smoothing=self.config.get("automata", "smoothing"),
+            anomaly_quantile=self.config.get("automata", "anomaly_quantile"),
+        )
+        self.paa_segments = self.config.get("automata", "paa_segments")
+        self.sax_encoder: TrainableSAXEncoder | None = None
+
+    def _resolved_paa_segments(self) -> int:
+        return self.paa_segments if self.paa_segments is not None else self.window_size
+
+    def fit(self, train_df: pd.DataFrame, feature_columns: list[str]) -> "AutomataPipeline":
+        train_values = self.preprocessor.fit_transform(train_df, feature_columns).reshape(-1)
+        paa_segments = self._resolved_paa_segments()
+        self.sax_encoder = TrainableSAXEncoder().fit(
+            train_values,
+            window_size=self.window_size,
+            paa_segments=paa_segments,
+            alphabet_size=self.alphabet_size,
+        )
+        patterns = self.sax_encoder.transform(train_values)
+        self.automata.fit(patterns)
+        return self
+
+    def transform_patterns(self, df: pd.DataFrame) -> list[str]:
+        if self.sax_encoder is None:
+            raise RuntimeError("AutomataPipeline must be fit before transform_patterns")
+        values = self.preprocessor.transform(df).reshape(-1)
+        return self.sax_encoder.transform(values)
+
+    def predict(self, df: pd.DataFrame) -> dict[str, Any]:
+        return self.automata.predict_sequence(self.transform_patterns(df))
+
+    def explain(self, df: pd.DataFrame, time_step: int | None = None) -> dict[str, Any]:
+        return explain_automata_decision(self.automata, self.transform_patterns(df), time_step=time_step)
+
+    def explain_from_patterns(self, patterns: list[str], time_step: int | None = None) -> dict[str, Any]:
+        return explain_automata_decision(self.automata, patterns, time_step=time_step)
+
+
+def build_fixed_automata_pipeline(config: ProjectConfig) -> AutomataPipeline:
+    fixed = config.get("automata", "fixed_comparison")
+    return AutomataPipeline(
+        config=config,
+        window_size=fixed["window_size"],
+        alphabet_size=fixed["alphabet_size"],
+    )
+
+
+================================================================================
+File: ./src/experiments/scenarios.py
+================================================================================
+from __future__ import annotations
+
+import itertools
+import string
+
+import numpy as np
+
+
+def add_gaussian_noise(values: np.ndarray, mean: float, std: float, seed: int) -> np.ndarray:
+    rng = np.random.default_rng(seed)
+    return values + rng.normal(loc=mean, scale=std, size=values.shape)
+
+
+def _choose_unseen_pattern(
+    *,
+    alphabet_size: int,
+    length: int,
+    forbidden_patterns: set[str],
+    fallback: str = "zzzz",
+) -> str:
+    if alphabet_size < 2:
+        return fallback
+
+    symbols = string.ascii_lowercase[:alphabet_size]
+    # length küçük olduğu için (window_size) tam arama yapılabilir.
+    for combo in itertools.product(symbols, repeat=length):
+        candidate = "".join(combo)
+        if candidate not in forbidden_patterns:
+            return candidate
+    return fallback
+
+
+def inject_unseen_pattern(
+    patterns: list[str],
+    replacement: str = "zzzz",
+    forbidden_patterns: set[str] | None = None,
+    alphabet_size: int | None = None,
+) -> list[str]:
+    if not patterns:
+        return []
+
+    mutated = list(patterns)
+    idx = len(mutated) // 2
+
+    if forbidden_patterns is not None and alphabet_size is not None:
+        replacement = _choose_unseen_pattern(
+            alphabet_size=alphabet_size,
+            length=len(mutated[idx]),
+            forbidden_patterns=forbidden_patterns,
+            fallback=replacement,
+        )
+
+    mutated[idx] = replacement
+    return mutated
+
+
+================================================================================
+File: ./src/experiments/results.py
+================================================================================
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import Any
+
+
+@dataclass(frozen=True)
+class ExperimentResult:
+    dataset: str
+    model: str
+    scenario: str
+    seed: int
+    parameters: dict[str, Any]
+    metrics: dict[str, float]
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "dataset": self.dataset,
+            "model": self.model,
+            "scenario": self.scenario,
+            "seed": self.seed,
+            "parameters": self.parameters,
+            "metrics": self.metrics,
+        }
+
+
+================================================================================
+File: ./src/experiments/experiment_logger.py
+================================================================================
+from __future__ import annotations
+
+import json
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
+
+from src.experiments.results import ExperimentResult
+
+
+class ExperimentLogger:
+    def __init__(self, log_dir: str | Path) -> None:
+        self.log_dir = Path(log_dir)
+        self.log_dir.mkdir(parents=True, exist_ok=True)
+        self.jsonl_path = self.log_dir / "experiments.jsonl"
+        self.summary_path = self.log_dir / "run_summary.json"
+
+    def log(self, record: ExperimentResult | dict[str, Any]) -> None:
+        payload = record.to_dict() if isinstance(record, ExperimentResult) else record
+        with self.jsonl_path.open("a", encoding="utf-8") as handle:
+            handle.write(json.dumps(payload, ensure_ascii=False) + "\n")
+
+    def save_run_summary(self, summary: dict[str, Any]) -> None:
+        payload = {
+            "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+            **summary,
+        }
+        with self.summary_path.open("w", encoding="utf-8") as handle:
+            json.dump(payload, handle, indent=2, ensure_ascii=False)
+
+
+def build_experiment_record(
+    *,
+    dataset: str,
+    model: str,
+    scenario: str,
+    seed: int,
+    parameters: dict[str, Any],
+    metrics: dict[str, float],
+    fold: int | None = None,
+    extra: dict[str, Any] | None = None,
+) -> ExperimentResult:
+    merged_params = dict(parameters)
+    if fold is not None:
+        merged_params["fold"] = fold
+    if extra:
+        merged_params.update(extra)
+    return ExperimentResult(
+        dataset=dataset,
+        model=model,
+        scenario=scenario,
+        seed=seed,
+        parameters=merged_params,
+        metrics=metrics,
+    )
+
+
+================================================================================
+File: ./src/experiments/__init__.py
+================================================================================
+
+
+================================================================================
+File: ./src/experiments/parameter_sweep.py
+================================================================================
+from __future__ import annotations
+
+import logging
+from collections.abc import Callable
+from typing import Any
+
+import numpy as np
+import pandas as pd
+
+from src.config import ProjectConfig
+from src.evaluation.metrics import classification_metrics
+from src.models.deep_learning_pipeline import set_seed
+from src.pipeline import AutomataPipeline
+
+logger = logging.getLogger(__name__)
+
+
+def run_parameter_grid(
+    config: ProjectConfig,
+    *,
+    dataset_name: str,
+    split_provider: Callable[[int], list[tuple[pd.DataFrame, pd.DataFrame]]],
+    feature_columns: list[str],
+    target_column: str,
+    seeds: list[int] | None = None,
+) -> list[dict[str, Any]]:
+    window_grid = config.get("automata", "parameter_grid", "window_size", default=[3, 4, 5, 6])
+    alphabet_grid = config.get("automata", "parameter_grid", "alphabet_size", default=[3, 4, 5, 6])
+    resolved_seeds = seeds or config.get("project", "random_seeds", default=[42])
+    total_combinations = len(window_grid) * len(alphabet_grid)
+
+    variation_results: list[dict[str, Any]] = []
+    combination_idx = 0
+
+    for window_size in window_grid:
+        for alphabet_size in alphabet_grid:
+            combination_idx += 1
+            logger.info(
+                "Parameter grid %s (%d/%d): window_size=%s, alphabet_size=%s, seeds=%s",
+                dataset_name,
+                combination_idx,
+                total_combinations,
+                window_size,
+                alphabet_size,
+                resolved_seeds,
+            )
+
+            f1_scores: list[float] = []
+            state_counts: list[int] = []
+            transition_densities: list[float] = []
+
+            for seed in resolved_seeds:
+                set_seed(seed)
+                train_test_splits = split_provider(seed)
+                for fold_idx, (train_df, test_df) in enumerate(train_test_splits, start=1):
+                    pipe = AutomataPipeline(config=config, window_size=window_size, alphabet_size=alphabet_size)
+                    pipe.fit(train_df, feature_columns)
+                    test_patterns = pipe.transform_patterns(test_df)
+                    y_test_aligned = test_df[target_column].to_numpy()[window_size - 1 :]
+                    y_pred = pipe.automata.predict_prefix_labels(test_patterns)
+
+                    metrics = classification_metrics(y_test_aligned, y_pred)
+                    f1_scores.append(metrics["f1"])
+                    state_counts.append(pipe.automata.state_count)
+                    transition_densities.append(pipe.automata.transition_density)
+
+                    logger.info(
+                        "  seed=%s fold %d/%d f1=%.4f states=%d",
+                        seed,
+                        fold_idx,
+                        len(train_test_splits),
+                        metrics["f1"],
+                        pipe.automata.state_count,
+                    )
+
+            variation_results.append(
+                {
+                    "dataset": dataset_name,
+                    "window_size": window_size,
+                    "alphabet_size": alphabet_size,
+                    "seed_count": len(resolved_seeds),
+                    "run_count": len(f1_scores),
+                    "f1_mean": float(np.mean(f1_scores)),
+                    "f1_std": float(np.std(f1_scores)),
+                    "states_mean": float(np.mean(state_counts)),
+                    "density_mean": float(np.mean(transition_densities)),
+                }
+            )
+
+    return variation_results
+
+
+================================================================================
+File: ./src/experiments/results_io.py
+================================================================================
+from __future__ import annotations
+
+import json
+import shutil
+from datetime import datetime
+from pathlib import Path
+from typing import Any
+
+
+def prepare_results_dir(base_dir: str | Path, *, timestamped: bool = False) -> Path:
+    base_path = Path(base_dir)
+    base_path.mkdir(parents=True, exist_ok=True)
+    if not timestamped:
+        return base_path
+
+    stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    run_dir = base_path / f"run_{stamp}"
+    run_dir.mkdir(parents=True, exist_ok=True)
+    return run_dir
+
+
+def write_json_result(
+    results_dir: Path,
+    filename: str,
+    payload: Any,
+    *,
+    backup_existing: bool = True,
+) -> Path:
+    target = results_dir / filename
+    if backup_existing and target.exists():
+        backups_dir = results_dir / "backups"
+        backups_dir.mkdir(parents=True, exist_ok=True)
+        stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        backup_path = backups_dir / f"{target.stem}_{stamp}{target.suffix}"
+        shutil.copy2(target, backup_path)
+
+    with target.open("w", encoding="utf-8") as handle:
+        json.dump(payload, handle, indent=2, ensure_ascii=False)
+
+    return target
+
+
+================================================================================
+File: ./src/features/sax.py
+================================================================================
+from __future__ import annotations
+
+import string
+
+import numpy as np
+from scipy.stats import norm
+
+from src.features.paa import paa
+
+
+def _validate_alphabet_size(alphabet_size: int) -> None:
+    if alphabet_size < 2:
+        raise ValueError("alphabet_size must be at least 2")
+    if alphabet_size > len(string.ascii_lowercase):
+        raise ValueError("alphabet_size exceeds supported lowercase alphabet")
+
+
+def _gaussian_breakpoints(alphabet_size: int) -> np.ndarray:
+    return norm.ppf(np.linspace(0, 1, alphabet_size + 1)[1:-1])
+
+
+def sax(sequence: np.ndarray, alphabet_size: int) -> str:
+    """Stateless SAX (yalnızca testler ve geriye dönük uyumluluk için)."""
+    values = np.asarray(sequence, dtype=float).reshape(-1)
+    _validate_alphabet_size(alphabet_size)
+
+    std = values.std()
+    normalized = values - values.mean()
+    if std > 0:
+        normalized = normalized / std
+
+    breakpoints = _gaussian_breakpoints(alphabet_size)
+    symbols = string.ascii_lowercase[:alphabet_size]
+    indexes = np.digitize(normalized, breakpoints)
+    return "".join(symbols[index] for index in indexes)
+
+
+class TrainableSAXEncoder:
+    """Eğitim verisinden öğrenilen SAX sözlüğü; testte yalnızca bu istatistikler kullanılır."""
+
+    def __init__(self) -> None:
+        self.mean_: float = 0.0
+        self.std_: float = 1.0
+        self.breakpoints_: np.ndarray | None = None
+        self.alphabet_size_: int = 3
+        self.symbols_: str = "abc"
+        self.window_size_: int = 4
+        self.paa_segments_: int = 4
+        self._is_fitted: bool = False
+
+    @property
+    def is_fitted(self) -> bool:
+        return self._is_fitted
+
+    def fit(
+        self,
+        sequence: np.ndarray,
+        *,
+        window_size: int,
+        paa_segments: int,
+        alphabet_size: int,
+    ) -> "TrainableSAXEncoder":
+        _validate_alphabet_size(alphabet_size)
+        if window_size <= 0:
+            raise ValueError("window_size must be positive")
+        if paa_segments <= 0:
+            raise ValueError("paa_segments must be positive")
+
+        from src.features.windowing import sliding_windows
+
+        values = np.asarray(sequence, dtype=float).reshape(-1)
+        paa_values: list[float] = []
+        for window in sliding_windows(values, window_size):
+            paa_values.extend(paa(window, paa_segments).tolist())
+
+        if not paa_values:
+            raise ValueError("Training sequence is too short to fit SAX encoder")
+
+        train_paa = np.asarray(paa_values, dtype=float)
+        self.mean_ = float(train_paa.mean())
+        self.std_ = float(train_paa.std())
+        if self.std_ <= 0 or np.isnan(self.std_):
+            self.std_ = 1.0
+
+        self.alphabet_size_ = alphabet_size
+        self.symbols_ = string.ascii_lowercase[:alphabet_size]
+        self.window_size_ = window_size
+        self.paa_segments_ = paa_segments
+        self.breakpoints_ = _gaussian_breakpoints(alphabet_size)
+        self._is_fitted = True
+        return self
+
+    def encode_paa(self, paa_values: np.ndarray) -> str:
+        if not self._is_fitted or self.breakpoints_ is None:
+            raise RuntimeError("TrainableSAXEncoder must be fit before encoding")
+
+        normalized = (np.asarray(paa_values, dtype=float).reshape(-1) - self.mean_) / self.std_
+        indexes = np.digitize(normalized, self.breakpoints_)
+        return "".join(self.symbols_[index] for index in indexes)
+
+    def encode_window(self, window: np.ndarray) -> str:
+        return self.encode_paa(paa(window, self.paa_segments_))
+
+    def transform(self, sequence: np.ndarray) -> list[str]:
+        if not self._is_fitted:
+            raise RuntimeError("TrainableSAXEncoder must be fit before transform")
+
+        from src.features.windowing import sliding_windows
+
+        values = np.asarray(sequence, dtype=float).reshape(-1)
+        return [self.encode_window(window) for window in sliding_windows(values, self.window_size_)]
+
+
+================================================================================
+File: ./src/features/windowing.py
+================================================================================
+from __future__ import annotations
+
+import numpy as np
+
+from src.features.paa import paa
+from src.features.sax import TrainableSAXEncoder, sax
+
+
+def sliding_windows(sequence: np.ndarray, window_size: int) -> list[np.ndarray]:
+    values = np.asarray(sequence, dtype=float).reshape(-1)
+    if window_size <= 0:
+        raise ValueError("window_size must be positive")
+    if len(values) < window_size:
+        return []
+    return [values[start : start + window_size] for start in range(0, len(values) - window_size + 1)]
+
+
+def extract_sax_patterns(
+    sequence: np.ndarray,
+    window_size: int,
+    paa_segments: int | None,
+    alphabet_size: int,
+    sax_encoder: TrainableSAXEncoder | None = None,
+) -> list[str]:
+    if sax_encoder is not None:
+        if not sax_encoder.is_fitted:
+            raise RuntimeError("Provided sax_encoder must be fit before transform")
+        return sax_encoder.transform(sequence)
+
+    resolved_segments = paa_segments if paa_segments is not None else window_size
+    patterns: list[str] = []
+    for window in sliding_windows(sequence, window_size):
+        patterns.append(sax(paa(window, resolved_segments), alphabet_size))
+    return patterns
+
+
+================================================================================
+File: ./src/features/__init__.py
+================================================================================
+
+
+================================================================================
+File: ./src/features/paa.py
+================================================================================
+from __future__ import annotations
+
+import numpy as np
+
+
+def paa(sequence: np.ndarray, segments: int) -> np.ndarray:
+    values = np.asarray(sequence, dtype=float).reshape(-1)
+    if segments <= 0:
+        raise ValueError("segments must be positive")
+    if len(values) < segments:
+        raise ValueError("sequence length must be at least the number of PAA segments")
+
+    boundaries = np.linspace(0, len(values), segments + 1)
+    reduced = []
+    for start, end in zip(boundaries[:-1], boundaries[1:]):
+        left = int(np.floor(start))
+        right = int(np.floor(end))
+        if right <= left:
+            right = left + 1
+        reduced.append(values[left:right].mean())
+    return np.asarray(reduced)
+
+
+================================================================================
+File: ./src/models/deep_learning.py
+================================================================================
+from __future__ import annotations
+
+from typing import Any
+
+import torch
+from torch import nn
+
+from src.config import ProjectConfig
+
+
+class LSTMClassifier(nn.Module):
+    def __init__(self, input_size: int, hidden_size: int = 64, num_layers: int = 1, dropout: float = 0.0):
+        super().__init__()
+        self.encoder = nn.LSTM(
+            input_size=input_size,
+            hidden_size=hidden_size,
+            num_layers=num_layers,
+            batch_first=True,
+            dropout=dropout if num_layers > 1 else 0.0,
+        )
+        self.classifier = nn.Linear(hidden_size, 1)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        _, (hidden, _) = self.encoder(x)
+        return self.classifier(hidden[-1]).squeeze(-1)
+
+
+class GRUClassifier(nn.Module):
+    def __init__(self, input_size: int, hidden_size: int = 64, num_layers: int = 1, dropout: float = 0.0):
+        super().__init__()
+        self.encoder = nn.GRU(
+            input_size=input_size,
+            hidden_size=hidden_size,
+            num_layers=num_layers,
+            batch_first=True,
+            dropout=dropout if num_layers > 1 else 0.0,
+        )
+        self.classifier = nn.Linear(hidden_size, 1)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        _, hidden = self.encoder(x)
+        return self.classifier(hidden[-1]).squeeze(-1)
+
+
+class CNN1DClassifier(nn.Module):
+    def __init__(self, input_size: int, channels: int = 64, kernel_size: int = 3, dropout: float = 0.0):
+        super().__init__()
+        self.network = nn.Sequential(
+            nn.Conv1d(input_size, channels, kernel_size=kernel_size, padding=kernel_size // 2),
+            nn.ReLU(),
+            nn.AdaptiveAvgPool1d(1),
+            nn.Flatten(),
+            nn.Dropout(dropout),
+            nn.Linear(channels, 1),
+        )
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return self.network(x.transpose(1, 2)).squeeze(-1)
+
+
+def resolve_model_architecture(config: ProjectConfig, model_name: str) -> dict[str, Any]:
+    normalized = model_name.lower()
+    if normalized in {"cnn1d", "1d-cnn", "cnn"}:
+        normalized = "cnn1d"
+    return dict(config.get("deep_learning", normalized, default={}) or {})
+
+
+def build_deep_model(name: str, input_size: int, **kwargs) -> nn.Module:
+    normalized = name.lower()
+    if normalized == "lstm":
+        return LSTMClassifier(input_size=input_size, **kwargs)
+    if normalized == "gru":
+        return GRUClassifier(input_size=input_size, **kwargs)
+    if normalized in {"cnn1d", "1d-cnn", "cnn"}:
+        return CNN1DClassifier(input_size=input_size, **kwargs)
+    raise ValueError(f"Unsupported deep learning model: {name}")
+
+
+================================================================================
+File: ./src/models/automata.py
+================================================================================
+from __future__ import annotations
+
+from collections import Counter, defaultdict
+from dataclasses import dataclass
+from typing import Any
+
+import numpy as np
+from Levenshtein import distance as levenshtein_distance
+
+
+@dataclass(frozen=True)
+class PatternMapping:
+    original: str
+    mapped: str
+    status: str
+    distance: int
+
+
+class ProbabilisticAutomata:
+    def __init__(self, smoothing: float = 1e-12, anomaly_quantile: float = 0.05) -> None:
+        self.smoothing = smoothing
+        self.anomaly_quantile = anomaly_quantile
+        self.states_: set[str] = set()
+        self.transition_counts_: dict[str, Counter[str]] = defaultdict(Counter)
+        self.transition_probabilities_: dict[str, dict[str, float]] = {}
+        self.threshold_: float | None = None
+
+    def fit(self, patterns: list[str]) -> "ProbabilisticAutomata":
+        if len(patterns) < 2:
+            raise ValueError("At least two patterns are required to fit automata transitions")
+
+        self.states_ = set(patterns)
+        self.transition_counts_ = defaultdict(Counter)
+        for source, target in zip(patterns[:-1], patterns[1:]):
+            self.transition_counts_[source][target] += 1
+
+        self.transition_probabilities_ = {}
+        for source, counts in self.transition_counts_.items():
+            total = sum(counts.values())
+            self.transition_probabilities_[source] = {
+                target: count / total for target, count in counts.items()
+            }
+
+        train_scores = []
+        path_probability = 1.0
+        for idx in range(1, len(patterns)):
+            prob = self.transition_probability(patterns[idx - 1], patterns[idx])
+            path_probability *= prob
+            train_scores.append(path_probability)
+        self.threshold_ = float(np.quantile(train_scores, self.anomaly_quantile))
+        return self
+
+    def map_pattern(self, pattern: str) -> PatternMapping:
+        if pattern in self.states_:
+            return PatternMapping(original=pattern, mapped=pattern, status="seen", distance=0)
+        if not self.states_:
+            raise RuntimeError("Automata must be fit before mapping patterns")
+
+        nearest = min(self.states_, key=lambda state: (levenshtein_distance(pattern, state), state))
+        return PatternMapping(
+            original=pattern,
+            mapped=nearest,
+            status="unseen",
+            distance=levenshtein_distance(pattern, nearest),
+        )
+
+    def transition_probability(self, source: str, target: str) -> float:
+        value: Any = self.transition_probabilities_.get(source, {}).get(target, self.smoothing)
+        # Bazı edge-case'lerde (örn. tip dönüşümleri / serileştirme) olasılık değeri float dışı gelebilir.
+        # Otomata olasılık hesapları deterministik ve sayısal olmalı; bu yüzden güvenli biçimde float'a zorluyoruz.
+        try:
+            return float(value)
+        except (TypeError, ValueError):
+            return float(self.smoothing)
+
+    def path_probability(self, patterns: list[str]) -> float:
+        if len(patterns) < 2:
+            return 1.0
+        mapped = [self.map_pattern(pattern).mapped if self.states_ else pattern for pattern in patterns]
+        probability: float = 1.0
+        for source, target in zip(mapped[:-1], mapped[1:]):
+            probability = float(probability) * self.transition_probability(str(source), str(target))
+        return float(probability)
+
+    def predict_sequence(self, patterns: list[str]) -> dict[str, Any]:
+        probability = self.path_probability(patterns)
+        threshold = self.threshold_ if self.threshold_ is not None else self.smoothing
+        decision = "anomaly" if probability <= threshold else "normal"
+        return {
+            "probability": probability,
+            "threshold": threshold,
+            "decision": decision,
+            "confidence": probability,
+        }
+
+    def predict_prefix_labels(self, patterns: list[str]) -> np.ndarray:
+        """Her zaman adımı için prefix olasılığına göre etiket üretir (O(n))."""
+        if not patterns:
+            return np.asarray([], dtype=int)
+
+        threshold = self.threshold_ if self.threshold_ is not None else self.smoothing
+        mappings = [self.map_pattern(pattern) for pattern in patterns]
+        path_probability = 1.0
+        predictions: list[int] = []
+
+        for idx, _current in enumerate(mappings):
+            if idx > 0:
+                previous = mappings[idx - 1]
+                current = mappings[idx]
+                path_probability *= self.transition_probability(previous.mapped, current.mapped)
+            predictions.append(1 if path_probability <= threshold else 0)
+
+        return np.asarray(predictions, dtype=int)
+
+    @property
+    def state_count(self) -> int:
+        return len(self.states_)
+
+    @property
+    def transition_density(self) -> float:
+        n_states = len(self.states_)
+        if n_states <= 1:
+            return 0.0
+        transition_count = sum(len(targets) for targets in self.transition_probabilities_.values())
+        return transition_count / (n_states * (n_states - 1))
+
+
+================================================================================
+File: ./src/models/__init__.py
+================================================================================
+
+
+================================================================================
+File: ./src/models/deep_learning_pipeline.py
+================================================================================
+from __future__ import annotations
+
+import copy
+import logging
+import random
+from typing import Any
+
+import numpy as np
+import torch
+from torch import nn
+from torch.utils.data import DataLoader, Dataset
+
+from src.config import ProjectConfig
+from src.evaluation.metrics import classification_metrics
+from src.models.deep_learning import build_deep_model, resolve_model_architecture
+
+logger = logging.getLogger(__name__)
+
+
+def set_seed(seed: int) -> None:
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+
+
+# Zaman serisi verilerini kayan pencere (sliding window) seklinde hazırlayan dataset sınıfımız
+class TimeSeriesDataset(Dataset):
+    def __init__(self, X: np.ndarray, y: np.ndarray, window_size: int):
+        self.X = torch.tensor(X, dtype=torch.float32)
+        self.y = torch.tensor(y, dtype=torch.float32)
+        self.window_size = window_size
+
+    def __len__(self) -> int:
+        if len(self.X) < self.window_size:
+            return 0
+        return len(self.X) - self.window_size + 1
+
+    def __getitem__(self, idx: int) -> tuple[torch.Tensor, torch.Tensor]:
+        x_window = self.X[idx : idx + self.window_size]
+        y_target = self.y[idx + self.window_size - 1]
+        return x_window, y_target
+
+
+# Aşırı öğrenmeyi engellemek amacıyla validation loss'u izleyen erken durdurma sınıfımız
+class EarlyStopping:
+    def __init__(self, patience: int = 5, min_delta: float = 0.0):
+        self.patience = patience
+        self.min_delta = min_delta
+        self.counter = 0
+        self.best_loss = float("inf")
+        self.early_stop = False
+        self.best_state: dict[str, Any] | None = None
+
+    def __call__(self, val_loss: float, model: nn.Module) -> None:
+        if val_loss < self.best_loss - self.min_delta:
+            self.best_loss = val_loss
+            self.best_state = copy.deepcopy(model.state_dict())
+            self.counter = 0
+        else:
+            self.counter += 1
+            if self.counter >= self.praise_patience():
+                self.early_stop = True
+
+    def praise_patience(self) -> int:
+        return self.patience
+
+
+class DeepLearningPipeline:
+    def __init__(
+        self,
+        config: ProjectConfig,
+        model_name: str,
+        input_size: int,
+        window_size: int = 4,
+    ):
+        self.config = config
+        self.model_name = model_name
+        self.input_size = input_size
+        self.window_size = window_size
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        architecture = resolve_model_architecture(self.config, self.model_name)
+        self.model = build_deep_model(self.model_name, input_size=self.input_size, **architecture).to(self.device)
+        self.epochs_trained_: int = 0
+        self.early_stopped_: bool = False
+        self.best_validation_loss_: float | None = None
+
+    def _batch_size(self) -> int:
+        return int(self.config.get("deep_learning", "batch_size", default=32))
+
+    def train_epoch(
+        self,
+        dataloader: DataLoader,
+        optimizer: torch.optim.Optimizer,
+        criterion: nn.Module,
+    ) -> float:
+        self.model.train()
+        total_loss = 0.0
+        for x_batch, y_batch in dataloader:
+            x_batch = x_batch.to(self.device)
+            y_batch = y_batch.to(self.device)
+
+            optimizer.zero_grad()
+            logits = self.model(x_batch)
+            loss = criterion(logits, y_batch)
+            loss.backward()
+            optimizer.step()
+
+            total_loss += loss.item() * len(x_batch)
+        return total_loss / len(dataloader.dataset)
+
+    def evaluate(self, dataloader: DataLoader, criterion: nn.Module) -> tuple[float, np.ndarray, np.ndarray]:
+        self.model.eval()
+        total_loss = 0.0
+        all_preds = []
+        all_targets = []
+        with torch.no_grad():
+            for x_batch, y_batch in dataloader:
+                x_batch = x_batch.to(self.device)
+                y_batch = y_batch.to(self.device)
+
+                logits = self.model(x_batch)
+                loss = criterion(logits, y_batch)
+                total_loss += loss.item() * len(x_batch)
+
+                probs = torch.sigmoid(logits)
+                preds = (probs >= 0.5).int().cpu().numpy()
+                all_preds.extend(preds)
+                all_targets.extend(y_batch.cpu().numpy())
+
+        avg_loss = total_loss / len(dataloader.dataset) if len(dataloader.dataset) > 0 else 0.0
+        return avg_loss, np.asarray(all_targets), np.asarray(all_preds)
+
+    def fit(
+        self,
+        train_X: np.ndarray,
+        train_y: np.ndarray,
+        val_X: np.ndarray | None = None,
+        val_y: np.ndarray | None = None,
+    ) -> DeepLearningPipeline:
+        max_epochs = self.config.get("deep_learning", "max_epochs", default=50)
+        batch_size = self._batch_size()
+        patience = self.config.get("deep_learning", "early_stopping", "patience", default=5)
+        self.epochs_trained_ = 0
+        self.early_stopped_ = False
+        self.best_validation_loss_ = None
+
+        train_dataset = TimeSeriesDataset(train_X, train_y, self.window_size)
+        train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+
+        if val_X is not None and val_y is not None:
+            val_dataset = TimeSeriesDataset(val_X, val_y, self.window_size)
+            val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
+        else:
+            val_loader = None
+
+        learning_rate = self.config.get("deep_learning", "learning_rate", default=0.001)
+        optimizer = torch.optim.Adam(self.model.parameters(), lr=learning_rate)
+        criterion = nn.BCEWithLogitsLoss()
+        early_stopping = EarlyStopping(patience=patience)
+
+        for epoch in range(max_epochs):
+            self.epochs_trained_ = epoch + 1
+            train_loss = self.train_epoch(train_loader, optimizer, criterion)
+
+            if val_loader is not None:
+                val_loss, _, _ = self.evaluate(val_loader, criterion)
+                early_stopping(val_loss, self.model)
+                if early_stopping.best_state is not None:
+                    self.best_validation_loss_ = float(early_stopping.best_loss)
+                if early_stopping.early_stop:
+                    self.early_stopped_ = True
+                    logger.info(
+                        "Early stopping at epoch %d (model=%s, best_val_loss=%.6f)",
+                        epoch + 1,
+                        self.model_name,
+                        early_stopping.best_loss,
+                    )
+                    if early_stopping.best_state is not None:
+                        self.model.load_state_dict(early_stopping.best_state)
+                    break
+            else:
+                early_stopping(train_loss, self.model)
+                if early_stopping.best_state is not None:
+                    self.best_validation_loss_ = float(early_stopping.best_loss)
+
+        if val_loader is None and early_stopping.best_state is not None:
+            self.model.load_state_dict(early_stopping.best_state)
+
+        return self
+
+    def training_summary(self) -> dict[str, Any]:
+        return {
+            "epochs_trained": self.epochs_trained_,
+            "early_stopped": self.early_stopped_,
+            "best_validation_loss": self.best_validation_loss_,
+            "max_epochs": int(self.config.get("deep_learning", "max_epochs", default=50)),
+            "batch_size": self._batch_size(),
+            "early_stopping_patience": int(
+                self.config.get("deep_learning", "early_stopping", "patience", default=5)
+            ),
+        }
+
+    def predict_proba(self, test_X: np.ndarray) -> np.ndarray:
+        test_y_placeholder = np.zeros(len(test_X))
+        test_dataset = TimeSeriesDataset(test_X, test_y_placeholder, self.window_size)
+        test_loader = DataLoader(test_dataset, batch_size=self._batch_size(), shuffle=False)
+
+        self.model.eval()
+        all_probs = []
+        with torch.no_grad():
+            for x_batch, _ in test_loader:
+                x_batch = x_batch.to(self.device)
+                logits = self.model(x_batch)
+                probs = torch.sigmoid(logits)
+                all_probs.extend(probs.cpu().numpy())
+
+        return np.asarray(all_probs, dtype=float)
+
+    def predict(self, test_X: np.ndarray) -> np.ndarray:
+        return (self.predict_proba(test_X) >= 0.5).astype(int)
+
+    def predict_and_evaluate(self, test_X: np.ndarray, test_y: np.ndarray) -> dict[str, float]:
+        test_dataset = TimeSeriesDataset(test_X, test_y, self.window_size)
+        test_loader = DataLoader(test_dataset, batch_size=self._batch_size(), shuffle=False)
+        criterion = nn.BCEWithLogitsLoss()
+
+        _, y_true, y_pred = self.evaluate(test_loader, criterion)
+        return classification_metrics(y_true, y_pred)
+
+
+================================================================================
+File: ./src/explainability/automata_explainer.py
+================================================================================
+from __future__ import annotations
+
+from typing import Any
+
+from Levenshtein import distance as levenshtein_distance
+from src.models.automata import ProbabilisticAutomata
+
+
+def find_counterfactual(
+    automata: ProbabilisticAutomata,
+    patterns: list[str],
+    current_decision: str,
+    threshold: float,
+) -> dict[str, Any] | None:
+    if not patterns or not automata.states_:
+        return None
+
+    last_pattern = patterns[-1]
+    best_counterfactual = None
+    min_dist = float("inf")
+
+    # Arama uzayı olarak eğitime katılan tüm benzersiz durumları (pattern'ları) tarıyoruz.
+    # Amacımız, son zaman adımındaki pattern yerine adayın konması durumunda kararın değişip değişmeyeceğini görmek.
+    for candidate in sorted(automata.states_):
+        if candidate == last_pattern:
+            continue
+
+        modified_patterns = list(patterns)
+        modified_patterns[-1] = candidate
+
+        new_prob = automata.path_probability(modified_patterns)
+        new_decision = "anomaly" if new_prob <= threshold else "normal"
+
+        if new_decision != current_decision:
+            dist = levenshtein_distance(last_pattern, candidate)
+            if dist < min_dist:
+                min_dist = dist
+                best_counterfactual = {
+                    "pattern": candidate,
+                    "distance": dist,
+                    "probability": new_prob,
+                    "decision": new_decision,
+                }
+            elif dist == min_dist:
+                # Eşit mesafe durumunda: kararı değiştiren daha güvenli alternatifi seçiyoruz.
+                if current_decision == "anomaly":  # normal yapmak istiyoruz, olasılığı en yüksek olanı seçelim
+                    if best_counterfactual is None or new_prob > best_counterfactual["probability"]:
+                        best_counterfactual = {
+                            "pattern": candidate,
+                            "distance": dist,
+                            "probability": new_prob,
+                            "decision": new_decision,
+                        }
+                else:  # anomali yapmak istiyoruz, olasılığı en düşük olanı seçelim
+                    if best_counterfactual is None or new_prob < best_counterfactual["probability"]:
+                        best_counterfactual = {
+                            "pattern": candidate,
+                            "distance": dist,
+                            "probability": new_prob,
+                            "decision": new_decision,
+                        }
+
+    return best_counterfactual
+
+
+def explain_automata_decision(
+    automata: ProbabilisticAutomata,
+    patterns: list[str],
+    time_step: int | None = None,
+) -> dict[str, Any]:
+    if not patterns:
+        raise ValueError("patterns must not be empty")
+
+    mappings = [automata.map_pattern(pattern) for pattern in patterns]
+    transitions = []
+    path_probability = 1.0
+
+    for previous, current in zip(mappings[:-1], mappings[1:]):
+        probability = automata.transition_probability(previous.mapped, current.mapped)
+        path_probability *= probability
+        transitions.append(
+            {
+                "from": previous.mapped,
+                "to": current.mapped,
+                "probability": probability,
+            }
+        )
+
+    prediction = automata.predict_sequence(patterns)
+    current = mappings[-1]
+    
+    counterfactual = find_counterfactual(
+        automata,
+        patterns,
+        prediction["decision"],
+        prediction["threshold"],
+    )
+
+    return {
+        "time_step": time_step,
+        "state": current.mapped,
+        "pattern": current.original,
+        "status": current.status,
+        "mapped_to": current.mapped if current.status == "unseen" else None,
+        "mapping_distance": current.distance,
+        "transitions": transitions,
+        "probability": path_probability,
+        "decision": prediction["decision"],
+        "confidence": prediction["confidence"],
+        "threshold": prediction["threshold"],
+        "counterfactual": counterfactual,
+    }
+
+
+
+================================================================================
+File: ./src/explainability/__init__.py
+================================================================================
+
+
+================================================================================
+File: ./src/explainability/explanation_export.py
+================================================================================
+from __future__ import annotations
+
+from typing import Any
+
+
+def select_explanation_samples(
+    explanations: list[dict[str, Any]],
+    scenario: str,
+    max_count: int,
+) -> list[dict[str, Any]]:
+    """Unseen senaryosunda en az bir unseen örneği ve bağlamını export'a dahil eder."""
+    if max_count <= 0 or not explanations:
+        return []
+
+    if scenario != "unseen":
+        return explanations[:max_count]
+
+    unseen_indices = [index for index, item in enumerate(explanations) if item.get("status") == "unseen"]
+    if not unseen_indices:
+        return explanations[:max_count]
+
+    selected_indices: list[int] = []
+    for index in unseen_indices:
+        for neighbor in (index - 1, index, index + 1):
+            if 0 <= neighbor < len(explanations) and neighbor not in selected_indices:
+                selected_indices.append(neighbor)
+
+    for index in range(len(explanations)):
+        if len(selected_indices) >= max_count:
+            break
+        if index not in selected_indices:
+            selected_indices.append(index)
+
+    return [explanations[index] for index in selected_indices[:max_count]]
+
+
+================================================================================
+File: ./src/evaluation/metrics.py
+================================================================================
+from __future__ import annotations
+
+from sklearn.metrics import accuracy_score, confusion_matrix, f1_score, precision_score, recall_score
+
+
+def classification_metrics(y_true, y_pred) -> dict[str, float]:
+    tn, fp, fn, tp = confusion_matrix(y_true, y_pred, labels=[0, 1]).ravel()
+    return {
+        "accuracy": float(accuracy_score(y_true, y_pred)),
+        "precision": float(precision_score(y_true, y_pred, zero_division=0)),
+        "recall": float(recall_score(y_true, y_pred, zero_division=0)),
+        "f1": float(f1_score(y_true, y_pred, zero_division=0)),
+        "tn": int(tn),
+        "fp": int(fp),
+        "fn": int(fn),
+        "tp": int(tp),
+    }
+
+
+================================================================================
+File: ./src/evaluation/statistical_tests.py
+================================================================================
+from __future__ import annotations
+
+import logging
+from typing import Any
+
+from scipy.stats import binomtest, wilcoxon
+
+logger = logging.getLogger(__name__)
+
+
+def calculate_statistical_significance(skab_results_by_seed: list[dict[str, Any]]) -> dict[str, Any]:
+    logger.info("Computing Wilcoxon and McNemar tests...")
+    automata_vs_lstm_a: list[float] = []
+    automata_vs_lstm_b: list[float] = []
+    automata_vs_gru_a: list[float] = []
+    automata_vs_gru_b: list[float] = []
+
+    mcnemar_automata_vs_lstm = {"b": 0, "c": 0}
+    mcnemar_automata_vs_gru = {"b": 0, "c": 0}
+
+    def _pool_mcnemar_counts(
+        orig: dict[str, Any], model_a: str, model_b: str, acc: dict[str, int]
+    ) -> None:
+        if model_a not in orig or model_b not in orig:
+            return
+        a_outputs = orig[model_a].get("outputs", [])
+        b_outputs = orig[model_b].get("outputs", [])
+        if not a_outputs or not b_outputs:
+            return
+
+        a_by_fold = {o.get("fold"): o for o in a_outputs if "fold" in o}
+        b_by_fold = {o.get("fold"): o for o in b_outputs if "fold" in o}
+        common_folds = sorted(set(a_by_fold).intersection(b_by_fold))
+        for fold_id in common_folds:
+            a_preds = a_by_fold[fold_id].get("predictions", [])
+            b_preds = b_by_fold[fold_id].get("predictions", [])
+            if not a_preds or not b_preds:
+                continue
+
+            a_map = {r["time_step"]: (r["y_true"], r["y_pred"]) for r in a_preds if "time_step" in r}
+            b_map = {r["time_step"]: (r["y_true"], r["y_pred"]) for r in b_preds if "time_step" in r}
+            common_ts = sorted(set(a_map).intersection(b_map))
+            if not common_ts:
+                continue
+
+            for ts in common_ts:
+                y_true_a, pred_a = a_map[ts]
+                y_true_b, pred_b = b_map[ts]
+                if y_true_a != y_true_b:
+                    continue
+
+                if pred_a == 1 and pred_b == 0:
+                    acc["b"] += 1
+                elif pred_a == 0 and pred_b == 1:
+                    acc["c"] += 1
+
+    def _paired_fold_f1(orig: dict[str, Any], model_a: str, model_b: str) -> tuple[list[float], list[float]]:
+        a_raw = orig.get(model_a, {}).get("raw", [])
+        b_raw = orig.get(model_b, {}).get("raw", [])
+        if len(a_raw) != len(b_raw) or not a_raw:
+            return [], []
+        return [float(item["f1"]) for item in a_raw], [float(item["f1"]) for item in b_raw]
+
+    for seed_res in skab_results_by_seed:
+        orig = seed_res.get("original", {})
+
+        a_lstm, l_lstm = _paired_fold_f1(orig, "automata", "lstm")
+        automata_vs_lstm_a.extend(a_lstm)
+        automata_vs_lstm_b.extend(l_lstm)
+
+        a_gru, l_gru = _paired_fold_f1(orig, "automata", "gru")
+        automata_vs_gru_a.extend(a_gru)
+        automata_vs_gru_b.extend(l_gru)
+
+        _pool_mcnemar_counts(orig, "automata", "lstm", mcnemar_automata_vs_lstm)
+        _pool_mcnemar_counts(orig, "automata", "gru", mcnemar_automata_vs_gru)
+
+    sig_results: dict[str, Any] = {
+        "paired_fold_count_lstm": len(automata_vs_lstm_a),
+        "paired_fold_count_gru": len(automata_vs_gru_a),
+    }
+    try:
+        if len(automata_vs_lstm_a) >= 2 and len(automata_vs_lstm_b) == len(automata_vs_lstm_a):
+            stat_al, p_val_al = wilcoxon(automata_vs_lstm_a, automata_vs_lstm_b)
+            sig_results["automata_vs_lstm"] = {
+                "statistic": float(stat_al),
+                "p_value": float(p_val_al),
+                "n_pairs": len(automata_vs_lstm_a),
+            }
+
+        if len(automata_vs_gru_a) >= 2 and len(automata_vs_gru_b) == len(automata_vs_gru_a):
+            stat_ag, p_val_ag = wilcoxon(automata_vs_gru_a, automata_vs_gru_b)
+            sig_results["automata_vs_gru"] = {
+                "statistic": float(stat_ag),
+                "p_value": float(p_val_ag),
+                "n_pairs": len(automata_vs_gru_a),
+            }
+
+        n01_lstm = int(mcnemar_automata_vs_lstm["b"])
+        n10_lstm = int(mcnemar_automata_vs_lstm["c"])
+        n_lstm = n01_lstm + n10_lstm
+        if n_lstm > 0:
+            res_lstm = binomtest(k=n01_lstm, n=n_lstm, p=0.5, alternative="two-sided")
+            sig_results["mcnemar_automata_vs_lstm"] = {
+                "b": n01_lstm,
+                "c": n10_lstm,
+                "n": n_lstm,
+                "p_value": float(res_lstm.pvalue),
+            }
+
+        n01_gru = int(mcnemar_automata_vs_gru["b"])
+        n10_gru = int(mcnemar_automata_vs_gru["c"])
+        n_gru = n01_gru + n10_gru
+        if n_gru > 0:
+            res_gru = binomtest(k=n01_gru, n=n_gru, p=0.5, alternative="two-sided")
+            sig_results["mcnemar_automata_vs_gru"] = {
+                "b": n01_gru,
+                "c": n10_gru,
+                "n": n_gru,
+                "p_value": float(res_gru.pvalue),
+            }
+    except Exception as exc:
+        logger.warning("Could not compute significance tests: %s", exc)
+        sig_results["error"] = str(exc)
+
+    return sig_results
+
+
+================================================================================
+File: ./src/evaluation/__init__.py
+================================================================================
+
+
+================================================================================
+File: ./src/evaluation/visualization.py
+================================================================================
+from __future__ import annotations
+
+import json
+import logging
+from pathlib import Path
+from typing import Any
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
+from sklearn.metrics import auc, precision_recall_curve, roc_curve
+
+logger = logging.getLogger("visualization")
+
+plt.style.use("seaborn-v0_8-whitegrid" if "seaborn-v0_8-whitegrid" in plt.style.available else "default")
+plt.rcParams.update(
+    {
+        "font.family": "sans-serif",
+        "font.sans-serif": ["Outfit", "Inter", "Roboto", "Helvetica"],
+        "figure.facecolor": "#0B0F19",
+        "axes.facecolor": "#111827",
+        "axes.edgecolor": "#374151",
+        "axes.labelcolor": "#E5E7EB",
+        "xtick.color": "#9CA3AF",
+        "ytick.color": "#9CA3AF",
+        "text.color": "#F9FAFB",
+        "grid.color": "#1F2937",
+        "grid.linestyle": "--",
+    }
+)
+
+
+def plot_confusion_matrix(
+    tp: int,
+    fp: int,
+    fn: int,
+    tn: int,
+    title: str,
+    save_path: Path,
+) -> None:
+    cm = np.array([[tn, fp], [fn, tp]])
+    plt.figure(figsize=(6, 5))
+    sns.heatmap(
+        cm,
+        annot=True,
+        fmt="d",
+        cmap="mako",
+        cbar=False,
+        xticklabels=["Normal", "Anomaly"],
+        yticklabels=["Normal", "Anomaly"],
+    )
+    plt.title(title, fontsize=14, fontweight="bold", pad=15)
+    plt.ylabel("Actual", fontsize=12)
+    plt.xlabel("Predicted", fontsize=12)
+    plt.tight_layout()
+    plt.savefig(save_path, dpi=300, facecolor="#0B0F19")
+    plt.close()
+
+
+def plot_transition_heatmap(
+    transition_probabilities: dict[str, dict[str, float]],
+    save_path: Path,
+) -> None:
+    # Durum geçiş olasılıklarını temsil eden bir kare matris 
+    states = sorted(list(transition_probabilities.keys()))
+    if not states:
+        return
+
+    matrix = np.zeros((len(states), len(states)))
+    state_to_idx = {s: i for i, s in enumerate(states)}
+
+    for src, targets in transition_probabilities.items():
+        src_idx = state_to_idx[src]
+        for tgt, prob in targets.items():
+            if tgt in state_to_idx:
+                matrix[src_idx, state_to_idx[tgt]] = prob
+
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(
+        matrix,
+        xticklabels=states,
+        yticklabels=states,
+        cmap="rocket_r",
+        annot=len(states) <= 12,
+        fmt=".2f",
+    )
+    plt.title("Automata State Transition Probability Heatmap", fontsize=14, fontweight="bold", pad=15)
+    plt.xlabel("Target State", fontsize=12)
+    plt.ylabel("Source State", fontsize=12)
+    plt.tight_layout()
+    plt.savefig(save_path, dpi=300, facecolor="#0B0F19")
+    plt.close()
+
+
+def plot_automata_state_diagram(
+    transition_probabilities: dict[str, dict[str, float]],
+    save_path: Path,
+    max_states: int = 24,
+) -> None:
+    states = sorted(transition_probabilities.keys())[:max_states]
+    if not states:
+        return
+
+    angles = np.linspace(0, 2 * np.pi, len(states), endpoint=False)
+    positions = {state: np.array([np.cos(angle), np.sin(angle)]) for state, angle in zip(states, angles)}
+
+    plt.figure(figsize=(9, 9))
+    ax = plt.gca()
+    ax.set_aspect("equal")
+    ax.axis("off")
+
+    for source in states:
+        start = positions[source]
+        for target, probability in transition_probabilities.get(source, {}).items():
+            if target not in positions:
+                continue
+            end = positions[target]
+            delta = end - start
+            if np.linalg.norm(delta) == 0:
+                continue
+            ax.annotate(
+                "",
+                xy=end * 0.88,
+                xytext=start * 0.88,
+                arrowprops={
+                    "arrowstyle": "->",
+                    "color": "#60A5FA",
+                    "alpha": max(0.25, min(0.95, probability)),
+                    "lw": 0.8 + 2.0 * probability,
+                },
+            )
+
+    for state, pos in positions.items():
+        circle = plt.Circle(pos, 0.09, color="#F9FAFB", ec="#22C55E", lw=2, zorder=3)
+        ax.add_patch(circle)
+        ax.text(pos[0], pos[1], state, ha="center", va="center", color="#111827", fontsize=8, zorder=4)
+
+    plt.title("Automata State Diagram", fontsize=14, fontweight="bold", pad=15)
+    plt.tight_layout()
+    plt.savefig(save_path, dpi=300, facecolor="#0B0F19")
+    plt.close()
+
+
+def plot_parameter_sensitivity(
+    variation_data: list[dict[str, Any]],
+    save_path: Path,
+) -> None:
+    # Pencere boyutu ve alfabe boyutunun F1 skoru üzerindeki duyarlılık grafiklerini çixiyoruz
+    df = pd.DataFrame(variation_data)
+    if df.empty:
+        return
+
+    plt.figure(figsize=(12, 5))
+
+    # 1.Alt Grafik: Pencere boyutu vs F1
+    plt.subplot(1, 2, 1)
+    sns.lineplot(data=df, x="window_size", y="f1_mean", hue="alphabet_size", marker="o", palette="viridis")
+    plt.title("Effect of Window Size on F1 Score", fontsize=12, fontweight="bold", pad=10)
+    plt.xlabel("Window Size", fontsize=10)
+    plt.ylabel("Mean F1 Score", fontsize=10)
+
+    # 2.Alt Grafik: Alfabe boyutu vs F1
+    plt.subplot(1, 2, 2)
+    sns.lineplot(data=df, x="alphabet_size", y="f1_mean", hue="window_size", marker="s", palette="magma")
+    plt.title("Effect of Alphabet Size on F1 Score", fontsize=12, fontweight="bold", pad=10)
+    plt.xlabel("Alphabet Size", fontsize=10)
+    plt.ylabel("Mean F1 Score", fontsize=10)
+
+    plt.tight_layout()
+    plt.savefig(save_path, dpi=300, facecolor="#0B0F19")
+    plt.close()
+
+
+def plot_state_sensitivity(
+    variation_data: list[dict[str, Any]],
+    save_path: Path,
+) -> None:
+    # Parametrelerin state sayısı ve geçiş yoğunluğu üzerindeki etkilerini görselleştiriyoruz
+    df = pd.DataFrame(variation_data)
+    if df.empty:
+        return
+
+    plt.figure(figsize=(12, 5))
+
+    # 1.Alt Grafik: Parametrelerin Durum Sayısına Etkisi
+    plt.subplot(1, 2, 1)
+    sns.barplot(data=df, x="window_size", y="states_mean", hue="alphabet_size", palette="mako")
+    plt.title("State Count Sensitivity", fontsize=12, fontweight="bold", pad=10)
+    plt.xlabel("Window Size", fontsize=10)
+    plt.ylabel("Automata State Count", fontsize=10)
+
+    # 2. Alt Grafik: Parametrelerin Geçiş Yoğunluğuna Etkisi
+    plt.subplot(1, 2, 2)
+    sns.barplot(data=df, x="window_size", y="density_mean", hue="alphabet_size", palette="flare")
+    plt.title("Transition Density Sensitivity", fontsize=12, fontweight="bold", pad=10)
+    plt.xlabel("Window Size", fontsize=10)
+    plt.ylabel("Transition Density", fontsize=10)
+
+    plt.tight_layout()
+    plt.savefig(save_path, dpi=300, facecolor="#0B0F19")
+    plt.close()
+
+
+def plot_precision_recall_from_records(records: list[dict[str, Any]], title: str, save_path: Path) -> None:
+    if not records:
+        return
+    y_true = np.asarray([row["y_true"] for row in records])
+    scores = np.asarray([row["anomaly_score"] for row in records])
+    if len(np.unique(y_true)) < 2:
+        return
+
+    precision, recall, _ = precision_recall_curve(y_true, scores)
+    plt.figure(figsize=(6, 5))
+    plt.plot(recall, precision, color="#22C55E", lw=2)
+    plt.title(title, fontsize=14, fontweight="bold", pad=15)
+    plt.xlabel("Recall", fontsize=12)
+    plt.ylabel("Precision", fontsize=12)
+    plt.xlim(0, 1.02)
+    plt.ylim(0, 1.02)
+    plt.tight_layout()
+    plt.savefig(save_path, dpi=300, facecolor="#0B0F19")
+    plt.close()
+
+
+def plot_roc_from_records(records: list[dict[str, Any]], title: str, save_path: Path) -> None:
+    if not records:
+        return
+
+    y_true = np.asarray([row["y_true"] for row in records])
+    scores = np.asarray([row["anomaly_score"] for row in records])
+
+    if len(np.unique(y_true)) < 2:
+        return
+
+    fpr, tpr, _ = roc_curve(y_true, scores)
+    roc_auc = float(auc(fpr, tpr))
+
+    plt.figure(figsize=(6, 5))
+    plt.plot(fpr, tpr, color="#3B82F6", lw=2, label=f"AUC={roc_auc:.3f}")
+    plt.plot([0, 1], [0, 1], color="#9CA3AF", lw=1, linestyle="--")
+    plt.title(title, fontsize=14, fontweight="bold", pad=15)
+    plt.xlabel("False Positive Rate", fontsize=12)
+    plt.ylabel("True Positive Rate", fontsize=12)
+    plt.xlim(0, 1.02)
+    plt.ylim(0, 1.02)
+    plt.legend(frameon=True, facecolor="#111827", edgecolor="#374151")
+    plt.tight_layout()
+    plt.savefig(save_path, dpi=300, facecolor="#0B0F19")
+    plt.close()
+
+
+def emit_model_diagnostics(
+    dataset_name: str,
+    scenario_data: dict[str, Any],
+    figures_path: Path,
+    scenario_suffix: str | None = None,
+) -> None:
+    suffix = f"_{scenario_suffix}" if scenario_suffix else ""
+    for model_name, model_data in scenario_data.items():
+        if model_name in {"automata_states", "automata_densities", "automata_density"}:
+            continue
+
+        if "mean" in model_data:
+            raw_metrics = model_data.get("raw", [])
+            metrics = (
+                {
+                    "tp": sum(item.get("tp", 0) for item in raw_metrics),
+                    "fp": sum(item.get("fp", 0) for item in raw_metrics),
+                    "fn": sum(item.get("fn", 0) for item in raw_metrics),
+                    "tn": sum(item.get("tn", 0) for item in raw_metrics),
+                }
+                if raw_metrics
+                else model_data["mean"]
+            )
+            outputs = model_data.get("outputs", [])
+            first_output = outputs[0] if outputs else {}
+        else:
+            metrics = model_data.get("metrics", {})
+            first_output = model_data
+
+        required = {"tp", "fp", "fn", "tn"}
+        if required.issubset(metrics):
+            plot_confusion_matrix(
+                int(metrics["tp"]),
+                int(metrics["fp"]),
+                int(metrics["fn"]),
+                int(metrics["tn"]),
+                f"{dataset_name.upper()} {model_name.upper()} Confusion Matrix",
+                figures_path / f"{dataset_name}_{model_name}{suffix}_confusion_matrix.png",
+            )
+
+        records = first_output.get("predictions", [])
+        plot_precision_recall_from_records(
+            records,
+            f"{dataset_name.upper()} {model_name.upper()} Precision-Recall",
+            figures_path / f"{dataset_name}_{model_name}{suffix}_precision_recall.png",
+        )
+        plot_roc_from_records(
+            records,
+            f"{dataset_name.upper()} {model_name.upper()} ROC Curve",
+            figures_path / f"{dataset_name}_{model_name}{suffix}_roc_curve.png",
+        )
+
+        if model_name == "automata":
+            transitions = first_output.get("transition_probabilities", {})
+            plot_transition_heatmap(
+                transitions,
+                figures_path / f"{dataset_name}_automata{suffix}_transition_heatmap.png",
+            )
+            plot_automata_state_diagram(
+                transitions,
+                figures_path / f"{dataset_name}_automata{suffix}_state_diagram.png",
+            )
+
+
+def generate_all_visualizations(results_root: str | Path, figures_root: str | Path) -> None:
+    results_path = Path(results_root)
+    figures_path = Path(figures_root)
+    figures_path.mkdir(parents=True, exist_ok=True)
+
+    # 1. Aşama: Parametre Duyarlılık Çizimleri (Otomata modeli için grid arama sonuçları)
+    skab_var_file = results_path / "automata_parameter_variation.json"
+    if skab_var_file.exists():
+        logger.info("Generating SKAB parameter sensitivity plots...")
+        with open(skab_var_file) as f:
+            variation_data = json.load(f)
+        plot_parameter_sensitivity(variation_data, figures_path / "parameter_sensitivity.png")
+        plot_state_sensitivity(variation_data, figures_path / "state_sensitivity.png")
+
+    batadal_var_file = results_path / "batadal_parameter_variation.json"
+    if batadal_var_file.exists():
+        logger.info("Generating BATADAL parameter sensitivity plots...")
+        with open(batadal_var_file) as f:
+            batadal_variation = json.load(f)
+        plot_parameter_sensitivity(
+            batadal_variation,
+            figures_path / "batadal_parameter_sensitivity.png",
+        )
+        plot_state_sensitivity(
+            batadal_variation,
+            figures_path / "batadal_state_sensitivity.png",
+        )
+
+    skab_file = results_path / "skab_experiments.json"
+    if skab_file.exists():
+        logger.info("Generating performance comparison plots...")
+        with open(skab_file) as f:
+            skab_data = json.load(f)
+
+        # Çizimde kullanacağımız modellerin listesini çekiyoru
+        models = list(skab_data[0]["original"].keys())
+        models = [m for m in models if m not in {"automata_states", "automata_densities"}]
+
+        metrics_list = []
+        for seed_data in skab_data:
+            seed = seed_data["seed"]
+            supported_scenarios = {"original", "gaussian_noise", "unseen"}
+            scenario_names = [s for s in seed_data.keys() if s in supported_scenarios]
+            for scenario in scenario_names:
+                for m in models:
+                    if m not in seed_data[scenario]:
+                        continue
+                    mean_f1 = seed_data[scenario][m]["mean"]["f1"]
+                    mean_acc = seed_data[scenario][m]["mean"]["accuracy"]
+                    metrics_list.append(
+                        {
+                            "Seed": seed,
+                            "Scenario": scenario,
+                            "Model": m.upper(),
+                            "F1 Score": mean_f1,
+                            "Accuracy": mean_acc,
+                        }
+                    )
+
+        df_metrics = pd.DataFrame(metrics_list)
+        plt.figure(figsize=(10, 6))
+        sns.barplot(data=df_metrics, x="Scenario", y="F1 Score", hue="Model", palette="viridis", errorbar="sd")
+        plt.title("Model F1 Performance Comparison across Scenarios (SKAB)", fontsize=14, fontweight="bold", pad=15)
+        plt.ylabel("F1 Score", fontsize=12)
+        plt.xlabel("Experiment Scenario", fontsize=12)
+        plt.ylim(0, 1.05)
+        plt.legend(frameon=True, facecolor="#111827", edgecolor="#374151")
+        plt.tight_layout()
+        plt.savefig(figures_path / "model_comparison_skab.png", dpi=300, facecolor="#0B0F19")
+        plt.close()
+
+        supported_scenarios = {"original", "gaussian_noise", "unseen"}
+        for scenario in supported_scenarios:
+            if scenario in skab_data[0]:
+                emit_model_diagnostics("skab", skab_data[0][scenario], figures_path, scenario_suffix=scenario)
+
+    batadal_file = results_path / "batadal_experiments.json"
+    if batadal_file.exists():
+        logger.info("Generating BATADAL diagnostic plots...")
+        with open(batadal_file) as f:
+            batadal_data = json.load(f)
+
+        batadal_metrics_list = []
+        supported_scenarios = {"original", "gaussian_noise", "unseen"}
+        for seed_data in batadal_data:
+            seed = seed_data["seed"]
+            scenario_names = [s for s in seed_data.keys() if s in supported_scenarios]
+            for scenario in scenario_names:
+                scenario_payload = seed_data[scenario]
+                models = [
+                    key
+                    for key in scenario_payload
+                    if key not in {"automata_states", "automata_density", "automata_densities"}
+                ]
+                for model_name in models:
+                    metrics = scenario_payload[model_name].get("metrics", {})
+                    if "f1" not in metrics:
+                        continue
+                    batadal_metrics_list.append(
+                        {
+                            "Seed": seed,
+                            "Scenario": scenario,
+                            "Model": model_name.upper(),
+                            "F1 Score": metrics["f1"],
+                            "Accuracy": metrics.get("accuracy", 0.0),
+                        }
+                    )
+
+        if batadal_metrics_list:
+            df_batadal = pd.DataFrame(batadal_metrics_list)
+            plt.figure(figsize=(10, 6))
+            sns.barplot(
+                data=df_batadal,
+                x="Scenario",
+                y="F1 Score",
+                hue="Model",
+                palette="rocket",
+                errorbar="sd",
+            )
+            plt.title(
+                "Model F1 Performance Comparison across Scenarios (BATADAL)",
+                fontsize=14,
+                fontweight="bold",
+                pad=15,
+            )
+            plt.ylabel("F1 Score", fontsize=12)
+            plt.xlabel("Experiment Scenario", fontsize=12)
+            plt.ylim(0, 1.05)
+            plt.legend(frameon=True, facecolor="#111827", edgecolor="#374151")
+            plt.tight_layout()
+            plt.savefig(figures_path / "model_comparison_batadal.png", dpi=300, facecolor="#0B0F19")
+            plt.close()
+
+        for scenario in supported_scenarios:
+            if scenario in batadal_data[0]:
+                emit_model_diagnostics(
+                    "batadal",
+                    batadal_data[0][scenario],
+                    figures_path,
+                    scenario_suffix=scenario,
+                )
+
+    logger.info(f"Visualizations successfully generated and saved to {figures_path}")
+
+
+================================================================================
+File: ./src/data/__init__.py
+================================================================================
+
+
+================================================================================
+File: ./src/data/preprocessing.py
+================================================================================
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import Any
+
+import numpy as np
+import pandas as pd
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+
+SUPPORTED_MISSING_STRATEGIES = ("none", "median", "mean", "forward_fill")
+
+
+@dataclass
+class LeakageSafePreprocessor:
+    use_standard_scaler: bool = True
+    pca_components: int | None = None
+    missing_strategy: str = "none"
+
+    def __post_init__(self) -> None:
+        if self.missing_strategy not in SUPPORTED_MISSING_STRATEGIES:
+            raise ValueError(
+                f"Unsupported missing_strategy={self.missing_strategy!r}. "
+                f"Choose from {SUPPORTED_MISSING_STRATEGIES}"
+            )
+        self.scaler_: StandardScaler | None = StandardScaler() if self.use_standard_scaler else None
+        self.pca_: PCA | None = PCA(n_components=self.pca_components) if self.pca_components else None
+        self.feature_columns_: list[str] | None = None
+        self._fill_values_: dict[str, float] = {}
+
+    def _impute_frame(self, df: pd.DataFrame) -> pd.DataFrame:
+        if self.feature_columns_ is None:
+            raise RuntimeError("Preprocessor must be fit before imputation.")
+        if self.missing_strategy == "none":
+            return df
+
+        frame = df.copy()
+        columns = self.feature_columns_
+        if self.missing_strategy == "forward_fill":
+            frame[columns] = frame[columns].ffill()
+            for column in columns:
+                if frame[column].isna().any():
+                    frame[column] = frame[column].fillna(self._fill_values_[column])
+            return frame
+
+        for column in columns:
+            frame[column] = frame[column].fillna(self._fill_values_[column])
+        return frame
+
+    def _learn_fill_values(self, train_df: pd.DataFrame) -> None:
+        columns = self.feature_columns_
+        if columns is None:
+            raise RuntimeError("feature_columns must be set before learning fill values.")
+
+        self._fill_values_ = {}
+        if self.missing_strategy == "none":
+            return
+
+        for column in columns:
+            series = train_df[column]
+            if self.missing_strategy == "median":
+                value = float(series.median())
+            elif self.missing_strategy == "mean":
+                value = float(series.mean())
+            elif self.missing_strategy == "forward_fill":
+                non_null = series.dropna()
+                value = float(non_null.iloc[0]) if len(non_null) else 0.0
+            else:
+                value = 0.0
+            if np.isnan(value):
+                value = 0.0
+            self._fill_values_[column] = value
+
+    def fit(self, train_df: pd.DataFrame, feature_columns: list[str]) -> "LeakageSafePreprocessor":
+        self.feature_columns_ = list(feature_columns)
+        self._learn_fill_values(train_df)
+        imputed = self._impute_frame(train_df)
+        values = imputed[self.feature_columns_].to_numpy(dtype=float)
+        if self.scaler_ is not None:
+            values = self.scaler_.fit_transform(values)
+        if self.pca_ is not None:
+            self.pca_.fit(values)
+        return self
+
+    def transform(self, df: pd.DataFrame) -> np.ndarray:
+        if self.feature_columns_ is None:
+            raise RuntimeError("Preprocessor must be fit before transform.")
+
+        imputed = self._impute_frame(df)
+        values = imputed[self.feature_columns_].to_numpy(dtype=float)
+        if self.scaler_ is not None:
+            values = self.scaler_.transform(values)
+        if self.pca_ is not None:
+            values = self.pca_.transform(values)
+        return values
+
+    def fit_transform(self, train_df: pd.DataFrame, feature_columns: list[str]) -> np.ndarray:
+        self.fit(train_df, feature_columns)
+        return self.transform(train_df)
+
+
+def build_leakage_safe_preprocessor(
+    config: Any,
+    *,
+    for_automata: bool = False,
+) -> LeakageSafePreprocessor:
+    """Config'ten ön işlemci oluşturur.
+
+    for_automata=False (varsayılan): DL için çok değişkenli girdi korunur, PCA uygulanmaz.
+    for_automata=True: PDF gereği otomata hattında PC1 kullanılır.
+    """
+    from src.config import ProjectConfig
+
+    if not isinstance(config, ProjectConfig):
+        raise TypeError("config must be a ProjectConfig instance")
+
+    missing_cfg = config.get("preprocessing", "missing_values", default={}) or {}
+    resolved_pca = (
+        config.get("preprocessing", "automata_pca_components") if for_automata else None
+    )
+    return LeakageSafePreprocessor(
+        use_standard_scaler=config.get("preprocessing", "normalization") == "standard",
+        pca_components=resolved_pca,
+        missing_strategy=missing_cfg.get("strategy", "none"),
+    )
+
+
+================================================================================
+File: ./src/data/skab_loader.py
+================================================================================
+from __future__ import annotations
+
+from pathlib import Path
+
+import pandas as pd
+
+
+def load_skab(root: str | Path, enabled_groups: list[str] | tuple[str, ...]) -> pd.DataFrame:
+    root_path = Path(root)
+    frames: list[pd.DataFrame] = []
+
+    for group in enabled_groups:
+        group_dir = root_path / group
+        if not group_dir.exists():
+            raise FileNotFoundError(f"SKAB group directory not found: {group_dir}")
+
+        for csv_path in sorted(group_dir.glob("*.csv")):
+            frame = pd.read_csv(csv_path, sep=None, engine="python")
+            frame["source_group"] = group
+            frame["source_file"] = csv_path.name
+            frames.append(frame)
+
+    if not frames:
+        raise ValueError(f"No SKAB CSV files found under {root_path} for groups {enabled_groups}")
+
+    return pd.concat(frames, ignore_index=True)
+
+
+def skab_feature_columns(df: pd.DataFrame, target_column: str, excluded_columns: list[str]) -> list[str]:
+    excluded = set(excluded_columns)
+    excluded.add(target_column)
+    return [column for column in df.columns if column not in excluded]
+
+
+================================================================================
+File: ./src/data/splits.py
+================================================================================
+from __future__ import annotations
+
+from dataclasses import dataclass
+
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import GroupKFold
+
+try:
+    from sklearn.model_selection import StratifiedGroupKFold
+except ImportError:
+    StratifiedGroupKFold = None
+
+
+@dataclass(frozen=True)
+class SplitIndices:
+    train: np.ndarray
+    validation: np.ndarray | None
+    test: np.ndarray
+
+
+def make_skab_group_folds(
+    df: pd.DataFrame,
+    target_column: str,
+    group_column: str,
+    n_splits: int,
+    seed: int,
+    prefer_stratified: bool = True,
+) -> list[SplitIndices]:
+    y = df[target_column].to_numpy()
+    groups = df[group_column].to_numpy()
+    x_placeholder = np.zeros(len(df))
+
+    unique_groups = np.unique(groups)
+    if len(unique_groups) < n_splits:
+        raise ValueError(f"n_splits={n_splits} exceeds unique SKAB source files={len(unique_groups)}")
+
+    if prefer_stratified and StratifiedGroupKFold is not None:
+        splitter = StratifiedGroupKFold(n_splits=n_splits, shuffle=True, random_state=seed)
+        raw_splits = splitter.split(x_placeholder, y, groups)
+    else:
+        splitter = GroupKFold(n_splits=n_splits)
+        raw_splits = splitter.split(x_placeholder, y, groups)
+
+    return [SplitIndices(train=train_idx, validation=None, test=test_idx) for train_idx, test_idx in raw_splits]
+
+
+def make_batadal_chronological_split(
+    df: pd.DataFrame,
+    train_ratio: float = 0.6,
+    validation_ratio: float = 0.2,
+    test_ratio: float = 0.2,
+) -> SplitIndices:
+    total = train_ratio + validation_ratio + test_ratio
+    if not np.isclose(total, 1.0):
+        raise ValueError(f"BATADAL split ratios must sum to 1.0, got {total}")
+
+    n_rows = len(df)
+    train_end = int(n_rows * train_ratio)
+    validation_end = train_end + int(n_rows * validation_ratio)
+
+    return SplitIndices(
+        train=np.arange(0, train_end),
+        validation=np.arange(train_end, validation_end),
+        test=np.arange(validation_end, n_rows),
+    )
+
+
+def assert_no_group_leakage(df: pd.DataFrame, split: SplitIndices, group_column: str) -> None:
+    train_groups = set(df.iloc[split.train][group_column])
+    test_groups = set(df.iloc[split.test][group_column])
+    overlap = train_groups.intersection(test_groups)
+    if overlap:
+        raise AssertionError(f"Group leakage detected for {group_column}: {sorted(overlap)}")
+
+
+================================================================================
+File: ./src/data/batadal_loader.py
+================================================================================
+from __future__ import annotations
+
+from pathlib import Path
+
+import pandas as pd
+
+
+COMMON_LABEL_NAMES = (
+    "ATT_FLAG",
+    "Attack",
+    "attack",
+    "Label",
+    "label",
+    "anomaly",
+    "target",
+)
+
+
+def load_batadal_training_dataset_2(path: str | Path) -> pd.DataFrame:
+    csv_path = Path(path)
+    if not csv_path.exists():
+        raise FileNotFoundError(f"BATADAL Training Dataset 2 not found: {csv_path}")
+    df = pd.read_csv(csv_path, sep=None, engine="python")
+    df.columns = [column.strip() for column in df.columns]
+    return df
+
+
+def infer_batadal_target_column(df: pd.DataFrame, configured_target: str | None = None) -> str:
+    if configured_target:
+        if configured_target not in df.columns:
+            raise ValueError(f"Configured BATADAL target column is missing: {configured_target}")
+        return configured_target
+
+    matches = [column for column in COMMON_LABEL_NAMES if column in df.columns]
+    if len(matches) == 1:
+        return matches[0]
+    if len(matches) > 1:
+        raise ValueError(f"Multiple possible BATADAL target columns found: {matches}")
+
+    raise ValueError(
+        "BATADAL target column could not be inferred. Set datasets.batadal.target_column "
+        "after checking the Training Dataset 2 file."
+    )
+
+
+def batadal_feature_columns(df: pd.DataFrame, target_column: str, time_columns: list[str]) -> list[str]:
+    excluded = set(time_columns)
+    excluded.add(target_column)
+    return [column for column in df.columns if column not in excluded]
+
+
