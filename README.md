@@ -339,14 +339,7 @@ python3 scripts/generate_report_metrics.py ile bu bölüm güncellenyior.
 | 6 | 5 | 0.1905 ± 0.0000 | 1268.0000 | 0.0011 |
 | 6 | 6 | 0.1876 ± 0.0000 | 1588.0000 | 0.0008 |
 
-### İstatistiksel testler (SKAB, original)
 
-| Karşılaştırma | Test | İstatistik | p |
-|---|---|---|---:|
-| Otomata vs LSTM | Wilcoxon (F1) | 0.0000 | 0.0000 |
-| Otomata vs GRU | Wilcoxon (F1) | 0.0000 | 0.0000 |
-| Otomata vs LSTM | McNemar (b=6104, c=10390) | — | 0.0000 |
-| Otomata vs GRU | McNemar (b=6033, c=10667) | — | 0.0000 |
 
 <!-- AUTO_METRICS_END -->
 
