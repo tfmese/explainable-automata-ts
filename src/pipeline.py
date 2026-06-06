@@ -8,7 +8,7 @@ import pandas as pd
 from src.config import ProjectConfig
 from src.data.preprocessing import LeakageSafePreprocessor
 from src.explainability.automata_explainer import explain_automata_decision
-from src.features.windowing import extract_sax_patterns
+from src.features.sax import TrainableSAXEncoder
 from src.models.automata import ProbabilisticAutomata
 
 
@@ -30,26 +30,29 @@ class AutomataPipeline:
             anomaly_quantile=self.config.get("automata", "anomaly_quantile"),
         )
         self.paa_segments = self.config.get("automata", "paa_segments")
+        self.sax_encoder: TrainableSAXEncoder | None = None
+
+    def _resolved_paa_segments(self) -> int:
+        return self.paa_segments if self.paa_segments is not None else self.window_size
 
     def fit(self, train_df: pd.DataFrame, feature_columns: list[str]) -> "AutomataPipeline":
         train_values = self.preprocessor.fit_transform(train_df, feature_columns).reshape(-1)
-        patterns = extract_sax_patterns(
+        paa_segments = self._resolved_paa_segments()
+        self.sax_encoder = TrainableSAXEncoder().fit(
             train_values,
             window_size=self.window_size,
-            paa_segments=self.paa_segments,
+            paa_segments=paa_segments,
             alphabet_size=self.alphabet_size,
         )
+        patterns = self.sax_encoder.transform(train_values)
         self.automata.fit(patterns)
         return self
 
     def transform_patterns(self, df: pd.DataFrame) -> list[str]:
+        if self.sax_encoder is None:
+            raise RuntimeError("AutomataPipeline must be fit before transform_patterns")
         values = self.preprocessor.transform(df).reshape(-1)
-        return extract_sax_patterns(
-            values,
-            window_size=self.window_size,
-            paa_segments=self.paa_segments,
-            alphabet_size=self.alphabet_size,
-        )
+        return self.sax_encoder.transform(values)
 
     def predict(self, df: pd.DataFrame) -> dict[str, Any]:
         return self.automata.predict_sequence(self.transform_patterns(df))

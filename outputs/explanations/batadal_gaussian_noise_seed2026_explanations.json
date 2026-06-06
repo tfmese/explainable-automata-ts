@@ -1,0 +1,1851 @@
+[
+  {
+    "time_step": 3,
+    "state": "cbbc",
+    "pattern": "cbbc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [],
+    "probability": 1.0,
+    "decision": "normal",
+    "confidence": 1.0,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 4,
+    "state": "bbcc",
+    "pattern": "bbcc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      }
+    ],
+    "probability": 0.3125,
+    "decision": "normal",
+    "confidence": 0.3125,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 5,
+    "state": "bccb",
+    "pattern": "bccb",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      }
+    ],
+    "probability": 0.0744047619047619,
+    "decision": "normal",
+    "confidence": 0.0744047619047619,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 6,
+    "state": "ccbb",
+    "pattern": "ccbb",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      }
+    ],
+    "probability": 0.05040322580645161,
+    "decision": "normal",
+    "confidence": 0.05040322580645161,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 7,
+    "state": "cbba",
+    "pattern": "cbba",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      }
+    ],
+    "probability": 0.014680551205762603,
+    "decision": "normal",
+    "confidence": 0.014680551205762603,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 8,
+    "state": "bbaa",
+    "pattern": "bbaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      }
+    ],
+    "probability": 0.013403981535696288,
+    "decision": "normal",
+    "confidence": 0.013403981535696288,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 9,
+    "state": "baaa",
+    "pattern": "baaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      }
+    ],
+    "probability": 0.011947027020946691,
+    "decision": "normal",
+    "confidence": 0.011947027020946691,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 10,
+    "state": "aaaa",
+    "pattern": "aaaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      }
+    ],
+    "probability": 0.009909549544506171,
+    "decision": "normal",
+    "confidence": 0.009909549544506171,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 11,
+    "state": "aaaa",
+    "pattern": "aaaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      }
+    ],
+    "probability": 0.006118848363324594,
+    "decision": "normal",
+    "confidence": 0.006118848363324594,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 12,
+    "state": "aaab",
+    "pattern": "aaab",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      }
+    ],
+    "probability": 0.0016587239539132934,
+    "decision": "normal",
+    "confidence": 0.0016587239539132934,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 13,
+    "state": "aabc",
+    "pattern": "aabc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      }
+    ],
+    "probability": 0.0007045907060870627,
+    "decision": "normal",
+    "confidence": 0.0007045907060870627,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 14,
+    "state": "abcc",
+    "pattern": "abcc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      }
+    ],
+    "probability": 0.0006115315562265072,
+    "decision": "normal",
+    "confidence": 0.0006115315562265072,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 15,
+    "state": "bccb",
+    "pattern": "bccb",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccb",
+        "probability": 0.20408163265306123
+      }
+    ],
+    "probability": 0.0001248023584135729,
+    "decision": "normal",
+    "confidence": 0.0001248023584135729,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 16,
+    "state": "ccbb",
+    "pattern": "ccbb",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccb",
+        "probability": 0.20408163265306123
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      }
+    ],
+    "probability": 8.454353311887197e-05,
+    "decision": "normal",
+    "confidence": 8.454353311887197e-05,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 17,
+    "state": "cbbb",
+    "pattern": "cbbb",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccb",
+        "probability": 0.20408163265306123
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      }
+    ],
+    "probability": 5.41735260761704e-05,
+    "decision": "normal",
+    "confidence": 5.41735260761704e-05,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 18,
+    "state": "bbbb",
+    "pattern": "bbbb",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccb",
+        "probability": 0.20408163265306123
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      }
+    ],
+    "probability": 3.765720715050869e-05,
+    "decision": "normal",
+    "confidence": 3.765720715050869e-05,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 19,
+    "state": "bbbb",
+    "pattern": "bbbb",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccb",
+        "probability": 0.20408163265306123
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      }
+    ],
+    "probability": 2.2685064548499213e-05,
+    "decision": "normal",
+    "confidence": 2.2685064548499213e-05,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 20,
+    "state": "bbbb",
+    "pattern": "bbbb",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccb",
+        "probability": 0.20408163265306123
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      }
+    ],
+    "probability": 1.366570153524049e-05,
+    "decision": "normal",
+    "confidence": 1.366570153524049e-05,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 21,
+    "state": "bbbb",
+    "pattern": "bbbb",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccb",
+        "probability": 0.20408163265306123
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      }
+    ],
+    "probability": 8.232350322434031e-06,
+    "decision": "normal",
+    "confidence": 8.232350322434031e-06,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 22,
+    "state": "bbbc",
+    "pattern": "bbbc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccb",
+        "probability": 0.20408163265306123
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      }
+    ],
+    "probability": 2.1820687601632372e-06,
+    "decision": "normal",
+    "confidence": 2.1820687601632372e-06,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 23,
+    "state": "bbcc",
+    "pattern": "bbcc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccb",
+        "probability": 0.20408163265306123
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcc",
+        "probability": 0.6065573770491803
+      }
+    ],
+    "probability": 1.3235499037055702e-06,
+    "decision": "normal",
+    "confidence": 1.3235499037055702e-06,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 24,
+    "state": "bccc",
+    "pattern": "bccc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccb",
+        "probability": 0.20408163265306123
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcc",
+        "probability": 0.6065573770491803
+      },
+      {
+        "from": "bbcc",
+        "to": "bccc",
+        "probability": 0.746031746031746
+      }
+    ],
+    "probability": 9.87410245621616e-07,
+    "decision": "normal",
+    "confidence": 9.87410245621616e-07,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 25,
+    "state": "cccc",
+    "pattern": "cccc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccb",
+        "probability": 0.20408163265306123
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcc",
+        "probability": 0.6065573770491803
+      },
+      {
+        "from": "bbcc",
+        "to": "bccc",
+        "probability": 0.746031746031746
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      }
+    ],
+    "probability": 6.647910564581177e-07,
+    "decision": "normal",
+    "confidence": 6.647910564581177e-07,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 26,
+    "state": "cccc",
+    "pattern": "cccc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccb",
+        "probability": 0.20408163265306123
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcc",
+        "probability": 0.6065573770491803
+      },
+      {
+        "from": "bbcc",
+        "to": "bccc",
+        "probability": 0.746031746031746
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      }
+    ],
+    "probability": 3.811875323727739e-07,
+    "decision": "normal",
+    "confidence": 3.811875323727739e-07,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 27,
+    "state": "cccb",
+    "pattern": "cccb",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccb",
+        "probability": 0.20408163265306123
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcc",
+        "probability": 0.6065573770491803
+      },
+      {
+        "from": "bbcc",
+        "to": "bccc",
+        "probability": 0.746031746031746
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      }
+    ],
+    "probability": 1.538738662789179e-07,
+    "decision": "normal",
+    "confidence": 1.538738662789179e-07,
+    "threshold": 0.0
+  }
+]

@@ -1,14 +1,26 @@
 {
+  "paired_fold_count_lstm": 25,
+  "paired_fold_count_gru": 25,
+  "automata_vs_lstm": {
+    "statistic": 0.0,
+    "p_value": 5.960464477539063e-08,
+    "n_pairs": 25
+  },
+  "automata_vs_gru": {
+    "statistic": 0.0,
+    "p_value": 5.960464477539063e-08,
+    "n_pairs": 25
+  },
   "mcnemar_automata_vs_lstm": {
-    "b": 1004,
-    "c": 0,
-    "n": 1004,
-    "p_value": 1.1665795231290236e-302
+    "b": 6104,
+    "c": 10390,
+    "n": 16494,
+    "p_value": 7.133311225936767e-247
   },
   "mcnemar_automata_vs_gru": {
-    "b": 1037,
-    "c": 0,
-    "n": 1037,
-    "p_value": 1.35807730622e-312
+    "b": 6033,
+    "c": 10667,
+    "n": 16700,
+    "p_value": 3.550366690626299e-285
   }
 }

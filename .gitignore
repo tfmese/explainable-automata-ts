@@ -4,9 +4,5 @@ __pycache__/
 .pytest_cache/
 .DS_Store
 
-outputs/results/*.json
 outputs/results/run_*/
 outputs/results/backups/
-outputs/logs/*.jsonl
-outputs/explanations/
-outputs/figures/*.png

@@ -1,7 +1,11 @@
 from __future__ import annotations
 
+from typing import Any
+
 import torch
 from torch import nn
+
+from src.config import ProjectConfig
 
 
 class LSTMClassifier(nn.Module):
@@ -52,6 +56,13 @@ class CNN1DClassifier(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return self.network(x.transpose(1, 2)).squeeze(-1)
+
+
+def resolve_model_architecture(config: ProjectConfig, model_name: str) -> dict[str, Any]:
+    normalized = model_name.lower()
+    if normalized in {"cnn1d", "1d-cnn", "cnn"}:
+        normalized = "cnn1d"
+    return dict(config.get("deep_learning", normalized, default={}) or {})
 
 
 def build_deep_model(name: str, input_size: int, **kwargs) -> nn.Module:

@@ -1,13 +1,21 @@
 {
-  "timestamp_utc": "2026-06-05T19:13:32.709127+00:00",
+  "timestamp_utc": "2026-06-05T22:47:03.351888+00:00",
   "seeds": [
-    42
+    42,
+    123,
+    2026,
+    7,
+    999
   ],
   "scenarios": [
-    "original"
+    "original",
+    "gaussian_noise",
+    "unseen"
   ],
   "models": [
-    "automata"
+    "lstm",
+    "gru",
+    "cnn1d"
   ],
   "fast_mode": false,
   "skip_parameter_grid": false,
@@ -15,5 +23,5 @@
   "results_dir": "outputs/results",
   "skab_target": "anomaly",
   "batadal_target": "ATT_FLAG",
-  "record_count": 2
+  "record_count": 360
 }

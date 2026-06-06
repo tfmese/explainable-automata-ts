@@ -1,0 +1,7162 @@
+[
+  {
+    "time_step": 41,
+    "state": "bbca",
+    "pattern": "bbca",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccb",
+        "probability": 0.20408163265306123
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccc",
+        "probability": 0.7959183673469388
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccba",
+        "probability": 0.18253968253968253
+      },
+      {
+        "from": "ccba",
+        "to": "cbaa",
+        "probability": 0.8928571428571429
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.9696969696969697
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabb",
+        "probability": 0.40707964601769914
+      },
+      {
+        "from": "aabb",
+        "to": "abbc",
+        "probability": 0.5660377358490566
+      },
+      {
+        "from": "abbc",
+        "to": "bbcb",
+        "probability": 0.25806451612903225
+      },
+      {
+        "from": "bbcb",
+        "to": "bcbb",
+        "probability": 0.5142857142857142
+      },
+      {
+        "from": "bcbb",
+        "to": "cbbb",
+        "probability": 0.4166666666666667
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbca",
+        "probability": 0.04918032786885246
+      }
+    ],
+    "probability": 4.847653124280702e-13,
+    "decision": "normal",
+    "confidence": 4.847653124280702e-13,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 42,
+    "state": "baac",
+    "pattern": "bcac",
+    "status": "unseen",
+    "mapped_to": "baac",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccb",
+        "probability": 0.20408163265306123
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccc",
+        "probability": 0.7959183673469388
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccba",
+        "probability": 0.18253968253968253
+      },
+      {
+        "from": "ccba",
+        "to": "cbaa",
+        "probability": 0.8928571428571429
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.9696969696969697
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabb",
+        "probability": 0.40707964601769914
+      },
+      {
+        "from": "aabb",
+        "to": "abbc",
+        "probability": 0.5660377358490566
+      },
+      {
+        "from": "abbc",
+        "to": "bbcb",
+        "probability": 0.25806451612903225
+      },
+      {
+        "from": "bbcb",
+        "to": "bcbb",
+        "probability": 0.5142857142857142
+      },
+      {
+        "from": "bcbb",
+        "to": "cbbb",
+        "probability": 0.4166666666666667
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbca",
+        "probability": 0.04918032786885246
+      },
+      {
+        "from": "bbca",
+        "to": "baac",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 4.847653124280702e-25,
+    "decision": "normal",
+    "confidence": 4.847653124280702e-25,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 43,
+    "state": "cacb",
+    "pattern": "cacb",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccb",
+        "probability": 0.20408163265306123
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccc",
+        "probability": 0.7959183673469388
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccba",
+        "probability": 0.18253968253968253
+      },
+      {
+        "from": "ccba",
+        "to": "cbaa",
+        "probability": 0.8928571428571429
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.9696969696969697
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabb",
+        "probability": 0.40707964601769914
+      },
+      {
+        "from": "aabb",
+        "to": "abbc",
+        "probability": 0.5660377358490566
+      },
+      {
+        "from": "abbc",
+        "to": "bbcb",
+        "probability": 0.25806451612903225
+      },
+      {
+        "from": "bbcb",
+        "to": "bcbb",
+        "probability": 0.5142857142857142
+      },
+      {
+        "from": "bcbb",
+        "to": "cbbb",
+        "probability": 0.4166666666666667
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbca",
+        "probability": 0.04918032786885246
+      },
+      {
+        "from": "bbca",
+        "to": "baac",
+        "probability": 1e-12
+      },
+      {
+        "from": "baac",
+        "to": "cacb",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 4.847653124280702e-37,
+    "decision": "normal",
+    "confidence": 4.847653124280702e-37,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 418,
+    "state": "bbbb",
+    "pattern": "bbbb",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccb",
+        "probability": 0.20408163265306123
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccc",
+        "probability": 0.7959183673469388
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccba",
+        "probability": 0.18253968253968253
+      },
+      {
+        "from": "ccba",
+        "to": "cbaa",
+        "probability": 0.8928571428571429
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.9696969696969697
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabb",
+        "probability": 0.40707964601769914
+      },
+      {
+        "from": "aabb",
+        "to": "abbc",
+        "probability": 0.5660377358490566
+      },
+      {
+        "from": "abbc",
+        "to": "bbcb",
+        "probability": 0.25806451612903225
+      },
+      {
+        "from": "bbcb",
+        "to": "bcbb",
+        "probability": 0.5142857142857142
+      },
+      {
+        "from": "bcbb",
+        "to": "cbbb",
+        "probability": 0.4166666666666667
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbca",
+        "probability": 0.04918032786885246
+      },
+      {
+        "from": "bbca",
+        "to": "baac",
+        "probability": 1e-12
+      },
+      {
+        "from": "baac",
+        "to": "cacb",
+        "probability": 1e-12
+      },
+      {
+        "from": "cacb",
+        "to": "acbb",
+        "probability": 1e-12
+      },
+      {
+        "from": "acbb",
+        "to": "cbbb",
+        "probability": 0.2
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcc",
+        "probability": 0.6065573770491803
+      },
+      {
+        "from": "bbcc",
+        "to": "bccc",
+        "probability": 0.746031746031746
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbc",
+        "probability": 0.06796116504854369
+      },
+      {
+        "from": "cbbc",
+        "to": "bbca",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbca",
+        "to": "bcaa",
+        "probability": 1.0
+      },
+      {
+        "from": "bcaa",
+        "to": "caaa",
+        "probability": 0.875
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 0.9090909090909091
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabb",
+        "probability": 0.40707964601769914
+      },
+      {
+        "from": "aabb",
+        "to": "abbb",
+        "probability": 0.33962264150943394
+      },
+      {
+        "from": "abbb",
+        "to": "bbbb",
+        "probability": 0.375
+      },
+      {
+        "from": "bbbb",
+        "to": "bbba",
+        "probability": 0.13253012048192772
+      },
+      {
+        "from": "bbba",
+        "to": "bbaa",
+        "probability": 0.9782608695652174
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.11144578313253012
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 0.7894736842105263
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 0.9166666666666666
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 0.7575757575757576
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcc",
+        "probability": 0.6065573770491803
+      },
+      {
+        "from": "bbcc",
+        "to": "bccc",
+        "probability": 0.746031746031746
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccba",
+        "probability": 0.18253968253968253
+      },
+      {
+        "from": "ccba",
+        "to": "cbaa",
+        "probability": 0.8928571428571429
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.9696969696969697
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccc",
+        "probability": 0.7959183673469388
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbc",
+        "probability": 0.06097560975609756
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcb",
+        "probability": 0.3442622950819672
+      },
+      {
+        "from": "bbcb",
+        "to": "bcbc",
+        "probability": 0.45714285714285713
+      },
+      {
+        "from": "bcbc",
+        "to": "cbcb",
+        "probability": 0.2
+      },
+      {
+        "from": "cbcb",
+        "to": "bcbc",
+        "probability": 0.08695652173913043
+      },
+      {
+        "from": "bcbc",
+        "to": "cbcc",
+        "probability": 0.7
+      },
+      {
+        "from": "cbcc",
+        "to": "bccc",
+        "probability": 0.6818181818181818
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.022935779816513763
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 0.5714285714285714
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 0.9090909090909091
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabb",
+        "probability": 0.40707964601769914
+      },
+      {
+        "from": "aabb",
+        "to": "abbb",
+        "probability": 0.33962264150943394
+      },
+      {
+        "from": "abbb",
+        "to": "bbbc",
+        "probability": 0.4583333333333333
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcc",
+        "probability": 0.6065573770491803
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccba",
+        "probability": 0.12903225806451613
+      },
+      {
+        "from": "ccba",
+        "to": "cbaa",
+        "probability": 0.8928571428571429
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.9696969696969697
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabb",
+        "probability": 0.40707964601769914
+      },
+      {
+        "from": "aabb",
+        "to": "abbb",
+        "probability": 0.33962264150943394
+      },
+      {
+        "from": "abbb",
+        "to": "bbbb",
+        "probability": 0.375
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcb",
+        "probability": 0.3442622950819672
+      },
+      {
+        "from": "bbcb",
+        "to": "bcbb",
+        "probability": 0.5142857142857142
+      },
+      {
+        "from": "bcbb",
+        "to": "cbbb",
+        "probability": 0.4166666666666667
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcb",
+        "probability": 0.3442622950819672
+      },
+      {
+        "from": "bbcb",
+        "to": "bcbc",
+        "probability": 0.45714285714285713
+      },
+      {
+        "from": "bcbc",
+        "to": "cbcc",
+        "probability": 0.7
+      },
+      {
+        "from": "cbcc",
+        "to": "bccc",
+        "probability": 0.6818181818181818
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.11144578313253012
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 0.7894736842105263
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 0.9166666666666666
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 0.7575757575757576
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbba",
+        "probability": 0.24390243902439024
+      },
+      {
+        "from": "bbba",
+        "to": "bbaa",
+        "probability": 0.9782608695652174
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaab",
+        "probability": 0.16279069767441862
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccc",
+        "probability": 0.7959183673469388
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccba",
+        "probability": 0.18253968253968253
+      },
+      {
+        "from": "ccba",
+        "to": "cbaa",
+        "probability": 0.8928571428571429
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.9696969696969697
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccc",
+        "probability": 0.7959183673469388
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbc",
+        "probability": 0.16666666666666666
+      },
+      {
+        "from": "ccbc",
+        "to": "cbcb",
+        "probability": 0.6428571428571429
+      },
+      {
+        "from": "cbcb",
+        "to": "bcbb",
+        "probability": 0.6521739130434783
+      },
+      {
+        "from": "bcbb",
+        "to": "cbbb",
+        "probability": 0.4166666666666667
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcc",
+        "probability": 0.6065573770491803
+      },
+      {
+        "from": "bbcc",
+        "to": "bccc",
+        "probability": 0.746031746031746
+      },
+      {
+        "from": "bccc",
+        "to": "cccb",
+        "probability": 0.31683168316831684
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabb",
+        "probability": 0.40707964601769914
+      },
+      {
+        "from": "aabb",
+        "to": "abbc",
+        "probability": 0.5660377358490566
+      },
+      {
+        "from": "abbc",
+        "to": "bbcc",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "bbcc",
+        "to": "bccc",
+        "probability": 0.746031746031746
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbc",
+        "probability": 0.16666666666666666
+      },
+      {
+        "from": "ccbc",
+        "to": "cbcc",
+        "probability": 0.25
+      },
+      {
+        "from": "cbcc",
+        "to": "bcca",
+        "probability": 0.045454545454545456
+      },
+      {
+        "from": "bcca",
+        "to": "ccab",
+        "probability": 0.5
+      },
+      {
+        "from": "ccab",
+        "to": "cabb",
+        "probability": 0.5
+      },
+      {
+        "from": "cabb",
+        "to": "abbb",
+        "probability": 1.0
+      },
+      {
+        "from": "abbb",
+        "to": "bbbb",
+        "probability": 0.375
+      },
+      {
+        "from": "bbbb",
+        "to": "bbba",
+        "probability": 0.13253012048192772
+      },
+      {
+        "from": "bbba",
+        "to": "bbaa",
+        "probability": 0.9782608695652174
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccb",
+        "probability": 0.20408163265306123
+      },
+      {
+        "from": "bccb",
+        "to": "ccba",
+        "probability": 0.12903225806451613
+      },
+      {
+        "from": "ccba",
+        "to": "cbab",
+        "probability": 0.10714285714285714
+      },
+      {
+        "from": "cbab",
+        "to": "babb",
+        "probability": 0.2
+      },
+      {
+        "from": "babb",
+        "to": "abbb",
+        "probability": 0.5714285714285714
+      },
+      {
+        "from": "abbb",
+        "to": "bbbb",
+        "probability": 0.375
+      },
+      {
+        "from": "bbbb",
+        "to": "bbba",
+        "probability": 0.13253012048192772
+      },
+      {
+        "from": "bbba",
+        "to": "bbab",
+        "probability": 0.021739130434782608
+      },
+      {
+        "from": "bbab",
+        "to": "babc",
+        "probability": 1e-12
+      },
+      {
+        "from": "babc",
+        "to": "abcc",
+        "probability": 0.75
+      },
+      {
+        "from": "abcc",
+        "to": "bccc",
+        "probability": 0.7959183673469388
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcc",
+        "probability": 0.6065573770491803
+      },
+      {
+        "from": "bbcc",
+        "to": "bccc",
+        "probability": 0.746031746031746
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccba",
+        "probability": 0.18253968253968253
+      },
+      {
+        "from": "ccba",
+        "to": "cbaa",
+        "probability": 0.8928571428571429
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.9696969696969697
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcb",
+        "probability": 0.09433962264150944
+      },
+      {
+        "from": "abcb",
+        "to": "bcbb",
+        "probability": 0.5
+      },
+      {
+        "from": "bcbb",
+        "to": "cbbb",
+        "probability": 0.4166666666666667
+      },
+      {
+        "from": "cbbb",
+        "to": "bbba",
+        "probability": 0.24390243902439024
+      },
+      {
+        "from": "bbba",
+        "to": "bbaa",
+        "probability": 0.9782608695652174
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccc",
+        "probability": 0.7959183673469388
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcb",
+        "probability": 0.3442622950819672
+      },
+      {
+        "from": "bbcb",
+        "to": "bcbb",
+        "probability": 0.5142857142857142
+      },
+      {
+        "from": "bcbb",
+        "to": "cbbb",
+        "probability": 0.4166666666666667
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbc",
+        "probability": 0.06097560975609756
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcc",
+        "probability": 0.6065573770491803
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbc",
+        "probability": 0.1935483870967742
+      },
+      {
+        "from": "ccbc",
+        "to": "cbcc",
+        "probability": 0.25
+      },
+      {
+        "from": "cbcc",
+        "to": "bccb",
+        "probability": 0.2727272727272727
+      },
+      {
+        "from": "bccb",
+        "to": "ccba",
+        "probability": 0.12903225806451613
+      },
+      {
+        "from": "ccba",
+        "to": "cbaa",
+        "probability": 0.8928571428571429
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.9696969696969697
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.11144578313253012
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 0.7894736842105263
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 0.9166666666666666
+      },
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 0.030303030303030304
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 0.5714285714285714
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 0.9090909090909091
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.11144578313253012
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 0.02631578947368421
+      },
+      {
+        "from": "aaca",
+        "to": "acaa",
+        "probability": 0.5
+      },
+      {
+        "from": "acaa",
+        "to": "caab",
+        "probability": 1e-12
+      },
+      {
+        "from": "caab",
+        "to": "aaba",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaba",
+        "to": "abaa",
+        "probability": 0.7142857142857143
+      },
+      {
+        "from": "abaa",
+        "to": "baaa",
+        "probability": 0.625
+      },
+      {
+        "from": "baaa",
+        "to": "aaac",
+        "probability": 0.007751937984496124
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 0.7894736842105263
+      },
+      {
+        "from": "aacc",
+        "to": "accb",
+        "probability": 0.05555555555555555
+      },
+      {
+        "from": "accb",
+        "to": "ccbc",
+        "probability": 0.5
+      },
+      {
+        "from": "ccbc",
+        "to": "cbcc",
+        "probability": 0.25
+      },
+      {
+        "from": "cbcc",
+        "to": "bccc",
+        "probability": 0.6818181818181818
+      },
+      {
+        "from": "bccc",
+        "to": "cccb",
+        "probability": 0.31683168316831684
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcc",
+        "probability": 0.6065573770491803
+      },
+      {
+        "from": "bbcc",
+        "to": "bccc",
+        "probability": 0.746031746031746
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccba",
+        "probability": 0.18253968253968253
+      },
+      {
+        "from": "ccba",
+        "to": "cbaa",
+        "probability": 0.8928571428571429
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.9696969696969697
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aaba",
+        "probability": 0.168141592920354
+      },
+      {
+        "from": "aaba",
+        "to": "abaa",
+        "probability": 0.7142857142857143
+      },
+      {
+        "from": "abaa",
+        "to": "baaa",
+        "probability": 0.625
+      },
+      {
+        "from": "baaa",
+        "to": "aaab",
+        "probability": 0.16279069767441862
+      },
+      {
+        "from": "aaab",
+        "to": "aaba",
+        "probability": 0.168141592920354
+      },
+      {
+        "from": "aaba",
+        "to": "abaa",
+        "probability": 0.7142857142857143
+      },
+      {
+        "from": "abaa",
+        "to": "baaa",
+        "probability": 0.625
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.11144578313253012
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 0.7894736842105263
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 0.9166666666666666
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 0.7575757575757576
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcc",
+        "probability": 0.6065573770491803
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbc",
+        "probability": 0.06796116504854369
+      },
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbba",
+        "probability": 0.13253012048192772
+      },
+      {
+        "from": "bbba",
+        "to": "bbaa",
+        "probability": 0.9782608695652174
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccc",
+        "probability": 0.7959183673469388
+      },
+      {
+        "from": "bccc",
+        "to": "cccb",
+        "probability": 0.31683168316831684
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbc",
+        "probability": 0.06796116504854369
+      },
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccc",
+        "probability": 0.746031746031746
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbc",
+        "probability": 0.06796116504854369
+      },
+      {
+        "from": "cbbc",
+        "to": "bbcb",
+        "probability": 0.375
+      },
+      {
+        "from": "bbcb",
+        "to": "bcbc",
+        "probability": 0.45714285714285713
+      },
+      {
+        "from": "bcbc",
+        "to": "cbcc",
+        "probability": 0.7
+      },
+      {
+        "from": "cbcc",
+        "to": "bccb",
+        "probability": 0.2727272727272727
+      },
+      {
+        "from": "bccb",
+        "to": "ccba",
+        "probability": 0.12903225806451613
+      },
+      {
+        "from": "ccba",
+        "to": "cbaa",
+        "probability": 0.8928571428571429
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.9696969696969697
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccb",
+        "probability": 0.20408163265306123
+      },
+      {
+        "from": "bccb",
+        "to": "ccba",
+        "probability": 0.12903225806451613
+      },
+      {
+        "from": "ccba",
+        "to": "cbaa",
+        "probability": 0.8928571428571429
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.9696969696969697
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabb",
+        "probability": 0.40707964601769914
+      },
+      {
+        "from": "aabb",
+        "to": "abbb",
+        "probability": 0.33962264150943394
+      },
+      {
+        "from": "abbb",
+        "to": "bbbb",
+        "probability": 0.375
+      }
+    ],
+    "probability": 4.822884676127921e-210,
+    "decision": "normal",
+    "confidence": 4.822884676127921e-210,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 419,
+    "state": "aaac",
+    "pattern": "abac",
+    "status": "unseen",
+    "mapped_to": "aaac",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccb",
+        "probability": 0.20408163265306123
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccc",
+        "probability": 0.7959183673469388
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccba",
+        "probability": 0.18253968253968253
+      },
+      {
+        "from": "ccba",
+        "to": "cbaa",
+        "probability": 0.8928571428571429
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.9696969696969697
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabb",
+        "probability": 0.40707964601769914
+      },
+      {
+        "from": "aabb",
+        "to": "abbc",
+        "probability": 0.5660377358490566
+      },
+      {
+        "from": "abbc",
+        "to": "bbcb",
+        "probability": 0.25806451612903225
+      },
+      {
+        "from": "bbcb",
+        "to": "bcbb",
+        "probability": 0.5142857142857142
+      },
+      {
+        "from": "bcbb",
+        "to": "cbbb",
+        "probability": 0.4166666666666667
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbca",
+        "probability": 0.04918032786885246
+      },
+      {
+        "from": "bbca",
+        "to": "baac",
+        "probability": 1e-12
+      },
+      {
+        "from": "baac",
+        "to": "cacb",
+        "probability": 1e-12
+      },
+      {
+        "from": "cacb",
+        "to": "acbb",
+        "probability": 1e-12
+      },
+      {
+        "from": "acbb",
+        "to": "cbbb",
+        "probability": 0.2
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcc",
+        "probability": 0.6065573770491803
+      },
+      {
+        "from": "bbcc",
+        "to": "bccc",
+        "probability": 0.746031746031746
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbc",
+        "probability": 0.06796116504854369
+      },
+      {
+        "from": "cbbc",
+        "to": "bbca",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbca",
+        "to": "bcaa",
+        "probability": 1.0
+      },
+      {
+        "from": "bcaa",
+        "to": "caaa",
+        "probability": 0.875
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 0.9090909090909091
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabb",
+        "probability": 0.40707964601769914
+      },
+      {
+        "from": "aabb",
+        "to": "abbb",
+        "probability": 0.33962264150943394
+      },
+      {
+        "from": "abbb",
+        "to": "bbbb",
+        "probability": 0.375
+      },
+      {
+        "from": "bbbb",
+        "to": "bbba",
+        "probability": 0.13253012048192772
+      },
+      {
+        "from": "bbba",
+        "to": "bbaa",
+        "probability": 0.9782608695652174
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.11144578313253012
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 0.7894736842105263
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 0.9166666666666666
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 0.7575757575757576
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcc",
+        "probability": 0.6065573770491803
+      },
+      {
+        "from": "bbcc",
+        "to": "bccc",
+        "probability": 0.746031746031746
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccba",
+        "probability": 0.18253968253968253
+      },
+      {
+        "from": "ccba",
+        "to": "cbaa",
+        "probability": 0.8928571428571429
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.9696969696969697
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccc",
+        "probability": 0.7959183673469388
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbc",
+        "probability": 0.06097560975609756
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcb",
+        "probability": 0.3442622950819672
+      },
+      {
+        "from": "bbcb",
+        "to": "bcbc",
+        "probability": 0.45714285714285713
+      },
+      {
+        "from": "bcbc",
+        "to": "cbcb",
+        "probability": 0.2
+      },
+      {
+        "from": "cbcb",
+        "to": "bcbc",
+        "probability": 0.08695652173913043
+      },
+      {
+        "from": "bcbc",
+        "to": "cbcc",
+        "probability": 0.7
+      },
+      {
+        "from": "cbcc",
+        "to": "bccc",
+        "probability": 0.6818181818181818
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.022935779816513763
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 0.5714285714285714
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 0.9090909090909091
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabb",
+        "probability": 0.40707964601769914
+      },
+      {
+        "from": "aabb",
+        "to": "abbb",
+        "probability": 0.33962264150943394
+      },
+      {
+        "from": "abbb",
+        "to": "bbbc",
+        "probability": 0.4583333333333333
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcc",
+        "probability": 0.6065573770491803
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccba",
+        "probability": 0.12903225806451613
+      },
+      {
+        "from": "ccba",
+        "to": "cbaa",
+        "probability": 0.8928571428571429
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.9696969696969697
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabb",
+        "probability": 0.40707964601769914
+      },
+      {
+        "from": "aabb",
+        "to": "abbb",
+        "probability": 0.33962264150943394
+      },
+      {
+        "from": "abbb",
+        "to": "bbbb",
+        "probability": 0.375
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcb",
+        "probability": 0.3442622950819672
+      },
+      {
+        "from": "bbcb",
+        "to": "bcbb",
+        "probability": 0.5142857142857142
+      },
+      {
+        "from": "bcbb",
+        "to": "cbbb",
+        "probability": 0.4166666666666667
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcb",
+        "probability": 0.3442622950819672
+      },
+      {
+        "from": "bbcb",
+        "to": "bcbc",
+        "probability": 0.45714285714285713
+      },
+      {
+        "from": "bcbc",
+        "to": "cbcc",
+        "probability": 0.7
+      },
+      {
+        "from": "cbcc",
+        "to": "bccc",
+        "probability": 0.6818181818181818
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.11144578313253012
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 0.7894736842105263
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 0.9166666666666666
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 0.7575757575757576
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbba",
+        "probability": 0.24390243902439024
+      },
+      {
+        "from": "bbba",
+        "to": "bbaa",
+        "probability": 0.9782608695652174
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaab",
+        "probability": 0.16279069767441862
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccc",
+        "probability": 0.7959183673469388
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccba",
+        "probability": 0.18253968253968253
+      },
+      {
+        "from": "ccba",
+        "to": "cbaa",
+        "probability": 0.8928571428571429
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.9696969696969697
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccc",
+        "probability": 0.7959183673469388
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbc",
+        "probability": 0.16666666666666666
+      },
+      {
+        "from": "ccbc",
+        "to": "cbcb",
+        "probability": 0.6428571428571429
+      },
+      {
+        "from": "cbcb",
+        "to": "bcbb",
+        "probability": 0.6521739130434783
+      },
+      {
+        "from": "bcbb",
+        "to": "cbbb",
+        "probability": 0.4166666666666667
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcc",
+        "probability": 0.6065573770491803
+      },
+      {
+        "from": "bbcc",
+        "to": "bccc",
+        "probability": 0.746031746031746
+      },
+      {
+        "from": "bccc",
+        "to": "cccb",
+        "probability": 0.31683168316831684
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabb",
+        "probability": 0.40707964601769914
+      },
+      {
+        "from": "aabb",
+        "to": "abbc",
+        "probability": 0.5660377358490566
+      },
+      {
+        "from": "abbc",
+        "to": "bbcc",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "bbcc",
+        "to": "bccc",
+        "probability": 0.746031746031746
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbc",
+        "probability": 0.16666666666666666
+      },
+      {
+        "from": "ccbc",
+        "to": "cbcc",
+        "probability": 0.25
+      },
+      {
+        "from": "cbcc",
+        "to": "bcca",
+        "probability": 0.045454545454545456
+      },
+      {
+        "from": "bcca",
+        "to": "ccab",
+        "probability": 0.5
+      },
+      {
+        "from": "ccab",
+        "to": "cabb",
+        "probability": 0.5
+      },
+      {
+        "from": "cabb",
+        "to": "abbb",
+        "probability": 1.0
+      },
+      {
+        "from": "abbb",
+        "to": "bbbb",
+        "probability": 0.375
+      },
+      {
+        "from": "bbbb",
+        "to": "bbba",
+        "probability": 0.13253012048192772
+      },
+      {
+        "from": "bbba",
+        "to": "bbaa",
+        "probability": 0.9782608695652174
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccb",
+        "probability": 0.20408163265306123
+      },
+      {
+        "from": "bccb",
+        "to": "ccba",
+        "probability": 0.12903225806451613
+      },
+      {
+        "from": "ccba",
+        "to": "cbab",
+        "probability": 0.10714285714285714
+      },
+      {
+        "from": "cbab",
+        "to": "babb",
+        "probability": 0.2
+      },
+      {
+        "from": "babb",
+        "to": "abbb",
+        "probability": 0.5714285714285714
+      },
+      {
+        "from": "abbb",
+        "to": "bbbb",
+        "probability": 0.375
+      },
+      {
+        "from": "bbbb",
+        "to": "bbba",
+        "probability": 0.13253012048192772
+      },
+      {
+        "from": "bbba",
+        "to": "bbab",
+        "probability": 0.021739130434782608
+      },
+      {
+        "from": "bbab",
+        "to": "babc",
+        "probability": 1e-12
+      },
+      {
+        "from": "babc",
+        "to": "abcc",
+        "probability": 0.75
+      },
+      {
+        "from": "abcc",
+        "to": "bccc",
+        "probability": 0.7959183673469388
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcc",
+        "probability": 0.6065573770491803
+      },
+      {
+        "from": "bbcc",
+        "to": "bccc",
+        "probability": 0.746031746031746
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccba",
+        "probability": 0.18253968253968253
+      },
+      {
+        "from": "ccba",
+        "to": "cbaa",
+        "probability": 0.8928571428571429
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.9696969696969697
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcb",
+        "probability": 0.09433962264150944
+      },
+      {
+        "from": "abcb",
+        "to": "bcbb",
+        "probability": 0.5
+      },
+      {
+        "from": "bcbb",
+        "to": "cbbb",
+        "probability": 0.4166666666666667
+      },
+      {
+        "from": "cbbb",
+        "to": "bbba",
+        "probability": 0.24390243902439024
+      },
+      {
+        "from": "bbba",
+        "to": "bbaa",
+        "probability": 0.9782608695652174
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccc",
+        "probability": 0.7959183673469388
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcb",
+        "probability": 0.3442622950819672
+      },
+      {
+        "from": "bbcb",
+        "to": "bcbb",
+        "probability": 0.5142857142857142
+      },
+      {
+        "from": "bcbb",
+        "to": "cbbb",
+        "probability": 0.4166666666666667
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbc",
+        "probability": 0.06097560975609756
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcc",
+        "probability": 0.6065573770491803
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbc",
+        "probability": 0.1935483870967742
+      },
+      {
+        "from": "ccbc",
+        "to": "cbcc",
+        "probability": 0.25
+      },
+      {
+        "from": "cbcc",
+        "to": "bccb",
+        "probability": 0.2727272727272727
+      },
+      {
+        "from": "bccb",
+        "to": "ccba",
+        "probability": 0.12903225806451613
+      },
+      {
+        "from": "ccba",
+        "to": "cbaa",
+        "probability": 0.8928571428571429
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.9696969696969697
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.11144578313253012
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 0.7894736842105263
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 0.9166666666666666
+      },
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 0.030303030303030304
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 0.5714285714285714
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 0.9090909090909091
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.11144578313253012
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 0.02631578947368421
+      },
+      {
+        "from": "aaca",
+        "to": "acaa",
+        "probability": 0.5
+      },
+      {
+        "from": "acaa",
+        "to": "caab",
+        "probability": 1e-12
+      },
+      {
+        "from": "caab",
+        "to": "aaba",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaba",
+        "to": "abaa",
+        "probability": 0.7142857142857143
+      },
+      {
+        "from": "abaa",
+        "to": "baaa",
+        "probability": 0.625
+      },
+      {
+        "from": "baaa",
+        "to": "aaac",
+        "probability": 0.007751937984496124
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 0.7894736842105263
+      },
+      {
+        "from": "aacc",
+        "to": "accb",
+        "probability": 0.05555555555555555
+      },
+      {
+        "from": "accb",
+        "to": "ccbc",
+        "probability": 0.5
+      },
+      {
+        "from": "ccbc",
+        "to": "cbcc",
+        "probability": 0.25
+      },
+      {
+        "from": "cbcc",
+        "to": "bccc",
+        "probability": 0.6818181818181818
+      },
+      {
+        "from": "bccc",
+        "to": "cccb",
+        "probability": 0.31683168316831684
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcc",
+        "probability": 0.6065573770491803
+      },
+      {
+        "from": "bbcc",
+        "to": "bccc",
+        "probability": 0.746031746031746
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccba",
+        "probability": 0.18253968253968253
+      },
+      {
+        "from": "ccba",
+        "to": "cbaa",
+        "probability": 0.8928571428571429
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.9696969696969697
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aaba",
+        "probability": 0.168141592920354
+      },
+      {
+        "from": "aaba",
+        "to": "abaa",
+        "probability": 0.7142857142857143
+      },
+      {
+        "from": "abaa",
+        "to": "baaa",
+        "probability": 0.625
+      },
+      {
+        "from": "baaa",
+        "to": "aaab",
+        "probability": 0.16279069767441862
+      },
+      {
+        "from": "aaab",
+        "to": "aaba",
+        "probability": 0.168141592920354
+      },
+      {
+        "from": "aaba",
+        "to": "abaa",
+        "probability": 0.7142857142857143
+      },
+      {
+        "from": "abaa",
+        "to": "baaa",
+        "probability": 0.625
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.11144578313253012
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 0.7894736842105263
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 0.9166666666666666
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 0.7575757575757576
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcc",
+        "probability": 0.6065573770491803
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbc",
+        "probability": 0.06796116504854369
+      },
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbba",
+        "probability": 0.13253012048192772
+      },
+      {
+        "from": "bbba",
+        "to": "bbaa",
+        "probability": 0.9782608695652174
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccc",
+        "probability": 0.7959183673469388
+      },
+      {
+        "from": "bccc",
+        "to": "cccb",
+        "probability": 0.31683168316831684
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbc",
+        "probability": 0.06796116504854369
+      },
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccc",
+        "probability": 0.746031746031746
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbc",
+        "probability": 0.06796116504854369
+      },
+      {
+        "from": "cbbc",
+        "to": "bbcb",
+        "probability": 0.375
+      },
+      {
+        "from": "bbcb",
+        "to": "bcbc",
+        "probability": 0.45714285714285713
+      },
+      {
+        "from": "bcbc",
+        "to": "cbcc",
+        "probability": 0.7
+      },
+      {
+        "from": "cbcc",
+        "to": "bccb",
+        "probability": 0.2727272727272727
+      },
+      {
+        "from": "bccb",
+        "to": "ccba",
+        "probability": 0.12903225806451613
+      },
+      {
+        "from": "ccba",
+        "to": "cbaa",
+        "probability": 0.8928571428571429
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.9696969696969697
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccb",
+        "probability": 0.20408163265306123
+      },
+      {
+        "from": "bccb",
+        "to": "ccba",
+        "probability": 0.12903225806451613
+      },
+      {
+        "from": "ccba",
+        "to": "cbaa",
+        "probability": 0.8928571428571429
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.9696969696969697
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabb",
+        "probability": 0.40707964601769914
+      },
+      {
+        "from": "aabb",
+        "to": "abbb",
+        "probability": 0.33962264150943394
+      },
+      {
+        "from": "abbb",
+        "to": "bbbb",
+        "probability": 0.375
+      },
+      {
+        "from": "bbbb",
+        "to": "aaac",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 4.822884676127921e-222,
+    "decision": "normal",
+    "confidence": 4.822884676127921e-222,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 420,
+    "state": "bbbb",
+    "pattern": "bbbb",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccb",
+        "probability": 0.20408163265306123
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccc",
+        "probability": 0.7959183673469388
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccba",
+        "probability": 0.18253968253968253
+      },
+      {
+        "from": "ccba",
+        "to": "cbaa",
+        "probability": 0.8928571428571429
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.9696969696969697
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabb",
+        "probability": 0.40707964601769914
+      },
+      {
+        "from": "aabb",
+        "to": "abbc",
+        "probability": 0.5660377358490566
+      },
+      {
+        "from": "abbc",
+        "to": "bbcb",
+        "probability": 0.25806451612903225
+      },
+      {
+        "from": "bbcb",
+        "to": "bcbb",
+        "probability": 0.5142857142857142
+      },
+      {
+        "from": "bcbb",
+        "to": "cbbb",
+        "probability": 0.4166666666666667
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbca",
+        "probability": 0.04918032786885246
+      },
+      {
+        "from": "bbca",
+        "to": "baac",
+        "probability": 1e-12
+      },
+      {
+        "from": "baac",
+        "to": "cacb",
+        "probability": 1e-12
+      },
+      {
+        "from": "cacb",
+        "to": "acbb",
+        "probability": 1e-12
+      },
+      {
+        "from": "acbb",
+        "to": "cbbb",
+        "probability": 0.2
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcc",
+        "probability": 0.6065573770491803
+      },
+      {
+        "from": "bbcc",
+        "to": "bccc",
+        "probability": 0.746031746031746
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbc",
+        "probability": 0.06796116504854369
+      },
+      {
+        "from": "cbbc",
+        "to": "bbca",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbca",
+        "to": "bcaa",
+        "probability": 1.0
+      },
+      {
+        "from": "bcaa",
+        "to": "caaa",
+        "probability": 0.875
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 0.9090909090909091
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabb",
+        "probability": 0.40707964601769914
+      },
+      {
+        "from": "aabb",
+        "to": "abbb",
+        "probability": 0.33962264150943394
+      },
+      {
+        "from": "abbb",
+        "to": "bbbb",
+        "probability": 0.375
+      },
+      {
+        "from": "bbbb",
+        "to": "bbba",
+        "probability": 0.13253012048192772
+      },
+      {
+        "from": "bbba",
+        "to": "bbaa",
+        "probability": 0.9782608695652174
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.11144578313253012
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 0.7894736842105263
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 0.9166666666666666
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 0.7575757575757576
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcc",
+        "probability": 0.6065573770491803
+      },
+      {
+        "from": "bbcc",
+        "to": "bccc",
+        "probability": 0.746031746031746
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccba",
+        "probability": 0.18253968253968253
+      },
+      {
+        "from": "ccba",
+        "to": "cbaa",
+        "probability": 0.8928571428571429
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.9696969696969697
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccc",
+        "probability": 0.7959183673469388
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbc",
+        "probability": 0.06097560975609756
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcb",
+        "probability": 0.3442622950819672
+      },
+      {
+        "from": "bbcb",
+        "to": "bcbc",
+        "probability": 0.45714285714285713
+      },
+      {
+        "from": "bcbc",
+        "to": "cbcb",
+        "probability": 0.2
+      },
+      {
+        "from": "cbcb",
+        "to": "bcbc",
+        "probability": 0.08695652173913043
+      },
+      {
+        "from": "bcbc",
+        "to": "cbcc",
+        "probability": 0.7
+      },
+      {
+        "from": "cbcc",
+        "to": "bccc",
+        "probability": 0.6818181818181818
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.022935779816513763
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 0.5714285714285714
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 0.9090909090909091
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabb",
+        "probability": 0.40707964601769914
+      },
+      {
+        "from": "aabb",
+        "to": "abbb",
+        "probability": 0.33962264150943394
+      },
+      {
+        "from": "abbb",
+        "to": "bbbc",
+        "probability": 0.4583333333333333
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcc",
+        "probability": 0.6065573770491803
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccba",
+        "probability": 0.12903225806451613
+      },
+      {
+        "from": "ccba",
+        "to": "cbaa",
+        "probability": 0.8928571428571429
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.9696969696969697
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabb",
+        "probability": 0.40707964601769914
+      },
+      {
+        "from": "aabb",
+        "to": "abbb",
+        "probability": 0.33962264150943394
+      },
+      {
+        "from": "abbb",
+        "to": "bbbb",
+        "probability": 0.375
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcb",
+        "probability": 0.3442622950819672
+      },
+      {
+        "from": "bbcb",
+        "to": "bcbb",
+        "probability": 0.5142857142857142
+      },
+      {
+        "from": "bcbb",
+        "to": "cbbb",
+        "probability": 0.4166666666666667
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcb",
+        "probability": 0.3442622950819672
+      },
+      {
+        "from": "bbcb",
+        "to": "bcbc",
+        "probability": 0.45714285714285713
+      },
+      {
+        "from": "bcbc",
+        "to": "cbcc",
+        "probability": 0.7
+      },
+      {
+        "from": "cbcc",
+        "to": "bccc",
+        "probability": 0.6818181818181818
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.11144578313253012
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 0.7894736842105263
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 0.9166666666666666
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 0.7575757575757576
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbba",
+        "probability": 0.24390243902439024
+      },
+      {
+        "from": "bbba",
+        "to": "bbaa",
+        "probability": 0.9782608695652174
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaab",
+        "probability": 0.16279069767441862
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccc",
+        "probability": 0.7959183673469388
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccba",
+        "probability": 0.18253968253968253
+      },
+      {
+        "from": "ccba",
+        "to": "cbaa",
+        "probability": 0.8928571428571429
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.9696969696969697
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccc",
+        "probability": 0.7959183673469388
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbc",
+        "probability": 0.16666666666666666
+      },
+      {
+        "from": "ccbc",
+        "to": "cbcb",
+        "probability": 0.6428571428571429
+      },
+      {
+        "from": "cbcb",
+        "to": "bcbb",
+        "probability": 0.6521739130434783
+      },
+      {
+        "from": "bcbb",
+        "to": "cbbb",
+        "probability": 0.4166666666666667
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcc",
+        "probability": 0.6065573770491803
+      },
+      {
+        "from": "bbcc",
+        "to": "bccc",
+        "probability": 0.746031746031746
+      },
+      {
+        "from": "bccc",
+        "to": "cccb",
+        "probability": 0.31683168316831684
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabb",
+        "probability": 0.40707964601769914
+      },
+      {
+        "from": "aabb",
+        "to": "abbc",
+        "probability": 0.5660377358490566
+      },
+      {
+        "from": "abbc",
+        "to": "bbcc",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "bbcc",
+        "to": "bccc",
+        "probability": 0.746031746031746
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbc",
+        "probability": 0.16666666666666666
+      },
+      {
+        "from": "ccbc",
+        "to": "cbcc",
+        "probability": 0.25
+      },
+      {
+        "from": "cbcc",
+        "to": "bcca",
+        "probability": 0.045454545454545456
+      },
+      {
+        "from": "bcca",
+        "to": "ccab",
+        "probability": 0.5
+      },
+      {
+        "from": "ccab",
+        "to": "cabb",
+        "probability": 0.5
+      },
+      {
+        "from": "cabb",
+        "to": "abbb",
+        "probability": 1.0
+      },
+      {
+        "from": "abbb",
+        "to": "bbbb",
+        "probability": 0.375
+      },
+      {
+        "from": "bbbb",
+        "to": "bbba",
+        "probability": 0.13253012048192772
+      },
+      {
+        "from": "bbba",
+        "to": "bbaa",
+        "probability": 0.9782608695652174
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccb",
+        "probability": 0.20408163265306123
+      },
+      {
+        "from": "bccb",
+        "to": "ccba",
+        "probability": 0.12903225806451613
+      },
+      {
+        "from": "ccba",
+        "to": "cbab",
+        "probability": 0.10714285714285714
+      },
+      {
+        "from": "cbab",
+        "to": "babb",
+        "probability": 0.2
+      },
+      {
+        "from": "babb",
+        "to": "abbb",
+        "probability": 0.5714285714285714
+      },
+      {
+        "from": "abbb",
+        "to": "bbbb",
+        "probability": 0.375
+      },
+      {
+        "from": "bbbb",
+        "to": "bbba",
+        "probability": 0.13253012048192772
+      },
+      {
+        "from": "bbba",
+        "to": "bbab",
+        "probability": 0.021739130434782608
+      },
+      {
+        "from": "bbab",
+        "to": "babc",
+        "probability": 1e-12
+      },
+      {
+        "from": "babc",
+        "to": "abcc",
+        "probability": 0.75
+      },
+      {
+        "from": "abcc",
+        "to": "bccc",
+        "probability": 0.7959183673469388
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcc",
+        "probability": 0.6065573770491803
+      },
+      {
+        "from": "bbcc",
+        "to": "bccc",
+        "probability": 0.746031746031746
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccba",
+        "probability": 0.18253968253968253
+      },
+      {
+        "from": "ccba",
+        "to": "cbaa",
+        "probability": 0.8928571428571429
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.9696969696969697
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcb",
+        "probability": 0.09433962264150944
+      },
+      {
+        "from": "abcb",
+        "to": "bcbb",
+        "probability": 0.5
+      },
+      {
+        "from": "bcbb",
+        "to": "cbbb",
+        "probability": 0.4166666666666667
+      },
+      {
+        "from": "cbbb",
+        "to": "bbba",
+        "probability": 0.24390243902439024
+      },
+      {
+        "from": "bbba",
+        "to": "bbaa",
+        "probability": 0.9782608695652174
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccc",
+        "probability": 0.7959183673469388
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcb",
+        "probability": 0.3442622950819672
+      },
+      {
+        "from": "bbcb",
+        "to": "bcbb",
+        "probability": 0.5142857142857142
+      },
+      {
+        "from": "bcbb",
+        "to": "cbbb",
+        "probability": 0.4166666666666667
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbc",
+        "probability": 0.06097560975609756
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcc",
+        "probability": 0.6065573770491803
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbc",
+        "probability": 0.1935483870967742
+      },
+      {
+        "from": "ccbc",
+        "to": "cbcc",
+        "probability": 0.25
+      },
+      {
+        "from": "cbcc",
+        "to": "bccb",
+        "probability": 0.2727272727272727
+      },
+      {
+        "from": "bccb",
+        "to": "ccba",
+        "probability": 0.12903225806451613
+      },
+      {
+        "from": "ccba",
+        "to": "cbaa",
+        "probability": 0.8928571428571429
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.9696969696969697
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.11144578313253012
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 0.7894736842105263
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 0.9166666666666666
+      },
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 0.030303030303030304
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 0.5714285714285714
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 0.9090909090909091
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.11144578313253012
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 0.02631578947368421
+      },
+      {
+        "from": "aaca",
+        "to": "acaa",
+        "probability": 0.5
+      },
+      {
+        "from": "acaa",
+        "to": "caab",
+        "probability": 1e-12
+      },
+      {
+        "from": "caab",
+        "to": "aaba",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaba",
+        "to": "abaa",
+        "probability": 0.7142857142857143
+      },
+      {
+        "from": "abaa",
+        "to": "baaa",
+        "probability": 0.625
+      },
+      {
+        "from": "baaa",
+        "to": "aaac",
+        "probability": 0.007751937984496124
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 0.7894736842105263
+      },
+      {
+        "from": "aacc",
+        "to": "accb",
+        "probability": 0.05555555555555555
+      },
+      {
+        "from": "accb",
+        "to": "ccbc",
+        "probability": 0.5
+      },
+      {
+        "from": "ccbc",
+        "to": "cbcc",
+        "probability": 0.25
+      },
+      {
+        "from": "cbcc",
+        "to": "bccc",
+        "probability": 0.6818181818181818
+      },
+      {
+        "from": "bccc",
+        "to": "cccb",
+        "probability": 0.31683168316831684
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbb",
+        "probability": 0.6024096385542169
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcc",
+        "probability": 0.6065573770491803
+      },
+      {
+        "from": "bbcc",
+        "to": "bccc",
+        "probability": 0.746031746031746
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccba",
+        "probability": 0.18253968253968253
+      },
+      {
+        "from": "ccba",
+        "to": "cbaa",
+        "probability": 0.8928571428571429
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.9696969696969697
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aaba",
+        "probability": 0.168141592920354
+      },
+      {
+        "from": "aaba",
+        "to": "abaa",
+        "probability": 0.7142857142857143
+      },
+      {
+        "from": "abaa",
+        "to": "baaa",
+        "probability": 0.625
+      },
+      {
+        "from": "baaa",
+        "to": "aaab",
+        "probability": 0.16279069767441862
+      },
+      {
+        "from": "aaab",
+        "to": "aaba",
+        "probability": 0.168141592920354
+      },
+      {
+        "from": "aaba",
+        "to": "abaa",
+        "probability": 0.7142857142857143
+      },
+      {
+        "from": "abaa",
+        "to": "baaa",
+        "probability": 0.625
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.11144578313253012
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 0.7894736842105263
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 0.9166666666666666
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 0.7575757575757576
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.573394495412844
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbbc",
+        "probability": 0.26506024096385544
+      },
+      {
+        "from": "bbbc",
+        "to": "bbcc",
+        "probability": 0.6065573770491803
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbc",
+        "probability": 0.06796116504854369
+      },
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbb",
+        "probability": 0.6407766990291263
+      },
+      {
+        "from": "cbbb",
+        "to": "bbbb",
+        "probability": 0.6951219512195121
+      },
+      {
+        "from": "bbbb",
+        "to": "bbba",
+        "probability": 0.13253012048192772
+      },
+      {
+        "from": "bbba",
+        "to": "bbaa",
+        "probability": 0.9782608695652174
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccc",
+        "probability": 0.7959183673469388
+      },
+      {
+        "from": "bccc",
+        "to": "cccb",
+        "probability": 0.31683168316831684
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbc",
+        "probability": 0.06796116504854369
+      },
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccc",
+        "probability": 0.746031746031746
+      },
+      {
+        "from": "bccc",
+        "to": "cccc",
+        "probability": 0.6732673267326733
+      },
+      {
+        "from": "cccc",
+        "to": "cccb",
+        "probability": 0.4036697247706422
+      },
+      {
+        "from": "cccb",
+        "to": "ccbb",
+        "probability": 0.6507936507936508
+      },
+      {
+        "from": "ccbb",
+        "to": "cbbc",
+        "probability": 0.06796116504854369
+      },
+      {
+        "from": "cbbc",
+        "to": "bbcb",
+        "probability": 0.375
+      },
+      {
+        "from": "bbcb",
+        "to": "bcbc",
+        "probability": 0.45714285714285713
+      },
+      {
+        "from": "bcbc",
+        "to": "cbcc",
+        "probability": 0.7
+      },
+      {
+        "from": "cbcc",
+        "to": "bccb",
+        "probability": 0.2727272727272727
+      },
+      {
+        "from": "bccb",
+        "to": "ccba",
+        "probability": 0.12903225806451613
+      },
+      {
+        "from": "ccba",
+        "to": "cbaa",
+        "probability": 0.8928571428571429
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.9696969696969697
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.6174698795180723
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabc",
+        "probability": 0.4247787610619469
+      },
+      {
+        "from": "aabc",
+        "to": "abcc",
+        "probability": 0.8679245283018868
+      },
+      {
+        "from": "abcc",
+        "to": "bccb",
+        "probability": 0.20408163265306123
+      },
+      {
+        "from": "bccb",
+        "to": "ccba",
+        "probability": 0.12903225806451613
+      },
+      {
+        "from": "ccba",
+        "to": "cbaa",
+        "probability": 0.8928571428571429
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.9696969696969697
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.2710843373493976
+      },
+      {
+        "from": "aaab",
+        "to": "aabb",
+        "probability": 0.40707964601769914
+      },
+      {
+        "from": "aabb",
+        "to": "abbb",
+        "probability": 0.33962264150943394
+      },
+      {
+        "from": "abbb",
+        "to": "bbbb",
+        "probability": 0.375
+      },
+      {
+        "from": "bbbb",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "bbbb",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 4.8228846761279207e-234,
+    "decision": "normal",
+    "confidence": 4.8228846761279207e-234,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 3,
+    "state": "cbbc",
+    "pattern": "cbbc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [],
+    "probability": 1.0,
+    "decision": "normal",
+    "confidence": 1.0,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 4,
+    "state": "bbcc",
+    "pattern": "bbcc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      }
+    ],
+    "probability": 0.3125,
+    "decision": "normal",
+    "confidence": 0.3125,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 5,
+    "state": "bccb",
+    "pattern": "bccb",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      }
+    ],
+    "probability": 0.0744047619047619,
+    "decision": "normal",
+    "confidence": 0.0744047619047619,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 6,
+    "state": "ccbb",
+    "pattern": "ccbb",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      }
+    ],
+    "probability": 0.05040322580645161,
+    "decision": "normal",
+    "confidence": 0.05040322580645161,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 7,
+    "state": "cbba",
+    "pattern": "cbba",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      }
+    ],
+    "probability": 0.014680551205762603,
+    "decision": "normal",
+    "confidence": 0.014680551205762603,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 8,
+    "state": "bbaa",
+    "pattern": "bbaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      }
+    ],
+    "probability": 0.013403981535696288,
+    "decision": "normal",
+    "confidence": 0.013403981535696288,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 9,
+    "state": "baaa",
+    "pattern": "baaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      }
+    ],
+    "probability": 0.011947027020946691,
+    "decision": "normal",
+    "confidence": 0.011947027020946691,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 10,
+    "state": "aaaa",
+    "pattern": "aaaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "cbbc",
+        "to": "bbcc",
+        "probability": 0.3125
+      },
+      {
+        "from": "bbcc",
+        "to": "bccb",
+        "probability": 0.23809523809523808
+      },
+      {
+        "from": "bccb",
+        "to": "ccbb",
+        "probability": 0.6774193548387096
+      },
+      {
+        "from": "ccbb",
+        "to": "cbba",
+        "probability": 0.2912621359223301
+      },
+      {
+        "from": "cbba",
+        "to": "bbaa",
+        "probability": 0.9130434782608695
+      },
+      {
+        "from": "bbaa",
+        "to": "baaa",
+        "probability": 0.8913043478260869
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.8294573643410853
+      }
+    ],
+    "probability": 0.009909549544506171,
+    "decision": "normal",
+    "confidence": 0.009909549544506171,
+    "threshold": 0.0
+  }
+]

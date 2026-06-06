@@ -1,0 +1,9247 @@
+[
+  {
+    "time_step": 3,
+    "state": "ccca",
+    "pattern": "ccca",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [],
+    "probability": 1.0,
+    "decision": "normal",
+    "confidence": 1.0,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 4,
+    "state": "ccaa",
+    "pattern": "ccaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      }
+    ],
+    "probability": 1.0,
+    "decision": "normal",
+    "confidence": 1.0,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 5,
+    "state": "caaa",
+    "pattern": "caaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      }
+    ],
+    "probability": 1.0,
+    "decision": "normal",
+    "confidence": 1.0,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 6,
+    "state": "aaaa",
+    "pattern": "aaaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      }
+    ],
+    "probability": 1.0,
+    "decision": "normal",
+    "confidence": 1.0,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 7,
+    "state": "aaac",
+    "pattern": "aaac",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 1e-12,
+    "decision": "normal",
+    "confidence": 1e-12,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 8,
+    "state": "aaac",
+    "pattern": "aacc",
+    "status": "unseen",
+    "mapped_to": "aaac",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 1e-24,
+    "decision": "normal",
+    "confidence": 1e-24,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 9,
+    "state": "aaca",
+    "pattern": "acca",
+    "status": "unseen",
+    "mapped_to": "aaca",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 1e-36,
+    "decision": "normal",
+    "confidence": 1e-36,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 10,
+    "state": "ccaa",
+    "pattern": "ccaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 1e-48,
+    "decision": "normal",
+    "confidence": 1e-48,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 11,
+    "state": "aaac",
+    "pattern": "caac",
+    "status": "unseen",
+    "mapped_to": "aaac",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaac",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 1e-60,
+    "decision": "normal",
+    "confidence": 1e-60,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 12,
+    "state": "aaac",
+    "pattern": "aacc",
+    "status": "unseen",
+    "mapped_to": "aaac",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 1e-72,
+    "decision": "normal",
+    "confidence": 1e-72,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 13,
+    "state": "aaca",
+    "pattern": "acca",
+    "status": "unseen",
+    "mapped_to": "aaca",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 9.999999999999999e-85,
+    "decision": "normal",
+    "confidence": 9.999999999999999e-85,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 14,
+    "state": "ccaa",
+    "pattern": "ccaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 1e-96,
+    "decision": "normal",
+    "confidence": 1e-96,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 15,
+    "state": "caaa",
+    "pattern": "caaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      }
+    ],
+    "probability": 1e-96,
+    "decision": "normal",
+    "confidence": 1e-96,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 16,
+    "state": "aaac",
+    "pattern": "aaac",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 9.999999999999999e-109,
+    "decision": "normal",
+    "confidence": 9.999999999999999e-109,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 17,
+    "state": "aaca",
+    "pattern": "aaca",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 9.999999999999998e-121,
+    "decision": "normal",
+    "confidence": 9.999999999999998e-121,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 18,
+    "state": "aaac",
+    "pattern": "acac",
+    "status": "unseen",
+    "mapped_to": "aaac",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaac",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 9.999999999999998e-133,
+    "decision": "normal",
+    "confidence": 9.999999999999998e-133,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 19,
+    "state": "bacc",
+    "pattern": "cacc",
+    "status": "unseen",
+    "mapped_to": "bacc",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "bacc",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 9.999999999999998e-145,
+    "decision": "normal",
+    "confidence": 9.999999999999998e-145,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 20,
+    "state": "aaca",
+    "pattern": "acca",
+    "status": "unseen",
+    "mapped_to": "aaca",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "bacc",
+        "probability": 1e-12
+      },
+      {
+        "from": "bacc",
+        "to": "aaca",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 9.999999999999998e-157,
+    "decision": "normal",
+    "confidence": 9.999999999999998e-157,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 21,
+    "state": "ccaa",
+    "pattern": "ccac",
+    "status": "unseen",
+    "mapped_to": "ccaa",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "bacc",
+        "probability": 1e-12
+      },
+      {
+        "from": "bacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 9.999999999999998e-169,
+    "decision": "normal",
+    "confidence": 9.999999999999998e-169,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 22,
+    "state": "aaca",
+    "pattern": "caca",
+    "status": "unseen",
+    "mapped_to": "aaca",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "bacc",
+        "probability": 1e-12
+      },
+      {
+        "from": "bacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaca",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 9.999999999999998e-181,
+    "decision": "normal",
+    "confidence": 9.999999999999998e-181,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 23,
+    "state": "acaa",
+    "pattern": "acaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "bacc",
+        "probability": 1e-12
+      },
+      {
+        "from": "bacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "acaa",
+        "probability": 0.6666666666666666
+      }
+    ],
+    "probability": 6.666666666666665e-181,
+    "decision": "normal",
+    "confidence": 6.666666666666665e-181,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 24,
+    "state": "caaa",
+    "pattern": "caaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "bacc",
+        "probability": 1e-12
+      },
+      {
+        "from": "bacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "acaa",
+        "probability": 0.6666666666666666
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 6.666666666666664e-193,
+    "decision": "normal",
+    "confidence": 6.666666666666664e-193,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 25,
+    "state": "aaaa",
+    "pattern": "aaaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "bacc",
+        "probability": 1e-12
+      },
+      {
+        "from": "bacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "acaa",
+        "probability": 0.6666666666666666
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      }
+    ],
+    "probability": 6.666666666666664e-193,
+    "decision": "normal",
+    "confidence": 6.666666666666664e-193,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 26,
+    "state": "aaaa",
+    "pattern": "aaaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "bacc",
+        "probability": 1e-12
+      },
+      {
+        "from": "bacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "acaa",
+        "probability": 0.6666666666666666
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9256633119853613
+      }
+    ],
+    "probability": 6.171088746569073e-193,
+    "decision": "normal",
+    "confidence": 6.171088746569073e-193,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 27,
+    "state": "aaac",
+    "pattern": "aaac",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "bacc",
+        "probability": 1e-12
+      },
+      {
+        "from": "bacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "acaa",
+        "probability": 0.6666666666666666
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9256633119853613
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 6.171088746569073e-205,
+    "decision": "normal",
+    "confidence": 6.171088746569073e-205,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 3,
+    "state": "accc",
+    "pattern": "accc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [],
+    "probability": 1.0,
+    "decision": "normal",
+    "confidence": 1.0,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 4,
+    "state": "ccca",
+    "pattern": "ccca",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 1e-12,
+    "decision": "normal",
+    "confidence": 1e-12,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 5,
+    "state": "ccaa",
+    "pattern": "ccaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      }
+    ],
+    "probability": 1e-12,
+    "decision": "normal",
+    "confidence": 1e-12,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 6,
+    "state": "baac",
+    "pattern": "caac",
+    "status": "unseen",
+    "mapped_to": "baac",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "baac",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 1e-24,
+    "decision": "normal",
+    "confidence": 1e-24,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 7,
+    "state": "aacc",
+    "pattern": "aacc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "baac",
+        "probability": 1e-12
+      },
+      {
+        "from": "baac",
+        "to": "aacc",
+        "probability": 0.5
+      }
+    ],
+    "probability": 5e-25,
+    "decision": "normal",
+    "confidence": 5e-25,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 8,
+    "state": "aaca",
+    "pattern": "acca",
+    "status": "unseen",
+    "mapped_to": "aaca",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "baac",
+        "probability": 1e-12
+      },
+      {
+        "from": "baac",
+        "to": "aacc",
+        "probability": 0.5
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 5e-37,
+    "decision": "normal",
+    "confidence": 5e-37,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 9,
+    "state": "ccaa",
+    "pattern": "ccac",
+    "status": "unseen",
+    "mapped_to": "ccaa",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "baac",
+        "probability": 1e-12
+      },
+      {
+        "from": "baac",
+        "to": "aacc",
+        "probability": 0.5
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 5e-49,
+    "decision": "normal",
+    "confidence": 5e-49,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 10,
+    "state": "aaca",
+    "pattern": "caca",
+    "status": "unseen",
+    "mapped_to": "aaca",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "baac",
+        "probability": 1e-12
+      },
+      {
+        "from": "baac",
+        "to": "aacc",
+        "probability": 0.5
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaca",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 5e-61,
+    "decision": "normal",
+    "confidence": 5e-61,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 11,
+    "state": "aaaa",
+    "pattern": "acaa",
+    "status": "unseen",
+    "mapped_to": "aaaa",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "baac",
+        "probability": 1e-12
+      },
+      {
+        "from": "baac",
+        "to": "aacc",
+        "probability": 0.5
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaaa",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 5e-73,
+    "decision": "normal",
+    "confidence": 5e-73,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 12,
+    "state": "caaa",
+    "pattern": "caaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "baac",
+        "probability": 1e-12
+      },
+      {
+        "from": "baac",
+        "to": "aacc",
+        "probability": 0.5
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "caaa",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 4.9999999999999996e-85,
+    "decision": "normal",
+    "confidence": 4.9999999999999996e-85,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 13,
+    "state": "aaaa",
+    "pattern": "aaaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "baac",
+        "probability": 1e-12
+      },
+      {
+        "from": "baac",
+        "to": "aacc",
+        "probability": 0.5
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "caaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      }
+    ],
+    "probability": 4.9999999999999996e-85,
+    "decision": "normal",
+    "confidence": 4.9999999999999996e-85,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 14,
+    "state": "aaaa",
+    "pattern": "aaaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "baac",
+        "probability": 1e-12
+      },
+      {
+        "from": "baac",
+        "to": "aacc",
+        "probability": 0.5
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "caaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      }
+    ],
+    "probability": 4.644970414201183e-85,
+    "decision": "normal",
+    "confidence": 4.644970414201183e-85,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 15,
+    "state": "aaaa",
+    "pattern": "aaac",
+    "status": "unseen",
+    "mapped_to": "aaaa",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "baac",
+        "probability": 1e-12
+      },
+      {
+        "from": "baac",
+        "to": "aacc",
+        "probability": 0.5
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "caaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      }
+    ],
+    "probability": 4.315150029760862e-85,
+    "decision": "normal",
+    "confidence": 4.315150029760862e-85,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 16,
+    "state": "aaca",
+    "pattern": "aaca",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "baac",
+        "probability": 1e-12
+      },
+      {
+        "from": "baac",
+        "to": "aacc",
+        "probability": 0.5
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "caaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaca",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 4.315150029760862e-97,
+    "decision": "normal",
+    "confidence": 4.315150029760862e-97,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 17,
+    "state": "aaaa",
+    "pattern": "acaa",
+    "status": "unseen",
+    "mapped_to": "aaaa",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "baac",
+        "probability": 1e-12
+      },
+      {
+        "from": "baac",
+        "to": "aacc",
+        "probability": 0.5
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "caaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaaa",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 4.315150029760862e-109,
+    "decision": "normal",
+    "confidence": 4.315150029760862e-109,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 18,
+    "state": "caaa",
+    "pattern": "caaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "baac",
+        "probability": 1e-12
+      },
+      {
+        "from": "baac",
+        "to": "aacc",
+        "probability": 0.5
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "caaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "caaa",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 4.315150029760862e-121,
+    "decision": "normal",
+    "confidence": 4.315150029760862e-121,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 19,
+    "state": "aaaa",
+    "pattern": "aaaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "baac",
+        "probability": 1e-12
+      },
+      {
+        "from": "baac",
+        "to": "aacc",
+        "probability": 0.5
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "caaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "caaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      }
+    ],
+    "probability": 4.315150029760862e-121,
+    "decision": "normal",
+    "confidence": 4.315150029760862e-121,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 20,
+    "state": "aaaa",
+    "pattern": "aaaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "baac",
+        "probability": 1e-12
+      },
+      {
+        "from": "baac",
+        "to": "aacc",
+        "probability": 0.5
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "caaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "caaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      }
+    ],
+    "probability": 4.008748844215712e-121,
+    "decision": "normal",
+    "confidence": 4.008748844215712e-121,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 21,
+    "state": "aaaa",
+    "pattern": "aaaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "baac",
+        "probability": 1e-12
+      },
+      {
+        "from": "baac",
+        "to": "aacc",
+        "probability": 0.5
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "caaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "caaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      }
+    ],
+    "probability": 3.7241039558690346e-121,
+    "decision": "normal",
+    "confidence": 3.7241039558690346e-121,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 22,
+    "state": "aaaa",
+    "pattern": "aaac",
+    "status": "unseen",
+    "mapped_to": "aaaa",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "baac",
+        "probability": 1e-12
+      },
+      {
+        "from": "baac",
+        "to": "aacc",
+        "probability": 0.5
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "caaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "caaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      }
+    ],
+    "probability": 3.459670538884251e-121,
+    "decision": "normal",
+    "confidence": 3.459670538884251e-121,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 23,
+    "state": "aacc",
+    "pattern": "aacc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "baac",
+        "probability": 1e-12
+      },
+      {
+        "from": "baac",
+        "to": "aacc",
+        "probability": 0.5
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "caaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "caaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aacc",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 3.459670538884251e-133,
+    "decision": "normal",
+    "confidence": 3.459670538884251e-133,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 24,
+    "state": "aaca",
+    "pattern": "acca",
+    "status": "unseen",
+    "mapped_to": "aaca",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "baac",
+        "probability": 1e-12
+      },
+      {
+        "from": "baac",
+        "to": "aacc",
+        "probability": 0.5
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "caaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "caaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aacc",
+        "probability": 1e-12
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 3.459670538884251e-145,
+    "decision": "normal",
+    "confidence": 3.459670538884251e-145,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 25,
+    "state": "ccaa",
+    "pattern": "ccaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "baac",
+        "probability": 1e-12
+      },
+      {
+        "from": "baac",
+        "to": "aacc",
+        "probability": 0.5
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "caaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "caaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aacc",
+        "probability": 1e-12
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 3.4596705388842506e-157,
+    "decision": "normal",
+    "confidence": 3.4596705388842506e-157,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 26,
+    "state": "caaa",
+    "pattern": "caaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "baac",
+        "probability": 1e-12
+      },
+      {
+        "from": "baac",
+        "to": "aacc",
+        "probability": 0.5
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "caaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "caaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aacc",
+        "probability": 1e-12
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      }
+    ],
+    "probability": 3.4596705388842506e-157,
+    "decision": "normal",
+    "confidence": 3.4596705388842506e-157,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 27,
+    "state": "aaaa",
+    "pattern": "aaaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "baac",
+        "probability": 1e-12
+      },
+      {
+        "from": "baac",
+        "to": "aacc",
+        "probability": 0.5
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "caaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "caaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9289940828402367
+      },
+      {
+        "from": "aaaa",
+        "to": "aacc",
+        "probability": 1e-12
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      }
+    ],
+    "probability": 3.4596705388842506e-157,
+    "decision": "normal",
+    "confidence": 3.4596705388842506e-157,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 3,
+    "state": "aacc",
+    "pattern": "cacc",
+    "status": "unseen",
+    "mapped_to": "aacc",
+    "mapping_distance": 1,
+    "transitions": [],
+    "probability": 1.0,
+    "decision": "normal",
+    "confidence": 1.0,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 4,
+    "state": "accc",
+    "pattern": "accc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      }
+    ],
+    "probability": 1.0,
+    "decision": "normal",
+    "confidence": 1.0,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 5,
+    "state": "cccc",
+    "pattern": "cccc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      }
+    ],
+    "probability": 1.0,
+    "decision": "normal",
+    "confidence": 1.0,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 6,
+    "state": "cccc",
+    "pattern": "cccc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      }
+    ],
+    "probability": 0.9779807917545092,
+    "decision": "normal",
+    "confidence": 0.9779807917545092,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 7,
+    "state": "ccca",
+    "pattern": "ccca",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00023424689622862497
+      }
+    ],
+    "probability": 0.000229088965039707,
+    "decision": "normal",
+    "confidence": 0.000229088965039707,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 8,
+    "state": "ccaa",
+    "pattern": "ccaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00023424689622862497
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      }
+    ],
+    "probability": 0.000229088965039707,
+    "decision": "normal",
+    "confidence": 0.000229088965039707,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 9,
+    "state": "caaa",
+    "pattern": "caaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00023424689622862497
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      }
+    ],
+    "probability": 0.000229088965039707,
+    "decision": "normal",
+    "confidence": 0.000229088965039707,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 10,
+    "state": "aaaa",
+    "pattern": "aaaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00023424689622862497
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      }
+    ],
+    "probability": 0.000229088965039707,
+    "decision": "normal",
+    "confidence": 0.000229088965039707,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 11,
+    "state": "aaaa",
+    "pattern": "aaaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00023424689622862497
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      }
+    ],
+    "probability": 0.00021285767727430828,
+    "decision": "normal",
+    "confidence": 0.00021285767727430828,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 12,
+    "state": "aaaa",
+    "pattern": "aaaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00023424689622862497
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      }
+    ],
+    "probability": 0.0001977763999534437,
+    "decision": "normal",
+    "confidence": 0.0001977763999534437,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 13,
+    "state": "aaac",
+    "pattern": "aaac",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00023424689622862497
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.00020716801325875285
+      }
+    ],
+    "probability": 4.097294384782343e-08,
+    "decision": "normal",
+    "confidence": 4.097294384782343e-08,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 14,
+    "state": "aacc",
+    "pattern": "aacc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00023424689622862497
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.00020716801325875285
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      }
+    ],
+    "probability": 4.097294384782343e-08,
+    "decision": "normal",
+    "confidence": 4.097294384782343e-08,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 15,
+    "state": "accc",
+    "pattern": "accc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00023424689622862497
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.00020716801325875285
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      }
+    ],
+    "probability": 4.097294384782343e-08,
+    "decision": "normal",
+    "confidence": 4.097294384782343e-08,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 16,
+    "state": "ccca",
+    "pattern": "ccca",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00023424689622862497
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.00020716801325875285
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 4.097294384782343e-20,
+    "decision": "normal",
+    "confidence": 4.097294384782343e-20,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 17,
+    "state": "ccaa",
+    "pattern": "ccaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00023424689622862497
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.00020716801325875285
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      }
+    ],
+    "probability": 4.097294384782343e-20,
+    "decision": "normal",
+    "confidence": 4.097294384782343e-20,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 18,
+    "state": "aaac",
+    "pattern": "caac",
+    "status": "unseen",
+    "mapped_to": "aaac",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00023424689622862497
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.00020716801325875285
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "aaac",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 4.097294384782343e-32,
+    "decision": "normal",
+    "confidence": 4.097294384782343e-32,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 19,
+    "state": "aacc",
+    "pattern": "aacc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00023424689622862497
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.00020716801325875285
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      }
+    ],
+    "probability": 4.097294384782343e-32,
+    "decision": "normal",
+    "confidence": 4.097294384782343e-32,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 20,
+    "state": "accc",
+    "pattern": "accc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00023424689622862497
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.00020716801325875285
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      }
+    ],
+    "probability": 4.097294384782343e-32,
+    "decision": "normal",
+    "confidence": 4.097294384782343e-32,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 21,
+    "state": "cccc",
+    "pattern": "cccc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00023424689622862497
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.00020716801325875285
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      }
+    ],
+    "probability": 4.097294384782343e-32,
+    "decision": "normal",
+    "confidence": 4.097294384782343e-32,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 22,
+    "state": "cccc",
+    "pattern": "cccc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00023424689622862497
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.00020716801325875285
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      }
+    ],
+    "probability": 4.0070752064807404e-32,
+    "decision": "normal",
+    "confidence": 4.0070752064807404e-32,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 23,
+    "state": "cccc",
+    "pattern": "cccc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00023424689622862497
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.00020716801325875285
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      }
+    ],
+    "probability": 3.918842583053898e-32,
+    "decision": "normal",
+    "confidence": 3.918842583053898e-32,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 24,
+    "state": "ccca",
+    "pattern": "ccca",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00023424689622862497
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.00020716801325875285
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00023424689622862497
+      }
+    ],
+    "probability": 9.179767118889431e-36,
+    "decision": "normal",
+    "confidence": 9.179767118889431e-36,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 25,
+    "state": "ccaa",
+    "pattern": "ccac",
+    "status": "unseen",
+    "mapped_to": "ccaa",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00023424689622862497
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.00020716801325875285
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00023424689622862497
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      }
+    ],
+    "probability": 9.179767118889431e-36,
+    "decision": "normal",
+    "confidence": 9.179767118889431e-36,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 26,
+    "state": "aacc",
+    "pattern": "cacc",
+    "status": "unseen",
+    "mapped_to": "aacc",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00023424689622862497
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.00020716801325875285
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00023424689622862497
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "aacc",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 9.179767118889431e-48,
+    "decision": "normal",
+    "confidence": 9.179767118889431e-48,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 27,
+    "state": "accc",
+    "pattern": "accc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00023424689622862497
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "caaa",
+        "probability": 1.0
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1.0
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      },
+      {
+        "from": "aaaa",
+        "to": "aaaa",
+        "probability": 0.9291485394655066
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.00020716801325875285
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9779807917545092
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00023424689622862497
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "aacc",
+        "probability": 1e-12
+      },
+      {
+        "from": "aacc",
+        "to": "accc",
+        "probability": 1.0
+      }
+    ],
+    "probability": 9.179767118889431e-48,
+    "decision": "normal",
+    "confidence": 9.179767118889431e-48,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 3,
+    "state": "bcca",
+    "pattern": "ccca",
+    "status": "unseen",
+    "mapped_to": "bcca",
+    "mapping_distance": 1,
+    "transitions": [],
+    "probability": 1.0,
+    "decision": "normal",
+    "confidence": 1.0,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 4,
+    "state": "acaa",
+    "pattern": "ccaa",
+    "status": "unseen",
+    "mapped_to": "acaa",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "bcca",
+        "to": "acaa",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 1e-12,
+    "decision": "normal",
+    "confidence": 1e-12,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 5,
+    "state": "caaa",
+    "pattern": "caaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "bcca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      }
+    ],
+    "probability": 5e-13,
+    "decision": "normal",
+    "confidence": 5e-13,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 6,
+    "state": "aaac",
+    "pattern": "aaac",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "bcca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 5e-25,
+    "decision": "normal",
+    "confidence": 5e-25,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 7,
+    "state": "aacc",
+    "pattern": "aacc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "bcca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      }
+    ],
+    "probability": 5e-25,
+    "decision": "normal",
+    "confidence": 5e-25,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 8,
+    "state": "aaca",
+    "pattern": "acca",
+    "status": "unseen",
+    "mapped_to": "aaca",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "bcca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 5e-37,
+    "decision": "normal",
+    "confidence": 5e-37,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 9,
+    "state": "ccac",
+    "pattern": "ccac",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "bcca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccac",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 5e-49,
+    "decision": "normal",
+    "confidence": 5e-49,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 10,
+    "state": "caca",
+    "pattern": "caca",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "bcca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccac",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccac",
+        "to": "caca",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 5e-61,
+    "decision": "normal",
+    "confidence": 5e-61,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 11,
+    "state": "acaa",
+    "pattern": "acaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "bcca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccac",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccac",
+        "to": "caca",
+        "probability": 1e-12
+      },
+      {
+        "from": "caca",
+        "to": "acaa",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 5e-73,
+    "decision": "normal",
+    "confidence": 5e-73,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 12,
+    "state": "caac",
+    "pattern": "caac",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "bcca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccac",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccac",
+        "to": "caca",
+        "probability": 1e-12
+      },
+      {
+        "from": "caca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caac",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 4.9999999999999996e-85,
+    "decision": "normal",
+    "confidence": 4.9999999999999996e-85,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 13,
+    "state": "aaca",
+    "pattern": "aaca",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "bcca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccac",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccac",
+        "to": "caca",
+        "probability": 1e-12
+      },
+      {
+        "from": "caca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caac",
+        "probability": 1e-12
+      },
+      {
+        "from": "caac",
+        "to": "aaca",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 5e-97,
+    "decision": "normal",
+    "confidence": 5e-97,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 14,
+    "state": "acaa",
+    "pattern": "acaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "bcca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccac",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccac",
+        "to": "caca",
+        "probability": 1e-12
+      },
+      {
+        "from": "caca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caac",
+        "probability": 1e-12
+      },
+      {
+        "from": "caac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "acaa",
+        "probability": 0.3333333333333333
+      }
+    ],
+    "probability": 1.6666666666666663e-97,
+    "decision": "normal",
+    "confidence": 1.6666666666666663e-97,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 15,
+    "state": "caac",
+    "pattern": "caac",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "bcca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccac",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccac",
+        "to": "caca",
+        "probability": 1e-12
+      },
+      {
+        "from": "caca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caac",
+        "probability": 1e-12
+      },
+      {
+        "from": "caac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "acaa",
+        "probability": 0.3333333333333333
+      },
+      {
+        "from": "acaa",
+        "to": "caac",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 1.6666666666666664e-109,
+    "decision": "normal",
+    "confidence": 1.6666666666666664e-109,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 16,
+    "state": "aaca",
+    "pattern": "aaca",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "bcca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccac",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccac",
+        "to": "caca",
+        "probability": 1e-12
+      },
+      {
+        "from": "caca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caac",
+        "probability": 1e-12
+      },
+      {
+        "from": "caac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "acaa",
+        "probability": 0.3333333333333333
+      },
+      {
+        "from": "acaa",
+        "to": "caac",
+        "probability": 1e-12
+      },
+      {
+        "from": "caac",
+        "to": "aaca",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 1.6666666666666663e-121,
+    "decision": "normal",
+    "confidence": 1.6666666666666663e-121,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 17,
+    "state": "aaac",
+    "pattern": "acac",
+    "status": "unseen",
+    "mapped_to": "aaac",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "bcca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccac",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccac",
+        "to": "caca",
+        "probability": 1e-12
+      },
+      {
+        "from": "caca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caac",
+        "probability": 1e-12
+      },
+      {
+        "from": "caac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "acaa",
+        "probability": 0.3333333333333333
+      },
+      {
+        "from": "acaa",
+        "to": "caac",
+        "probability": 1e-12
+      },
+      {
+        "from": "caac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaac",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 1.6666666666666664e-133,
+    "decision": "normal",
+    "confidence": 1.6666666666666664e-133,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 18,
+    "state": "caca",
+    "pattern": "caca",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "bcca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccac",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccac",
+        "to": "caca",
+        "probability": 1e-12
+      },
+      {
+        "from": "caca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caac",
+        "probability": 1e-12
+      },
+      {
+        "from": "caac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "acaa",
+        "probability": 0.3333333333333333
+      },
+      {
+        "from": "acaa",
+        "to": "caac",
+        "probability": 1e-12
+      },
+      {
+        "from": "caac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "caca",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 1.6666666666666662e-145,
+    "decision": "normal",
+    "confidence": 1.6666666666666662e-145,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 19,
+    "state": "acaa",
+    "pattern": "acaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "bcca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccac",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccac",
+        "to": "caca",
+        "probability": 1e-12
+      },
+      {
+        "from": "caca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caac",
+        "probability": 1e-12
+      },
+      {
+        "from": "caac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "acaa",
+        "probability": 0.3333333333333333
+      },
+      {
+        "from": "acaa",
+        "to": "caac",
+        "probability": 1e-12
+      },
+      {
+        "from": "caac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "caca",
+        "probability": 1e-12
+      },
+      {
+        "from": "caca",
+        "to": "acaa",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 1.6666666666666662e-157,
+    "decision": "normal",
+    "confidence": 1.6666666666666662e-157,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 20,
+    "state": "caaa",
+    "pattern": "caaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "bcca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccac",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccac",
+        "to": "caca",
+        "probability": 1e-12
+      },
+      {
+        "from": "caca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caac",
+        "probability": 1e-12
+      },
+      {
+        "from": "caac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "acaa",
+        "probability": 0.3333333333333333
+      },
+      {
+        "from": "acaa",
+        "to": "caac",
+        "probability": 1e-12
+      },
+      {
+        "from": "caac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "caca",
+        "probability": 1e-12
+      },
+      {
+        "from": "caca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      }
+    ],
+    "probability": 8.333333333333331e-158,
+    "decision": "normal",
+    "confidence": 8.333333333333331e-158,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 21,
+    "state": "aaaa",
+    "pattern": "aaaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "bcca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccac",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccac",
+        "to": "caca",
+        "probability": 1e-12
+      },
+      {
+        "from": "caca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caac",
+        "probability": 1e-12
+      },
+      {
+        "from": "caac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "acaa",
+        "probability": 0.3333333333333333
+      },
+      {
+        "from": "acaa",
+        "to": "caac",
+        "probability": 1e-12
+      },
+      {
+        "from": "caac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "caca",
+        "probability": 1e-12
+      },
+      {
+        "from": "caca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 8.33333333333333e-170,
+    "decision": "normal",
+    "confidence": 8.33333333333333e-170,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 22,
+    "state": "aaac",
+    "pattern": "aaac",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "bcca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccac",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccac",
+        "to": "caca",
+        "probability": 1e-12
+      },
+      {
+        "from": "caca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caac",
+        "probability": 1e-12
+      },
+      {
+        "from": "caac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "acaa",
+        "probability": 0.3333333333333333
+      },
+      {
+        "from": "acaa",
+        "to": "caac",
+        "probability": 1e-12
+      },
+      {
+        "from": "caac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "caca",
+        "probability": 1e-12
+      },
+      {
+        "from": "caca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.0002498126405196103
+      }
+    ],
+    "probability": 2.081772004330085e-173,
+    "decision": "normal",
+    "confidence": 2.081772004330085e-173,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 23,
+    "state": "aaca",
+    "pattern": "aaca",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "bcca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccac",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccac",
+        "to": "caca",
+        "probability": 1e-12
+      },
+      {
+        "from": "caca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caac",
+        "probability": 1e-12
+      },
+      {
+        "from": "caac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "acaa",
+        "probability": 0.3333333333333333
+      },
+      {
+        "from": "acaa",
+        "to": "caac",
+        "probability": 1e-12
+      },
+      {
+        "from": "caac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "caca",
+        "probability": 1e-12
+      },
+      {
+        "from": "caca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.0002498126405196103
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 2.0817720043300852e-185,
+    "decision": "normal",
+    "confidence": 2.0817720043300852e-185,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 24,
+    "state": "acaa",
+    "pattern": "acaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "bcca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccac",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccac",
+        "to": "caca",
+        "probability": 1e-12
+      },
+      {
+        "from": "caca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caac",
+        "probability": 1e-12
+      },
+      {
+        "from": "caac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "acaa",
+        "probability": 0.3333333333333333
+      },
+      {
+        "from": "acaa",
+        "to": "caac",
+        "probability": 1e-12
+      },
+      {
+        "from": "caac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "caca",
+        "probability": 1e-12
+      },
+      {
+        "from": "caca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.0002498126405196103
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "acaa",
+        "probability": 0.3333333333333333
+      }
+    ],
+    "probability": 6.939240014433617e-186,
+    "decision": "normal",
+    "confidence": 6.939240014433617e-186,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 25,
+    "state": "caaa",
+    "pattern": "caaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "bcca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccac",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccac",
+        "to": "caca",
+        "probability": 1e-12
+      },
+      {
+        "from": "caca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caac",
+        "probability": 1e-12
+      },
+      {
+        "from": "caac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "acaa",
+        "probability": 0.3333333333333333
+      },
+      {
+        "from": "acaa",
+        "to": "caac",
+        "probability": 1e-12
+      },
+      {
+        "from": "caac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "caca",
+        "probability": 1e-12
+      },
+      {
+        "from": "caca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.0002498126405196103
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "acaa",
+        "probability": 0.3333333333333333
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      }
+    ],
+    "probability": 3.4696200072168087e-186,
+    "decision": "normal",
+    "confidence": 3.4696200072168087e-186,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 26,
+    "state": "aaac",
+    "pattern": "aaac",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "bcca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccac",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccac",
+        "to": "caca",
+        "probability": 1e-12
+      },
+      {
+        "from": "caca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caac",
+        "probability": 1e-12
+      },
+      {
+        "from": "caac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "acaa",
+        "probability": 0.3333333333333333
+      },
+      {
+        "from": "acaa",
+        "to": "caac",
+        "probability": 1e-12
+      },
+      {
+        "from": "caac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "caca",
+        "probability": 1e-12
+      },
+      {
+        "from": "caca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.0002498126405196103
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "acaa",
+        "probability": 0.3333333333333333
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 3.469620007216808e-198,
+    "decision": "normal",
+    "confidence": 3.469620007216808e-198,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 27,
+    "state": "aacc",
+    "pattern": "aacc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "bcca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      },
+      {
+        "from": "aacc",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "ccac",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccac",
+        "to": "caca",
+        "probability": 1e-12
+      },
+      {
+        "from": "caca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caac",
+        "probability": 1e-12
+      },
+      {
+        "from": "caac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "acaa",
+        "probability": 0.3333333333333333
+      },
+      {
+        "from": "acaa",
+        "to": "caac",
+        "probability": 1e-12
+      },
+      {
+        "from": "caac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "caca",
+        "probability": 1e-12
+      },
+      {
+        "from": "caca",
+        "to": "acaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      },
+      {
+        "from": "caaa",
+        "to": "aaaa",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaaa",
+        "to": "aaac",
+        "probability": 0.0002498126405196103
+      },
+      {
+        "from": "aaac",
+        "to": "aaca",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaca",
+        "to": "acaa",
+        "probability": 0.3333333333333333
+      },
+      {
+        "from": "acaa",
+        "to": "caaa",
+        "probability": 0.5
+      },
+      {
+        "from": "caaa",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacc",
+        "probability": 1.0
+      }
+    ],
+    "probability": 3.469620007216808e-198,
+    "decision": "normal",
+    "confidence": 3.469620007216808e-198,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 3,
+    "state": "aaac",
+    "pattern": "caac",
+    "status": "unseen",
+    "mapped_to": "aaac",
+    "mapping_distance": 1,
+    "transitions": [],
+    "probability": 1.0,
+    "decision": "normal",
+    "confidence": 1.0,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 4,
+    "state": "aaac",
+    "pattern": "aacc",
+    "status": "unseen",
+    "mapped_to": "aaac",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 1e-12,
+    "decision": "normal",
+    "confidence": 1e-12,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 5,
+    "state": "aacb",
+    "pattern": "accb",
+    "status": "unseen",
+    "mapped_to": "aacb",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacb",
+        "probability": 1.0
+      }
+    ],
+    "probability": 1e-12,
+    "decision": "normal",
+    "confidence": 1e-12,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 6,
+    "state": "bcba",
+    "pattern": "ccba",
+    "status": "unseen",
+    "mapped_to": "bcba",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacb",
+        "probability": 1.0
+      },
+      {
+        "from": "aacb",
+        "to": "bcba",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 1e-24,
+    "decision": "normal",
+    "confidence": 1e-24,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 7,
+    "state": "cbaa",
+    "pattern": "cbaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacb",
+        "probability": 1.0
+      },
+      {
+        "from": "aacb",
+        "to": "bcba",
+        "probability": 1e-12
+      },
+      {
+        "from": "bcba",
+        "to": "cbaa",
+        "probability": 0.6666666666666666
+      }
+    ],
+    "probability": 6.666666666666666e-25,
+    "decision": "normal",
+    "confidence": 6.666666666666666e-25,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 8,
+    "state": "baaa",
+    "pattern": "baaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacb",
+        "probability": 1.0
+      },
+      {
+        "from": "aacb",
+        "to": "bcba",
+        "probability": 1e-12
+      },
+      {
+        "from": "bcba",
+        "to": "cbaa",
+        "probability": 0.6666666666666666
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.5
+      }
+    ],
+    "probability": 3.333333333333333e-25,
+    "decision": "normal",
+    "confidence": 3.333333333333333e-25,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 9,
+    "state": "aaaa",
+    "pattern": "aaaa",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacb",
+        "probability": 1.0
+      },
+      {
+        "from": "aacb",
+        "to": "bcba",
+        "probability": 1e-12
+      },
+      {
+        "from": "bcba",
+        "to": "cbaa",
+        "probability": 0.6666666666666666
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.5
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.6589147286821705
+      }
+    ],
+    "probability": 2.196382428940568e-25,
+    "decision": "normal",
+    "confidence": 2.196382428940568e-25,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 10,
+    "state": "aaab",
+    "pattern": "aaab",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacb",
+        "probability": 1.0
+      },
+      {
+        "from": "aacb",
+        "to": "bcba",
+        "probability": 1e-12
+      },
+      {
+        "from": "bcba",
+        "to": "cbaa",
+        "probability": 0.6666666666666666
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.5
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.6589147286821705
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.07597765363128492
+      }
+    ],
+    "probability": 1.6687598342788675e-26,
+    "decision": "normal",
+    "confidence": 1.6687598342788675e-26,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 11,
+    "state": "aaba",
+    "pattern": "aaba",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacb",
+        "probability": 1.0
+      },
+      {
+        "from": "aacb",
+        "to": "bcba",
+        "probability": 1e-12
+      },
+      {
+        "from": "bcba",
+        "to": "cbaa",
+        "probability": 0.6666666666666666
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.5
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.6589147286821705
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.07597765363128492
+      },
+      {
+        "from": "aaab",
+        "to": "aaba",
+        "probability": 0.5650485436893203
+      }
+    ],
+    "probability": 9.429303141265056e-27,
+    "decision": "normal",
+    "confidence": 9.429303141265056e-27,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 12,
+    "state": "abac",
+    "pattern": "abac",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacb",
+        "probability": 1.0
+      },
+      {
+        "from": "aacb",
+        "to": "bcba",
+        "probability": 1e-12
+      },
+      {
+        "from": "bcba",
+        "to": "cbaa",
+        "probability": 0.6666666666666666
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.5
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.6589147286821705
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.07597765363128492
+      },
+      {
+        "from": "aaab",
+        "to": "aaba",
+        "probability": 0.5650485436893203
+      },
+      {
+        "from": "aaba",
+        "to": "abac",
+        "probability": 0.002352941176470588
+      }
+    ],
+    "probability": 2.218659562650601e-29,
+    "decision": "normal",
+    "confidence": 2.218659562650601e-29,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 13,
+    "state": "bacc",
+    "pattern": "bacc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacb",
+        "probability": 1.0
+      },
+      {
+        "from": "aacb",
+        "to": "bcba",
+        "probability": 1e-12
+      },
+      {
+        "from": "bcba",
+        "to": "cbaa",
+        "probability": 0.6666666666666666
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.5
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.6589147286821705
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.07597765363128492
+      },
+      {
+        "from": "aaab",
+        "to": "aaba",
+        "probability": 0.5650485436893203
+      },
+      {
+        "from": "aaba",
+        "to": "abac",
+        "probability": 0.002352941176470588
+      },
+      {
+        "from": "abac",
+        "to": "bacc",
+        "probability": 1.0
+      }
+    ],
+    "probability": 2.218659562650601e-29,
+    "decision": "normal",
+    "confidence": 2.218659562650601e-29,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 14,
+    "state": "accc",
+    "pattern": "accc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacb",
+        "probability": 1.0
+      },
+      {
+        "from": "aacb",
+        "to": "bcba",
+        "probability": 1e-12
+      },
+      {
+        "from": "bcba",
+        "to": "cbaa",
+        "probability": 0.6666666666666666
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.5
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.6589147286821705
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.07597765363128492
+      },
+      {
+        "from": "aaab",
+        "to": "aaba",
+        "probability": 0.5650485436893203
+      },
+      {
+        "from": "aaba",
+        "to": "abac",
+        "probability": 0.002352941176470588
+      },
+      {
+        "from": "abac",
+        "to": "bacc",
+        "probability": 1.0
+      },
+      {
+        "from": "bacc",
+        "to": "accc",
+        "probability": 1.0
+      }
+    ],
+    "probability": 2.218659562650601e-29,
+    "decision": "normal",
+    "confidence": 2.218659562650601e-29,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 15,
+    "state": "cccc",
+    "pattern": "cccc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacb",
+        "probability": 1.0
+      },
+      {
+        "from": "aacb",
+        "to": "bcba",
+        "probability": 1e-12
+      },
+      {
+        "from": "bcba",
+        "to": "cbaa",
+        "probability": 0.6666666666666666
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.5
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.6589147286821705
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.07597765363128492
+      },
+      {
+        "from": "aaab",
+        "to": "aaba",
+        "probability": 0.5650485436893203
+      },
+      {
+        "from": "aaba",
+        "to": "abac",
+        "probability": 0.002352941176470588
+      },
+      {
+        "from": "abac",
+        "to": "bacc",
+        "probability": 1.0
+      },
+      {
+        "from": "bacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      }
+    ],
+    "probability": 2.218659562650601e-29,
+    "decision": "normal",
+    "confidence": 2.218659562650601e-29,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 16,
+    "state": "cccc",
+    "pattern": "cccc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacb",
+        "probability": 1.0
+      },
+      {
+        "from": "aacb",
+        "to": "bcba",
+        "probability": 1e-12
+      },
+      {
+        "from": "bcba",
+        "to": "cbaa",
+        "probability": 0.6666666666666666
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.5
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.6589147286821705
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.07597765363128492
+      },
+      {
+        "from": "aaab",
+        "to": "aaba",
+        "probability": 0.5650485436893203
+      },
+      {
+        "from": "aaba",
+        "to": "abac",
+        "probability": 0.002352941176470588
+      },
+      {
+        "from": "abac",
+        "to": "bacc",
+        "probability": 1.0
+      },
+      {
+        "from": "bacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      }
+    ],
+    "probability": 2.134983688348552e-29,
+    "decision": "normal",
+    "confidence": 2.134983688348552e-29,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 17,
+    "state": "cccc",
+    "pattern": "cccc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacb",
+        "probability": 1.0
+      },
+      {
+        "from": "aacb",
+        "to": "bcba",
+        "probability": 1e-12
+      },
+      {
+        "from": "bcba",
+        "to": "cbaa",
+        "probability": 0.6666666666666666
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.5
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.6589147286821705
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.07597765363128492
+      },
+      {
+        "from": "aaab",
+        "to": "aaba",
+        "probability": 0.5650485436893203
+      },
+      {
+        "from": "aaba",
+        "to": "abac",
+        "probability": 0.002352941176470588
+      },
+      {
+        "from": "abac",
+        "to": "bacc",
+        "probability": 1.0
+      },
+      {
+        "from": "bacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      }
+    ],
+    "probability": 2.054463616792485e-29,
+    "decision": "normal",
+    "confidence": 2.054463616792485e-29,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 18,
+    "state": "cccc",
+    "pattern": "cccc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacb",
+        "probability": 1.0
+      },
+      {
+        "from": "aacb",
+        "to": "bcba",
+        "probability": 1e-12
+      },
+      {
+        "from": "bcba",
+        "to": "cbaa",
+        "probability": 0.6666666666666666
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.5
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.6589147286821705
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.07597765363128492
+      },
+      {
+        "from": "aaab",
+        "to": "aaba",
+        "probability": 0.5650485436893203
+      },
+      {
+        "from": "aaba",
+        "to": "abac",
+        "probability": 0.002352941176470588
+      },
+      {
+        "from": "abac",
+        "to": "bacc",
+        "probability": 1.0
+      },
+      {
+        "from": "bacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      }
+    ],
+    "probability": 1.9769803281208857e-29,
+    "decision": "normal",
+    "confidence": 1.9769803281208857e-29,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 19,
+    "state": "cccc",
+    "pattern": "cccc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacb",
+        "probability": 1.0
+      },
+      {
+        "from": "aacb",
+        "to": "bcba",
+        "probability": 1e-12
+      },
+      {
+        "from": "bcba",
+        "to": "cbaa",
+        "probability": 0.6666666666666666
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.5
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.6589147286821705
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.07597765363128492
+      },
+      {
+        "from": "aaab",
+        "to": "aaba",
+        "probability": 0.5650485436893203
+      },
+      {
+        "from": "aaba",
+        "to": "abac",
+        "probability": 0.002352941176470588
+      },
+      {
+        "from": "abac",
+        "to": "bacc",
+        "probability": 1.0
+      },
+      {
+        "from": "bacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      }
+    ],
+    "probability": 1.9024192912595857e-29,
+    "decision": "normal",
+    "confidence": 1.9024192912595857e-29,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 20,
+    "state": "cccc",
+    "pattern": "cccc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacb",
+        "probability": 1.0
+      },
+      {
+        "from": "aacb",
+        "to": "bcba",
+        "probability": 1e-12
+      },
+      {
+        "from": "bcba",
+        "to": "cbaa",
+        "probability": 0.6666666666666666
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.5
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.6589147286821705
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.07597765363128492
+      },
+      {
+        "from": "aaab",
+        "to": "aaba",
+        "probability": 0.5650485436893203
+      },
+      {
+        "from": "aaba",
+        "to": "abac",
+        "probability": 0.002352941176470588
+      },
+      {
+        "from": "abac",
+        "to": "bacc",
+        "probability": 1.0
+      },
+      {
+        "from": "bacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      }
+    ],
+    "probability": 1.8306702946289117e-29,
+    "decision": "normal",
+    "confidence": 1.8306702946289117e-29,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 21,
+    "state": "ccca",
+    "pattern": "ccca",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacb",
+        "probability": 1.0
+      },
+      {
+        "from": "aacb",
+        "to": "bcba",
+        "probability": 1e-12
+      },
+      {
+        "from": "bcba",
+        "to": "cbaa",
+        "probability": 0.6666666666666666
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.5
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.6589147286821705
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.07597765363128492
+      },
+      {
+        "from": "aaab",
+        "to": "aaba",
+        "probability": 0.5650485436893203
+      },
+      {
+        "from": "aaba",
+        "to": "abac",
+        "probability": 0.002352941176470588
+      },
+      {
+        "from": "abac",
+        "to": "bacc",
+        "probability": 1.0
+      },
+      {
+        "from": "bacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00028145229383619476
+      }
+    ],
+    "probability": 5.152463536810897e-33,
+    "decision": "normal",
+    "confidence": 5.152463536810897e-33,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 22,
+    "state": "ccaa",
+    "pattern": "ccac",
+    "status": "unseen",
+    "mapped_to": "ccaa",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacb",
+        "probability": 1.0
+      },
+      {
+        "from": "aacb",
+        "to": "bcba",
+        "probability": 1e-12
+      },
+      {
+        "from": "bcba",
+        "to": "cbaa",
+        "probability": 0.6666666666666666
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.5
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.6589147286821705
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.07597765363128492
+      },
+      {
+        "from": "aaab",
+        "to": "aaba",
+        "probability": 0.5650485436893203
+      },
+      {
+        "from": "aaba",
+        "to": "abac",
+        "probability": 0.002352941176470588
+      },
+      {
+        "from": "abac",
+        "to": "bacc",
+        "probability": 1.0
+      },
+      {
+        "from": "bacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00028145229383619476
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      }
+    ],
+    "probability": 5.152463536810897e-33,
+    "decision": "normal",
+    "confidence": 5.152463536810897e-33,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 23,
+    "state": "bacc",
+    "pattern": "cacc",
+    "status": "unseen",
+    "mapped_to": "bacc",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacb",
+        "probability": 1.0
+      },
+      {
+        "from": "aacb",
+        "to": "bcba",
+        "probability": 1e-12
+      },
+      {
+        "from": "bcba",
+        "to": "cbaa",
+        "probability": 0.6666666666666666
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.5
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.6589147286821705
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.07597765363128492
+      },
+      {
+        "from": "aaab",
+        "to": "aaba",
+        "probability": 0.5650485436893203
+      },
+      {
+        "from": "aaba",
+        "to": "abac",
+        "probability": 0.002352941176470588
+      },
+      {
+        "from": "abac",
+        "to": "bacc",
+        "probability": 1.0
+      },
+      {
+        "from": "bacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00028145229383619476
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "bacc",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 5.152463536810897e-45,
+    "decision": "normal",
+    "confidence": 5.152463536810897e-45,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 24,
+    "state": "accc",
+    "pattern": "accc",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacb",
+        "probability": 1.0
+      },
+      {
+        "from": "aacb",
+        "to": "bcba",
+        "probability": 1e-12
+      },
+      {
+        "from": "bcba",
+        "to": "cbaa",
+        "probability": 0.6666666666666666
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.5
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.6589147286821705
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.07597765363128492
+      },
+      {
+        "from": "aaab",
+        "to": "aaba",
+        "probability": 0.5650485436893203
+      },
+      {
+        "from": "aaba",
+        "to": "abac",
+        "probability": 0.002352941176470588
+      },
+      {
+        "from": "abac",
+        "to": "bacc",
+        "probability": 1.0
+      },
+      {
+        "from": "bacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00028145229383619476
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "bacc",
+        "probability": 1e-12
+      },
+      {
+        "from": "bacc",
+        "to": "accc",
+        "probability": 1.0
+      }
+    ],
+    "probability": 5.152463536810897e-45,
+    "decision": "normal",
+    "confidence": 5.152463536810897e-45,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 25,
+    "state": "ccca",
+    "pattern": "ccca",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacb",
+        "probability": 1.0
+      },
+      {
+        "from": "aacb",
+        "to": "bcba",
+        "probability": 1e-12
+      },
+      {
+        "from": "bcba",
+        "to": "cbaa",
+        "probability": 0.6666666666666666
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.5
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.6589147286821705
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.07597765363128492
+      },
+      {
+        "from": "aaab",
+        "to": "aaba",
+        "probability": 0.5650485436893203
+      },
+      {
+        "from": "aaba",
+        "to": "abac",
+        "probability": 0.002352941176470588
+      },
+      {
+        "from": "abac",
+        "to": "bacc",
+        "probability": 1.0
+      },
+      {
+        "from": "bacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00028145229383619476
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "bacc",
+        "probability": 1e-12
+      },
+      {
+        "from": "bacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 5.152463536810897e-57,
+    "decision": "normal",
+    "confidence": 5.152463536810897e-57,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 26,
+    "state": "ccaa",
+    "pattern": "ccac",
+    "status": "unseen",
+    "mapped_to": "ccaa",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacb",
+        "probability": 1.0
+      },
+      {
+        "from": "aacb",
+        "to": "bcba",
+        "probability": 1e-12
+      },
+      {
+        "from": "bcba",
+        "to": "cbaa",
+        "probability": 0.6666666666666666
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.5
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.6589147286821705
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.07597765363128492
+      },
+      {
+        "from": "aaab",
+        "to": "aaba",
+        "probability": 0.5650485436893203
+      },
+      {
+        "from": "aaba",
+        "to": "abac",
+        "probability": 0.002352941176470588
+      },
+      {
+        "from": "abac",
+        "to": "bacc",
+        "probability": 1.0
+      },
+      {
+        "from": "bacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00028145229383619476
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "bacc",
+        "probability": 1e-12
+      },
+      {
+        "from": "bacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      }
+    ],
+    "probability": 5.152463536810897e-57,
+    "decision": "normal",
+    "confidence": 5.152463536810897e-57,
+    "threshold": 0.0
+  },
+  {
+    "time_step": 27,
+    "state": "bacc",
+    "pattern": "cacc",
+    "status": "unseen",
+    "mapped_to": "bacc",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "aaac",
+        "to": "aaac",
+        "probability": 1e-12
+      },
+      {
+        "from": "aaac",
+        "to": "aacb",
+        "probability": 1.0
+      },
+      {
+        "from": "aacb",
+        "to": "bcba",
+        "probability": 1e-12
+      },
+      {
+        "from": "bcba",
+        "to": "cbaa",
+        "probability": 0.6666666666666666
+      },
+      {
+        "from": "cbaa",
+        "to": "baaa",
+        "probability": 0.5
+      },
+      {
+        "from": "baaa",
+        "to": "aaaa",
+        "probability": 0.6589147286821705
+      },
+      {
+        "from": "aaaa",
+        "to": "aaab",
+        "probability": 0.07597765363128492
+      },
+      {
+        "from": "aaab",
+        "to": "aaba",
+        "probability": 0.5650485436893203
+      },
+      {
+        "from": "aaba",
+        "to": "abac",
+        "probability": 0.002352941176470588
+      },
+      {
+        "from": "abac",
+        "to": "bacc",
+        "probability": 1.0
+      },
+      {
+        "from": "bacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "cccc",
+        "probability": 1.0
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "cccc",
+        "probability": 0.9622853926259499
+      },
+      {
+        "from": "cccc",
+        "to": "ccca",
+        "probability": 0.00028145229383619476
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "bacc",
+        "probability": 1e-12
+      },
+      {
+        "from": "bacc",
+        "to": "accc",
+        "probability": 1.0
+      },
+      {
+        "from": "accc",
+        "to": "ccca",
+        "probability": 1e-12
+      },
+      {
+        "from": "ccca",
+        "to": "ccaa",
+        "probability": 1.0
+      },
+      {
+        "from": "ccaa",
+        "to": "bacc",
+        "probability": 1e-12
+      }
+    ],
+    "probability": 5.152463536810896e-69,
+    "decision": "normal",
+    "confidence": 5.152463536810896e-69,
+    "threshold": 0.0
+  }
+]

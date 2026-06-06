@@ -27,9 +27,10 @@ from src.evaluation.visualization import generate_all_visualizations
 from src.experiments.experiment_logger import ExperimentLogger, build_experiment_record
 from src.experiments.parameter_sweep import run_parameter_grid
 from src.experiments.results_io import prepare_results_dir, write_json_result
+from src.explainability.explanation_export import select_explanation_samples
 from src.experiments.scenarios import add_gaussian_noise, inject_unseen_pattern
 from src.models.deep_learning_pipeline import DeepLearningPipeline, set_seed
-from src.pipeline import build_fixed_automata_pipeline
+from src.pipeline import AutomataPipeline, build_fixed_automata_pipeline
 
 # Log kayıtlarını konsola yazdırmak için yapılandırıyoruz
 logging.basicConfig(
@@ -38,9 +39,15 @@ logging.basicConfig(
 )
 logger = logging.getLogger("run_experiments")
 
-MAX_STORED_PREDICTIONS = 2_000
-MAX_STORED_EXPLANATIONS = 25
 EXPLANATIONS_DIR_NAME = "explanations"
+
+
+def output_limits(config: ProjectConfig) -> tuple[int, int]:
+    output_cfg = config.get("experiments", "output", default={}) or {}
+    return (
+        int(output_cfg.get("max_stored_predictions", 2000)),
+        int(output_cfg.get("max_stored_explanations", 25)),
+    )
 
 
 def automata_experiment_parameters(config: ProjectConfig) -> dict[str, Any]:
@@ -57,13 +64,17 @@ def export_automata_explanations(
     scenario: str,
     seed: int,
     samples: list[dict[str, Any]],
+    *,
+    max_samples: int | None = None,
 ) -> None:
     if not samples:
         return
+    limit = max_samples if max_samples is not None else len(samples)
+    selected = select_explanation_samples(samples, scenario, limit)
     output_dir.mkdir(parents=True, exist_ok=True)
     path = output_dir / f"{dataset}_{scenario}_seed{seed}_explanations.json"
     with path.open("w", encoding="utf-8") as handle:
-        json.dump(samples, handle, indent=2, ensure_ascii=False)
+        json.dump(selected, handle, indent=2, ensure_ascii=False)
 
 
 def evaluate_predictions(y_true: np.ndarray, y_pred: np.ndarray) -> dict[str, float]:
@@ -81,8 +92,10 @@ def compact_prediction_records(
     y_pred: np.ndarray,
     scores: list[float],
     window_size: int,
+    *,
+    max_records: int,
 ) -> list[dict[str, Any]]:
-    limit = min(len(y_true), MAX_STORED_PREDICTIONS)
+    limit = min(len(y_true), max_records)
     return [
         {
             "time_step": int(idx + window_size - 1),
@@ -99,10 +112,12 @@ def automata_predict_with_trace(
     df: pd.DataFrame,
     scenario: str,
     window_size: int,
+    *,
+    max_explanations: int,
+    max_predictions: int,
 ) -> tuple[np.ndarray, list[float], list[dict[str, Any]], list[dict[str, Any]]]:
     patterns = automata_pipe.transform_patterns(df)
     if scenario == "unseen":
-        
         patterns = inject_unseen_pattern(
             patterns,
             replacement="zzzz",
@@ -110,69 +125,85 @@ def automata_predict_with_trace(
             alphabet_size=automata_pipe.alphabet_size,
         )
 
-    # Not: naive prefix-skorlaması \(O(n^2)\) olduğu için (her prefix için yeniden olasılık hesaplayınca)
-    # deney süresi saatlere uzayabiliyor. Burada geçiş olasılıklarını artımlı birikimli hesaplayarak
-    # \(O(n)\) hale getiriyoruz.
     automata = automata_pipe.automata
     threshold = float(automata.threshold_ if automata.threshold_ is not None else automata.smoothing)
-
     mappings = [automata.map_pattern(p) for p in patterns]
+
+    path_probabilities: list[float] = []
+    prefix_transitions: list[list[dict[str, Any]]] = []
+    transitions_acc: list[dict[str, Any]] = []
+    path_probability = 1.0
+
+    for idx, _current in enumerate(mappings):
+        if idx == 0:
+            path_probability = 1.0
+            transitions_acc = []
+        else:
+            previous = mappings[idx - 1]
+            current = mappings[idx]
+            prob = automata.transition_probability(previous.mapped, current.mapped)
+            path_probability *= prob
+            transitions_acc.append(
+                {"from": previous.mapped, "to": current.mapped, "probability": float(prob)}
+            )
+        path_probabilities.append(float(path_probability))
+        prefix_transitions.append(list(transitions_acc))
 
     predictions: list[int] = []
     scores: list[float] = []
-    explanations: list[dict[str, Any]] = []
-    trace: list[dict[str, Any]] = []
 
-    path_probability = 1.0
-    transitions_so_far: list[dict[str, Any]] = []
+    def build_explanation(idx: int) -> dict[str, Any]:
+        current = mappings[idx]
+        probability = path_probabilities[idx]
+        decision = "anomaly" if probability <= threshold else "normal"
+        return {
+            "time_step": int(idx + window_size - 1),
+            "state": current.mapped,
+            "pattern": current.original,
+            "status": current.status,
+            "mapped_to": current.mapped if current.status == "unseen" else None,
+            "mapping_distance": int(current.distance),
+            "transitions": prefix_transitions[idx],
+            "probability": probability,
+            "decision": decision,
+            "confidence": probability,
+            "threshold": threshold,
+        }
 
+    explanations_by_step: dict[int, dict[str, Any]] = {}
     for idx, current in enumerate(mappings):
-        if idx == 0:
-            path_probability = 1.0
-        else:
-            previous = mappings[idx - 1]
-            prob = automata.transition_probability(previous.mapped, current.mapped)
-            path_probability *= prob
-            if len(transitions_so_far) < MAX_STORED_EXPLANATIONS:
-                transitions_so_far.append(
-                    {"from": previous.mapped, "to": current.mapped, "probability": float(prob)}
-                )
-
-        decision = "anomaly" if path_probability <= threshold else "normal"
-        confidence = float(path_probability)
-
+        probability = path_probabilities[idx]
+        decision = "anomaly" if probability <= threshold else "normal"
         predictions.append(1 if decision == "anomaly" else 0)
-        scores.append(anomaly_score(float(path_probability), threshold))
+        scores.append(anomaly_score(probability, threshold))
 
-        if len(explanations) < MAX_STORED_EXPLANATIONS:
-            time_step = int(idx + window_size - 1)
-            explanation = {
-                "time_step": time_step,
-                "state": current.mapped,
-                "pattern": current.original,
-                "status": current.status,
-                "mapped_to": current.mapped if current.status == "unseen" else None,
-                "mapping_distance": int(current.distance),
-                "transitions": list(transitions_so_far),
-                "probability": float(path_probability),
-                "decision": decision,
-                "confidence": confidence,
-                "threshold": threshold,
-            }
-            explanations.append(explanation)
-            trace.append(
-                {
-                    "time_step": time_step,
-                    "state": explanation["state"],
-                    "pattern": explanation["pattern"],
-                    "status": explanation["status"],
-                    "mapped_to": explanation["mapped_to"],
-                    "probability": explanation["probability"],
-                    "threshold": explanation["threshold"],
-                    "decision": explanation["decision"],
-                    "confidence": explanation["confidence"],
-                }
-            )
+        if scenario != "unseen" and len(explanations_by_step) < max_explanations:
+            explanations_by_step[idx] = build_explanation(idx)
+        elif scenario == "unseen":
+            if len(explanations_by_step) < max(3, max_explanations // 3):
+                explanations_by_step[idx] = build_explanation(idx)
+            if current.status == "unseen":
+                for neighbor in (idx - 1, idx, idx + 1):
+                    if 0 <= neighbor < len(mappings):
+                        explanations_by_step[neighbor] = build_explanation(neighbor)
+
+    ordered_steps = sorted(explanations_by_step)
+    ordered_explanations = [explanations_by_step[step] for step in ordered_steps]
+    explanations = select_explanation_samples(ordered_explanations, scenario, max_explanations)
+    trace = [
+        {
+            "time_step": item["time_step"],
+            "state": item["state"],
+            "pattern": item["pattern"],
+            "status": item["status"],
+            "mapped_to": item["mapped_to"],
+            "probability": item["probability"],
+            "threshold": item["threshold"],
+            "decision": item["decision"],
+            "confidence": item["confidence"],
+        }
+        for item in explanations
+    ]
 
     return np.asarray(predictions), scores, trace, explanations
 
@@ -210,6 +241,8 @@ def run_skab_experiment(
 
     automata_states = []
     automata_densities = []
+    max_predictions, max_explanations = output_limits(config)
+    train_val_ratio = config.get("deep_learning", "skab_train_validation_ratio", default=0.9)
 
     for fold_idx, split in enumerate(splits):
         if max_folds is not None and fold_idx >= max_folds:
@@ -245,6 +278,8 @@ def run_skab_experiment(
             test_df_perturbed,
             scenario=scenario,
             window_size=W,
+            max_explanations=max_explanations,
+            max_predictions=max_predictions,
         )
 
         automata_metrics = evaluate_predictions(y_test_aligned, y_pred_automata)
@@ -268,7 +303,11 @@ def run_skab_experiment(
         outputs_by_model["automata"].append(
             {
                 "fold": fold_idx,
-                "predictions": compact_prediction_records(y_test_aligned, y_pred_automata, automata_scores, W),
+                "state_count": automata_pipe.automata.state_count,
+                "transition_density": automata_pipe.automata.transition_density,
+                "predictions": compact_prediction_records(
+                    y_test_aligned, y_pred_automata, automata_scores, W, max_records=max_predictions
+                ),
                 "explanation_trace": automata_trace,
                 "full_explanation_samples": automata_explanations,
                 "transition_probabilities": automata_pipe.automata.transition_probabilities_,
@@ -287,8 +326,7 @@ def run_skab_experiment(
             train_y = train_df[target_col].to_numpy()
             test_y = test_df[target_col].to_numpy()
 
-            # Eğitim verisinin son %10'unu kronolojik olarak validation için ayırıyoruz
-            val_split = int(len(train_X_scaled) * 0.9)
+            val_split = int(len(train_X_scaled) * train_val_ratio)
             fit_train_X, fit_val_X = train_X_scaled[:val_split], train_X_scaled[val_split:]
             fit_train_y, fit_val_y = train_y[:val_split], train_y[val_split:]
 
@@ -314,6 +352,7 @@ def run_skab_experiment(
             if experiment_logger is not None:
                 dl_params = automata_experiment_parameters(config)
                 dl_params["deep_learning_model"] = dl_model
+                dl_params.update(dl_pipe.training_summary())
                 experiment_logger.log(
                     build_experiment_record(
                         dataset="skab",
@@ -328,7 +367,9 @@ def run_skab_experiment(
             outputs_by_model[dl_model].append(
                 {
                     "fold": fold_idx,
-                    "predictions": compact_prediction_records(dl_y_true, dl_preds, dl_probs.tolist(), W),
+                    "predictions": compact_prediction_records(
+                        dl_y_true, dl_preds, dl_probs.tolist(), W, max_records=max_predictions
+                    ),
                 }
             )
 
@@ -400,6 +441,7 @@ def run_batadal_experiment(
 
     models_to_run = models_override or (["automata"] + config.get("deep_learning", "models", default=["lstm", "gru"]))
     results_by_model: dict[str, dict[str, float]] = {}
+    max_predictions, max_explanations = output_limits(config)
 
     logger.info("Fitting automata...")
     automata_pipe = build_fixed_automata_pipeline(config)
@@ -411,12 +453,16 @@ def run_batadal_experiment(
         test_df_perturbed,
         scenario=scenario,
         window_size=W,
+        max_explanations=max_explanations,
+        max_predictions=max_predictions,
     )
 
     automata_metrics = evaluate_predictions(y_test_aligned, y_pred_automata)
     results_by_model["automata"] = {
         "metrics": automata_metrics,
-        "predictions": compact_prediction_records(y_test_aligned, y_pred_automata, automata_scores, W),
+        "predictions": compact_prediction_records(
+            y_test_aligned, y_pred_automata, automata_scores, W, max_records=max_predictions
+        ),
         "explanation_trace": automata_trace,
         "full_explanation_samples": automata_explanations,
         "transition_probabilities": automata_pipe.automata.transition_probabilities_,
@@ -468,11 +514,14 @@ def run_batadal_experiment(
         dl_metrics = evaluate_predictions(dl_y_true, dl_preds)
         results_by_model[dl_model] = {
             "metrics": dl_metrics,
-            "predictions": compact_prediction_records(dl_y_true, dl_preds, dl_probs.tolist(), W),
+            "predictions": compact_prediction_records(
+                dl_y_true, dl_preds, dl_probs.tolist(), W, max_records=max_predictions
+            ),
         }
         if experiment_logger is not None:
             dl_params = automata_experiment_parameters(config)
             dl_params["deep_learning_model"] = dl_model
+            dl_params.update(dl_pipe.training_summary())
             experiment_logger.log(
                 build_experiment_record(
                     dataset="batadal",
@@ -498,23 +547,29 @@ def run_skab_parameter_variation(
     skab_target_col: str,
 ) -> list[dict[str, Any]]:
     logger.info("Running SKAB automata parameter variation...")
-    set_seed(42)
+    seeds = config.get("project", "random_seeds", default=[42, 123, 2026, 7, 999])
     group_col = config.get("datasets", "skab", "group_column")
     n_splits = config.get("datasets", "skab", "n_splits", default=5)
-    splits = make_skab_group_folds(
-        skab_df,
-        target_column=skab_target_col,
-        group_column=group_col,
-        n_splits=n_splits,
-        seed=42,
-    )
-    train_test_splits = [(skab_df.iloc[split.train], skab_df.iloc[split.test]) for split in splits]
+    prefer_stratified = config.get("datasets", "skab", "prefer_stratified_group_kfold", default=True)
+
+    def split_provider(seed: int) -> list[tuple[pd.DataFrame, pd.DataFrame]]:
+        splits = make_skab_group_folds(
+            skab_df,
+            target_column=skab_target_col,
+            group_column=group_col,
+            n_splits=n_splits,
+            seed=seed,
+            prefer_stratified=prefer_stratified,
+        )
+        return [(skab_df.iloc[split.train], skab_df.iloc[split.test]) for split in splits]
+
     return run_parameter_grid(
         config,
         dataset_name="skab",
-        train_test_splits=train_test_splits,
+        split_provider=split_provider,
         feature_columns=skab_feature_cols,
         target_column=skab_target_col,
+        seeds=seeds,
     )
 
 
@@ -525,21 +580,25 @@ def run_batadal_parameter_variation(
     target_col: str,
 ) -> list[dict[str, Any]]:
     logger.info("Running BATADAL automata parameter variation...")
+    seeds = config.get("project", "random_seeds", default=[42, 123, 2026, 7, 999])
     split_conf = config.get("datasets", "batadal", "split")
-    split = make_batadal_chronological_split(
-        batadal_df,
-        train_ratio=split_conf.get("train", 0.6),
-        validation_ratio=split_conf.get("validation", 0.2),
-        test_ratio=split_conf.get("test", 0.2),
-    )
-    train_df = batadal_df.iloc[split.train]
-    test_df = batadal_df.iloc[split.test]
+
+    def split_provider(_seed: int) -> list[tuple[pd.DataFrame, pd.DataFrame]]:
+        split = make_batadal_chronological_split(
+            batadal_df,
+            train_ratio=split_conf.get("train", 0.6),
+            validation_ratio=split_conf.get("validation", 0.2),
+            test_ratio=split_conf.get("test", 0.2),
+        )
+        return [(batadal_df.iloc[split.train], batadal_df.iloc[split.test])]
+
     return run_parameter_grid(
         config,
         dataset_name="batadal",
-        train_test_splits=[(train_df, test_df)],
+        split_provider=split_provider,
         feature_columns=feature_cols,
         target_column=target_col,
+        seeds=seeds,
     )
 
 
@@ -690,16 +749,28 @@ def main() -> None:
             )
             batadal_seed_res[scenario] = batadal_res
 
+            max_explanations, _ = output_limits(config)
             automata_samples = batadal_res.get("automata", {}).get("full_explanation_samples", [])
-            export_automata_explanations(explanations_dir, "batadal", scenario, seed, automata_samples)
+            export_automata_explanations(
+                explanations_dir,
+                "batadal",
+                scenario,
+                seed,
+                automata_samples,
+                max_samples=max_explanations,
+            )
             skab_automata_outputs = skab_res.get("automata", {}).get("outputs", [])
             if skab_automata_outputs:
+                skab_samples: list[dict[str, Any]] = []
+                for fold_output in skab_automata_outputs:
+                    skab_samples.extend(fold_output.get("full_explanation_samples", []))
                 export_automata_explanations(
                     explanations_dir,
                     "skab",
                     scenario,
                     seed,
-                    skab_automata_outputs[0].get("full_explanation_samples", []),
+                    skab_samples,
+                    max_samples=max_explanations,
                 )
 
         skab_full_results.append({"seed": seed, **skab_seed_res})
@@ -758,6 +829,15 @@ def main() -> None:
 
     if not args.fast:
         generate_all_visualizations(results_dir, figures_dir)
+        try:
+            import subprocess
+            import sys
+
+            report_script = Path(__file__).resolve().parent / "scripts" / "generate_report_metrics.py"
+            subprocess.run([sys.executable, str(report_script)], check=True, cwd=Path(__file__).resolve().parent)
+            logger.info("README metric tables refreshed from experiment outputs.")
+        except Exception as exc:
+            logger.warning("Could not refresh README metrics: %s", exc)
     else:
         logger.info("FAST mode: skipping full visualization generation.")
     logger.info(f"All experiments executed successfully. Outputs stored in {results_dir}")

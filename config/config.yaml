@@ -57,9 +57,26 @@
     "minimum_required_models": 2,
     "max_epochs": 50,
     "batch_size": 32,
+    "learning_rate": 0.001,
+    "skab_train_validation_ratio": 0.9,
     "early_stopping": {
       "monitor": "validation_loss",
       "patience": 5
+    },
+    "lstm": {
+      "hidden_size": 64,
+      "num_layers": 1,
+      "dropout": 0.0
+    },
+    "gru": {
+      "hidden_size": 64,
+      "num_layers": 1,
+      "dropout": 0.0
+    },
+    "cnn1d": {
+      "channels": 64,
+      "kernel_size": 3,
+      "dropout": 0.0
     }
   },
   "experiments": {
@@ -68,6 +85,13 @@
       "mean": 0.0,
       "std": 0.05
     },
-    "metrics": ["accuracy", "precision", "recall", "f1"]
+    "metrics": ["accuracy", "precision", "recall", "f1"],
+    "output": {
+      "max_stored_predictions": 2000,
+      "max_stored_explanations": 25
+    },
+    "visualization": {
+      "automata_max_states_in_diagram": 24
+    }
   }
 }

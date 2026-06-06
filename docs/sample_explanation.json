@@ -1,0 +1,34 @@
+[
+  {
+    "time_step": 4,
+    "state": "aab",
+    "pattern": "aab",
+    "status": "seen",
+    "mapped_to": null,
+    "mapping_distance": 0,
+    "transitions": [],
+    "probability": 1.0,
+    "decision": "normal",
+    "confidence": 1.0,
+    "threshold": 0.108
+  },
+  {
+    "time_step": 5,
+    "state": "abc",
+    "pattern": "adc",
+    "status": "unseen",
+    "mapped_to": "abc",
+    "mapping_distance": 1,
+    "transitions": [
+      {
+        "from": "aab",
+        "to": "abc",
+        "probability": 0.72
+      }
+    ],
+    "probability": 0.108,
+    "decision": "anomaly",
+    "confidence": 0.108,
+    "threshold": 0.108
+  }
+]

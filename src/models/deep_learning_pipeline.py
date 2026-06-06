@@ -12,7 +12,7 @@ from torch.utils.data import DataLoader, Dataset
 
 from src.config import ProjectConfig
 from src.evaluation.metrics import classification_metrics
-from src.models.deep_learning import build_deep_model
+from src.models.deep_learning import build_deep_model, resolve_model_architecture
 
 logger = logging.getLogger(__name__)
 
@@ -80,7 +80,14 @@ class DeepLearningPipeline:
         self.input_size = input_size
         self.window_size = window_size
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.model = build_deep_model(self.model_name, input_size=self.input_size).to(self.device)
+        architecture = resolve_model_architecture(self.config, self.model_name)
+        self.model = build_deep_model(self.model_name, input_size=self.input_size, **architecture).to(self.device)
+        self.epochs_trained_: int = 0
+        self.early_stopped_: bool = False
+        self.best_validation_loss_: float | None = None
+
+    def _batch_size(self) -> int:
+        return int(self.config.get("deep_learning", "batch_size", default=32))
 
     def train_epoch(
         self,
@@ -133,8 +140,11 @@ class DeepLearningPipeline:
         val_y: np.ndarray | None = None,
     ) -> DeepLearningPipeline:
         max_epochs = self.config.get("deep_learning", "max_epochs", default=50)
-        batch_size = self.config.get("deep_learning", "batch_size", default=32)
+        batch_size = self._batch_size()
         patience = self.config.get("deep_learning", "early_stopping", "patience", default=5)
+        self.epochs_trained_ = 0
+        self.early_stopped_ = False
+        self.best_validation_loss_ = None
 
         train_dataset = TimeSeriesDataset(train_X, train_y, self.window_size)
         train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
@@ -145,35 +155,57 @@ class DeepLearningPipeline:
         else:
             val_loader = None
 
-        optimizer = torch.optim.Adam(self.model.parameters(), lr=1e-3)
+        learning_rate = self.config.get("deep_learning", "learning_rate", default=0.001)
+        optimizer = torch.optim.Adam(self.model.parameters(), lr=learning_rate)
         criterion = nn.BCEWithLogitsLoss()
         early_stopping = EarlyStopping(patience=patience)
 
         for epoch in range(max_epochs):
+            self.epochs_trained_ = epoch + 1
             train_loss = self.train_epoch(train_loader, optimizer, criterion)
 
             if val_loader is not None:
                 val_loss, _, _ = self.evaluate(val_loader, criterion)
                 early_stopping(val_loss, self.model)
+                if early_stopping.best_state is not None:
+                    self.best_validation_loss_ = float(early_stopping.best_loss)
                 if early_stopping.early_stop:
-                    logger.info(f"Early stopping triggered at epoch {epoch}")
+                    self.early_stopped_ = True
+                    logger.info(
+                        "Early stopping at epoch %d (model=%s, best_val_loss=%.6f)",
+                        epoch + 1,
+                        self.model_name,
+                        early_stopping.best_loss,
+                    )
                     if early_stopping.best_state is not None:
                         self.model.load_state_dict(early_stopping.best_state)
                     break
             else:
-                # Validation seti yoksa (örneğin SKAB GroupKFold fold'larında), train loss üzerinden takip ediyoruz
                 early_stopping(train_loss, self.model)
+                if early_stopping.best_state is not None:
+                    self.best_validation_loss_ = float(early_stopping.best_loss)
 
-        # Eğer eğitim bittiyse ve elimizde kaydedilmiş en iyi ağırlıklar varsa onları yüklüyoruz
         if val_loader is None and early_stopping.best_state is not None:
             self.model.load_state_dict(early_stopping.best_state)
 
         return self
 
+    def training_summary(self) -> dict[str, Any]:
+        return {
+            "epochs_trained": self.epochs_trained_,
+            "early_stopped": self.early_stopped_,
+            "best_validation_loss": self.best_validation_loss_,
+            "max_epochs": int(self.config.get("deep_learning", "max_epochs", default=50)),
+            "batch_size": self._batch_size(),
+            "early_stopping_patience": int(
+                self.config.get("deep_learning", "early_stopping", "patience", default=5)
+            ),
+        }
+
     def predict_proba(self, test_X: np.ndarray) -> np.ndarray:
         test_y_placeholder = np.zeros(len(test_X))
         test_dataset = TimeSeriesDataset(test_X, test_y_placeholder, self.window_size)
-        test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
+        test_loader = DataLoader(test_dataset, batch_size=self._batch_size(), shuffle=False)
 
         self.model.eval()
         all_probs = []
@@ -191,7 +223,7 @@ class DeepLearningPipeline:
 
     def predict_and_evaluate(self, test_X: np.ndarray, test_y: np.ndarray) -> dict[str, float]:
         test_dataset = TimeSeriesDataset(test_X, test_y, self.window_size)
-        test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
+        test_loader = DataLoader(test_dataset, batch_size=self._batch_size(), shuffle=False)
         criterion = nn.BCEWithLogitsLoss()
 
         _, y_true, y_pred = self.evaluate(test_loader, criterion)
